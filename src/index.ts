@@ -12,18 +12,12 @@ var longType = new GraphQLScalarType({
     description: '64-bit integral numbers',
     serialize: Number,
     parseValue: Number,
-    parseLiteral: function parseLiteral(ast) {
-        if (ast.kind === Kind.INT) {
-            const num = parseInt(ast.value, 10);
-            return num;
-        }
-        return null;
-    }
+    parseLiteral: (ast) => ast.kind === Kind.INT ? parseInt(ast.value, 10) : null
 });
 
 const accountFields = {
     address: { type: GraphQLString },
-    balance: { type: longType, resolve: (account) => web3.eth.getBalance(account.address) }
+    balance: { type: longType, resolve: ({ address }) => web3.eth.getBalance(address) }
 }
 
 const Account = new GraphQLObjectType({
@@ -65,15 +59,9 @@ const blockFields = {
     timestamp: { type: GraphQLInt },
     transactions: {
         type: new GraphQLList(Transaction),
-        resolve: (source) => {
-            const transform = (tx) => {
-                const { from, to } = tx;
-                tx.from = { address: from };
-                tx.to = { address: to };
-                return tx;
-            };
-            return source.transactions.map(transform)
-        }
+        resolve: (source) => source.transactions.map(tx =>
+            Object.assign(tx, { from: { address: tx.from }, to: { address: tx.to } })
+        )
     }
 };
 
