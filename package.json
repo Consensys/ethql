@@ -1,10 +1,9 @@
 {
   "name": "ethql",
   "scripts": {
-    "start": "dotenv -- nodemon -e ts,graphql -x ts-node src/index.ts",
-    "dev": "npm-run-all --parallel start",
-    "debug": "dotenv -- nodemon -e ts,graphql -x ts-node --inspect src/index.ts",
-    "playground": "graphql playground",
+    "start": "dotenv -- node dist/index.js",
+    "dev": "nodemon -e ts -x ts-node src/index.ts",
+    "debug": "dotenv -- nodemon -e ts -x ts-node --inspect src/index.ts",
     "build": "rimraf dist && tsc"
   },
   "version": "1.0.0",
