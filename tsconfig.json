@@ -6,19 +6,11 @@
     "sourceMap": true,
     "rootDir": "src",
     "outDir": "dist",
-    "lib": [
-      "esnext",
-      "dom"
-    ],
+    "baseUrl": ".",
+    "lib": ["esnext", "dom"],
     "paths": {
-      "*": [
-        "node_modules/*",
-        "src/types/*"
-      ]
+      "*": ["node_modules/*", "src/types/*"]
     }
   },
-  "include": [
-    "src/**/*",
-    "./node_modules/web3-typescript-typings/index.d.ts"
-  ]
+  "include": ["src/**/*", "./node_modules/web3-typescript-typings/index.d.ts"]
 }
