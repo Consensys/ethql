@@ -7,7 +7,9 @@ import {
   GraphQLInt,
   GraphQLList,
   GraphQLScalarType,
-  Kind
+  GraphQLNonNull,
+  Kind,
+  GraphQLFieldConfigMap
 } from 'graphql';
 import * as express from 'express';
 import * as Web3 from 'web3';
@@ -24,7 +26,19 @@ var longType = new GraphQLScalarType({
 
 const accountFields = {
   address: { type: GraphQLString },
-  balance: { type: longType, resolve: ({ address }) => web3.eth.getBalance(address) }
+  balance: {
+    type: longType,
+    args: { unit: { type: GraphQLString } },
+    resolve: ({ address }, { unit }) => {
+      const balance = web3.eth.getBalance(address);
+      return balance;
+      // return unit ? (web3 as any).utils.fromWei(balance, unit) : balance;
+    }
+  },
+  code: {
+    type: GraphQLString,
+    resolve: ({ address }) => web3.eth.getCode(address)
+  }
 };
 
 const Account = new GraphQLObjectType({
@@ -89,9 +103,7 @@ const schema = new GraphQLSchema({
       blocks: {
         type: new GraphQLList(Block),
         args: { from: { type: GraphQLInt }, to: { type: GraphQLInt } },
-        resolve: (obj, { from, to }) => {
-          Promise.all(_.range(from, to + 1).map(i => web3.eth.getBlock(i, true)));
-        }
+        resolve: (obj, { from, to }) => Promise.all(_.range(from, to + 1).map(i => web3.eth.getBlock(i, true)))
       }
     }
   })
