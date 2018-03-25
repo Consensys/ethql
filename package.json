@@ -13,6 +13,7 @@
   "license": "Apache-2.0",
   "dependencies": {
     "@types/lodash": "^4.14.104",
+    "abi-decoder": "^1.1.0",
     "express": "^4.16.2",
     "express-graphql": "^0.6.11",
     "graphql": "^0.13.1",
