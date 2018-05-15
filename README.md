@@ -2,9 +2,9 @@
 
 **This repo is currently in its Proof of Concept stages.**
 
-ethql is a TypeScript application that exposes a GraphQL interface to the public Ethereum ledger. It works against the standard JSON-RPC APIs offered by all Ethereum clients. 
+ethql is a server that exposes a GraphQL endpoint to the public Ethereum ledger. It works against the standard JSON-RPC APIs offered by all Ethereum clients. It is built in TypeScript, and thus leverages the vast ecosystem of GraphQL tooling while preserving compile-time type safety.
 
-ethql reimagines blockchain data as a graph, and leverages the extensibility of GraphQL to introduce additional functionality, amongst which are:
+ethql regards blockchain data as a graph, and leverages the extensibility of GraphQL to introduce additional functionality, amongst which are:
 
 * Decoding of standard transactions (e.g. ERC20, ENS, ERC223, etc.) out of the box.
 * New query patterns enabled by indexing solutions (e.g. all transactions between any two accounts).
@@ -40,3 +40,12 @@ $ INFURA_ID=myid npm run dev
 * Raúl Kripalani <raul.kripalani@consensys.net>
 * Akhila Raju <akhila.raju@consensys.net>
 
+# Who we are
+
+[![PegaSys logo](https://raw.github.com/ConsenSys/ethql/master/logo.svg?sanitize=true)](https://pegasys.tech/)
+
+PegaSys’ mission is to build blockchain solutions ready for production in business environments. We are committed to open source, and are creating a framework for collaborative innovation for the public-chain community and leading enterprises. 
+
+Our team is composed of engineers leading in the areas of big data processing, applied cryptography, open source computing, cloud services, and blockchain development.
+
+[Learn more at our website.](https://pegasys.tech/)
