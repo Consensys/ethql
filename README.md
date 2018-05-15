@@ -42,10 +42,10 @@ $ INFURA_ID=myid npm run dev
 
 # Who we are
 
-[![PegaSys logo](https://raw.github.com/ConsenSys/ethql/master/logo.svg?sanitize=true)](https://pegasys.tech/)
+<a href="https://pegasys.tech/?utm_source=github&utm_medium=source&utm_campaign=ethql" rel="nofollow"><img src="https://raw.github.com/ConsenSys/ethql/master/logo.svg?sanitize=true" alt="PegaSys logo" data-canonical-src="https://raw.github.com/ConsenSys/ethql/master/logo.svg?sanitize=true" width="400"></a>
 
 PegaSys’ mission is to build blockchain solutions ready for production in business environments. We are committed to open source, and are creating a framework for collaborative innovation for the public-chain community and leading enterprises. 
 
 Our team is composed of engineers leading in the areas of big data processing, applied cryptography, open source computing, cloud services, and blockchain development.
 
-[Learn more at our website.](https://pegasys.tech/)
+[Learn more about PegaSys.](https://pegasys.tech/?utm_source=github&utm_medium=source&utm_campaign=ethql)
