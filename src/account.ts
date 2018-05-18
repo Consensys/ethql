@@ -16,6 +16,10 @@ const accountFields = {
   code: {
     type: GraphQLString,
     resolve: ({ address }) => web3.eth.getCode(address)
+  },
+  transactionCount: {
+    type: longType,
+    resolve: ({ address }) => web3.eth.getTransactionCount(address)
   }
 };
 
