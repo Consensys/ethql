@@ -1,4 +1,4 @@
-import { GraphQLInt, GraphQLString, GraphQLList, GraphQLObjectType, GraphQLFieldConfigMap } from 'graphql';
+import { GraphQLFieldConfigMap, GraphQLInt, GraphQLList, GraphQLObjectType, GraphQLString } from 'graphql';
 import { Transaction } from './transaction';
 
 const blockFields: GraphQLFieldConfigMap<any, any> = {
@@ -17,11 +17,11 @@ const blockFields: GraphQLFieldConfigMap<any, any> = {
   transactions: {
     type: new GraphQLList(Transaction),
     resolve: ({ transactions }) =>
-      transactions.map(tx => Object.assign(tx, { from: { address: tx.from }, to: { address: tx.to } }))
-  }
+      transactions.map(tx => ({ ...tx, from: { address: tx.from }, to: { address: tx.to } })),
+  },
 };
 
 export const Block = new GraphQLObjectType({
   name: 'Block',
-  fields: blockFields
+  fields: blockFields,
 });

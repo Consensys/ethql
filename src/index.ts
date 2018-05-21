@@ -1,22 +1,22 @@
-import * as _ from 'lodash';
 import * as graphqlHTTP from 'express-graphql';
 import {
-  GraphQLSchema,
-  GraphQLObjectType,
-  GraphQLString,
-  GraphQLInt,
-  GraphQLList,
-  GraphQLScalarType,
-  GraphQLNonNull,
-  Kind,
   GraphQLFieldConfigMap,
-  GraphQLInterfaceType
+  GraphQLInt,
+  GraphQLInterfaceType,
+  GraphQLList,
+  GraphQLNonNull,
+  GraphQLObjectType,
+  GraphQLScalarType,
+  GraphQLSchema,
+  GraphQLString,
+  Kind,
 } from 'graphql';
+import * as _ from 'lodash';
 
 import * as express from 'express';
 import { Block } from './block';
-import { web3 } from './web3';
 import { DecodedTransaction, Erc20TransactionType } from './transaction';
+import { web3 } from './web3';
 
 const schema = new GraphQLSchema({
   types: [DecodedTransaction, Erc20TransactionType],
@@ -27,19 +27,19 @@ const schema = new GraphQLSchema({
       block: {
         type: Block,
         args: { number: { type: GraphQLInt } },
-        resolve: (obj, { number }) => web3.eth.getBlock(number, true)
+        resolve: (obj, { blockNumber }) => web3.eth.getBlock(blockNumber, true),
       },
       blocks: {
         type: new GraphQLList(Block),
         args: { from: { type: GraphQLInt }, to: { type: GraphQLInt } },
-        resolve: (obj, { from, to }) => Promise.all(_.range(from, to + 1).map(i => web3.eth.getBlock(i, true)))
-      }
-    }
-  })
+        resolve: (obj, { from, to }) => Promise.all(_.range(from, to + 1).map(i => web3.eth.getBlock(i, true))),
+      },
+    },
+  }),
 });
 
 const app = express();
-app.use('/graphql', graphqlHTTP({ schema: schema, graphiql: true }));
+app.use('/graphql', graphqlHTTP({ schema, graphiql: true }));
 
 app.listen(4000);
 

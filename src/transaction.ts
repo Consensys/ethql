@@ -1,14 +1,14 @@
+import { DecodedMethod, DecodedParam } from 'abi-decoder';
 import {
-  GraphQLObjectType,
   GraphQLEnumType,
-  GraphQLInterfaceType,
-  GraphQLString,
-  GraphQLInt,
   GraphQLFieldConfigMap,
-  GraphQLUnionType
+  GraphQLInt,
+  GraphQLInterfaceType,
+  GraphQLObjectType,
+  GraphQLString,
+  GraphQLUnionType,
 } from 'graphql';
 import { Account } from './account';
-import { DecodedMethod, DecodedParam } from 'abi-decoder';
 
 export const DecodedTransaction = new GraphQLInterfaceType({
   name: 'InterpretedTransaction',
@@ -16,9 +16,9 @@ export const DecodedTransaction = new GraphQLInterfaceType({
   fields: {
     contractType: {
       name: 'ContractType',
-      type: GraphQLString
-    }
-  }
+      type: GraphQLString,
+    },
+  },
 });
 
 export const Transaction = new GraphQLObjectType({
@@ -38,18 +38,20 @@ export const Transaction = new GraphQLObjectType({
     decoded: {
       type: DecodedTransaction,
       resolve: tx => {
-        if (!tx.input) return;
-        // If we find a decoder for the transaction, we return the result of the ABI decoding
-        // enhanced with a 'type' property with the GraphQL type.
-        for (var entry of decoders) {
+        if (!tx.input) {
+          return;
+        }
+        /* If we find a decoder for the transaction, we return the result of the ABI decoding
+           enhanced with a 'type' property with the GraphQL type. */
+        for (const entry of decoders) {
           const decoded = entry.decoder.decodeMethod(tx.input);
           if (decoded) {
-            return Object.assign(decoded, { type: entry.type });
+            return { ...decoded, type: entry.type };
           }
         }
-      }
-    }
-  }
+      },
+    },
+  },
 });
 
 const extractParamValue = (params: [DecodedParam], name: string) => {
@@ -71,18 +73,18 @@ export const Erc20TransactionType = new GraphQLObjectType({
           approveAndCall: { value: 'approveAndCall' },
           approve: { value: 'approve' },
           transferFrom: { value: 'transferFrom' },
-          transfer: { value: 'transfer' }
-        }
+          transfer: { value: 'transfer' },
+        },
       }),
-      resolve: ({ name }) => name
+      resolve: ({ name }) => name,
     },
     from: {
       type: GraphQLString,
-      resolve: ({ params }) => extractParamValue(params, 'from')
+      resolve: ({ params }) => extractParamValue(params, 'from'),
     },
     to: { type: GraphQLString, resolve: ({ params }) => extractParamValue(params, 'to') },
-    value: { type: GraphQLString, resolve: ({ params }) => extractParamValue(params, 'value') }
-  }
+    value: { type: GraphQLString, resolve: ({ params }) => extractParamValue(params, 'value') },
+  },
 });
 
 const decoders = [
@@ -92,6 +94,6 @@ const decoders = [
       const decoder = require('abi-decoder');
       decoder.addABI(require('../abi/erc20.json'));
       return decoder;
-    })()
-  }
+    })(),
+  },
 ];

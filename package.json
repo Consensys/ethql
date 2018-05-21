@@ -1,36 +1,60 @@
 {
   "name": "ethql",
+  "version": "0.0.1",
+  "description": "A GraphQL interface to Ethereum",
+  "author": "PegaSys – ConsenSys",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ConsenSys/ethql"
+  },
+  "main": "index.js",
+  "engines": {
+    "node": ">=8.0.0"
+  },
   "scripts": {
+    "clean": "$(npm bin)/rimraf dist",
     "start": "$(npm bin)/dotenv -- node dist/index.js",
     "dev": "$(npm bin)/nodemon -e ts -x ts-node src/index.ts",
     "debug": "$(npm bin)/dotenv -- nodemon -e ts -x ts-node --inspect src/index.ts",
-    "build": "$(npm bin)/rimraf dist && tsc"
+    "build": "npm run clean && tsc && npm run tslint",
+    "lint":
+      "tslint --fix -t stylish -c tslint.json -p tsconfig.json && prettier --parser typescript --write src/**/*.ts",
+    "precommit": "lint-staged"
   },
-  "version": "1.0.0",
-  "description": "A GraphQL interface to Ethereum",
-  "main": "index.js",
-  "author": "Raúl Kripalani <raul.kripalani@gmail.com>",
-  "license": "Apache-2.0",
+  "lint-staged": {
+    "*.{ts}": [
+      "tslint --fix -t stylish -c tslint.json -p tsconfig.json",
+      "prettier --parser typescript --write",
+      "git add"
+    ],
+    "*.{js,css,scss,html,json,graphql,md}": ["prettier --write", "git add"]
+  },
   "dependencies": {
-    "@types/lodash": "^4.14.104",
     "abi-decoder": "^1.1.0",
     "express": "^4.16.2",
     "express-graphql": "^0.6.11",
     "graphql": "^0.13.1",
     "lodash": "^4.17.5",
-    "web3": "^1.0.0-beta.30"
+    "web3": "^1.0.0-beta.34"
   },
   "devDependencies": {
     "@types/express": "^4.11.1",
-    "@types/express-graphql": "^0.0.36",
-    "@types/graphql": "^0.12.4",
+    "@types/express-graphql": "^0.6.1",
+    "@types/graphql": "^0.13.1",
+    "@types/lodash": "^4.14.104",
     "dotenv": "^5.0.1",
     "dotenv-cli": "^1.4.0",
+    "husky": "^0.14.3",
+    "lint-staged": "^7.1.2",
     "nodemon": "^1.17.3",
     "npm-run-all": "^4.1.2",
+    "prettier": "1.12.1",
     "rimraf": "^2.6.2",
-    "ts-node": "^4.1.0",
+    "ts-node": "^6.0.3",
+    "tslint": "^5.10.0",
+    "tslint-config-prettier": "^1.13.0",
     "typescript": "^2.7.2",
-    "web3-typescript-typings": "^0.9.11"
+    "web3-typescript-typings": "^0.10.2"
   }
 }
