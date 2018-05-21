@@ -14,6 +14,7 @@ import {
 import * as _ from 'lodash';
 
 import * as express from 'express';
+import { Account } from './account';
 import { Block } from './block';
 import { DecodedTransaction, Erc20TransactionType } from './transaction';
 import { web3 } from './web3';
@@ -24,6 +25,11 @@ const schema = new GraphQLSchema({
     name: 'Query',
     description: 'Query root',
     fields: {
+      account: {
+        type: Account,
+        args: { address: { type: GraphQLString } },
+        resolve: (obj, { address }) => ({ address }),
+      },
       block: {
         type: Block,
         args: { number: { type: GraphQLInt } },
