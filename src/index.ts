@@ -28,7 +28,7 @@ const schema = new GraphQLSchema({
       account: {
         type: Account,
         args: { address: { type: GraphQLString } },
-        resolve: (obj, { address }) => { return { address } }
+        resolve: (obj, { address }) => ({ address }),
       },
       block: {
         type: Block,

@@ -1,4 +1,4 @@
-import { GraphQLString, GraphQLObjectType, GraphQLInt } from 'graphql';
+import { GraphQLInt, GraphQLObjectType, GraphQLString } from 'graphql';
 import { longType } from './common-types';
 import { web3 } from './web3';
 
@@ -11,11 +11,11 @@ const accountFields = {
   },
   code: {
     type: GraphQLString,
-    resolve: ({ address }) => web3.eth.getCode(address)
+    resolve: ({ address }) => web3.eth.getCode(address),
   },
   transactionCount: {
     type: GraphQLInt,
-    resolve: ({ address }) => web3.eth.getTransactionCount(address)
+    resolve: ({ address }) => web3.eth.getTransactionCount(address),
   },
 };
 
