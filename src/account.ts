@@ -7,11 +7,7 @@ const accountFields = {
   balance: {
     type: longType,
     args: { unit: { type: GraphQLString } },
-    resolve: ({ address }, { unit }) => {
-      const balance = web3.eth.getBalance(address);
-      return balance;
-      // return unit ? (web3 as any).utils.fromWei(balance, unit) : balance;
-    }
+    resolve: ({ address }, { unit }) => web3.eth.getBalance(address),
   },
   code: {
     type: GraphQLString,
@@ -20,10 +16,10 @@ const accountFields = {
   transactionCount: {
     type: GraphQLInt,
     resolve: ({ address }) => web3.eth.getTransactionCount(address)
-  }
+  },
 };
 
 export const Account = new GraphQLObjectType({
   name: 'Account',
-  fields: accountFields
+  fields: accountFields,
 });
