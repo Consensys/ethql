@@ -33,16 +33,21 @@ const schema = new GraphQLSchema({
       block: {
         type: Block,
         args: { number: { type: GraphQLInt }, hash: { type: GraphQLString } },
-        resolve: (obj, { number, hash }) => {
-          if ((!hash && !number) || (hash && number)) {
+        resolve: (obj, { block_number, hash }) => {
+          if ((!hash && !block_number) || (hash && block_number)) {
             throw new Error('Please provide one argument.');
           }
-          return (number ? web3.eth.getBlock(number, true) : web3.eth.getBlock(hash, true));
-        }
+          return block_number ? web3.eth.getBlock(block_number, true) : web3.eth.getBlock(hash, true);
+        },
       },
       blocks: {
         type: new GraphQLList(Block),
-        args: { from: { type: GraphQLInt }, to: { type: GraphQLInt }, numbers: { type: new GraphQLList(GraphQLInt) }, hashes: { type: new GraphQLList(GraphQLString) } },
+        args: {
+          from: { type: GraphQLInt },
+          to: { type: GraphQLInt },
+          numbers: { type: new GraphQLList(GraphQLInt) },
+          hashes: { type: new GraphQLList(GraphQLString) },
+        },
         resolve: (obj, { from, to, hashes, numbers }) => {
           if (hashes && !numbers && !from && !to) {
             return Promise.all(hashes.map(i => web3.eth.getBlock(i, true)));
@@ -51,12 +56,12 @@ const schema = new GraphQLSchema({
           } else if (from && to && !numbers && !hashes) {
             return Promise.all(_.range(from, to + 1).map(i => web3.eth.getBlock(i, true)));
           } else {
-            throw new Error('Please provide a valid argument.'); 
+            throw new Error('Please provide a valid argument.');
           }
         },
       },
     },
-  })
+  }),
 });
 
 const app = express();
