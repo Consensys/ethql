@@ -35,7 +35,7 @@ const schema = new GraphQLSchema({
         args: { number: { type: GraphQLInt }, hash: { type: GraphQLString } },
         resolve: (obj, { blockNumber, hash }) => {
           if ((!hash && !blockNumber) || (hash && blockNumber)) {
-            throw new Error('Please provide one argument.');
+            throw new Error("Please provide either: (1) a block hash in 'hash', or (2) a block number in 'number'.");
           }
           return blockNumber ? web3.eth.getBlock(blockNumber, true) : web3.eth.getBlock(hash, true);
         },
