@@ -33,11 +33,11 @@ const schema = new GraphQLSchema({
       block: {
         type: Block,
         args: { number: { type: GraphQLInt }, hash: { type: GraphQLString } },
-        resolve: (obj, { block_number, hash }) => {
-          if ((!hash && !block_number) || (hash && block_number)) {
+        resolve: (obj, { blockNumber, hash }) => {
+          if ((!hash && !blockNumber) || (hash && blockNumber)) {
             throw new Error('Please provide one argument.');
           }
-          return block_number ? web3.eth.getBlock(block_number, true) : web3.eth.getBlock(hash, true);
+          return blockNumber ? web3.eth.getBlock(blockNumber, true) : web3.eth.getBlock(hash, true);
         },
       },
       blocks: {
@@ -49,14 +49,35 @@ const schema = new GraphQLSchema({
           hashes: { type: new GraphQLList(GraphQLString) },
         },
         resolve: (obj, { from, to, hashes, numbers }) => {
-          if (hashes && !numbers && !from && !to) {
+          // if hashes nonnull and length zero, set to undefined
+          if (hashes && hashes.length == 0) {
+            hashes = undefined;
+          }
+          // if numbers nonnull and length zero, set to undefined
+          if (numbers && numbers.length == 0) {
+            numbers = undefined;
+          }
+          // if from is "", set to undefined
+          if (from && from == "") {
+            from = undefined;
+          }
+          // if to is "", set to undefined
+          if (to && to == "") {
+            to = undefined;
+          }
+          // if all 4 args are not undefined
+          if ((hashes == undefined && numbers == undefined && from == undefined && to == undefined) || 
+              ((from != undefined && to != undefined) && (hashes != undefined || numbers != undefined)) ||
+              (numbers != undefined && (hashes != undefined || from != undefined || to != undefined)) ||
+              (hashes != undefined && (numbers != undefined || from != undefined || to != undefined))) {
+            throw new Error("Please provide either: (1) both 'from' and 'to', (2) a list of block hashes in 'hashes', or (3) a list of block numbers in 'numbers'.");
+          }
+          if (hashes) {
             return Promise.all(hashes.map(i => web3.eth.getBlock(i, true)));
-          } else if (numbers && !hashes && !from && !to) {
+          } else if (numbers) {
             return Promise.all(numbers.map(i => web3.eth.getBlock(i, true)));
-          } else if (from && to && !numbers && !hashes) {
+          } else { // from && to case
             return Promise.all(_.range(from, to + 1).map(i => web3.eth.getBlock(i, true)));
-          } else {
-            throw new Error('Please provide a valid argument.');
           }
         },
       },
