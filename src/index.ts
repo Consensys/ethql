@@ -49,34 +49,30 @@ const schema = new GraphQLSchema({
           hashes: { type: new GraphQLList(GraphQLString) },
         },
         resolve: (obj, { from, to, hashes, numbers }) => {
-          // if hashes nonnull and length zero, set to undefined
           if (hashes && hashes.length == 0) {
             hashes = undefined;
           }
-          // if numbers nonnull and length zero, set to undefined
           if (numbers && numbers.length == 0) {
             numbers = undefined;
           }
-          // if from is "", set to undefined
           if (from && from == "") {
             from = undefined;
           }
-          // if to is "", set to undefined
           if (to && to == "") {
             to = undefined;
           }
-          // if all 4 args are not undefined
-          if ((hashes == undefined && numbers == undefined && from == undefined && to == undefined) || 
-              ((from != undefined && to != undefined) && (hashes != undefined || numbers != undefined)) ||
-              (numbers != undefined && (hashes != undefined || from != undefined || to != undefined)) ||
-              (hashes != undefined && (numbers != undefined || from != undefined || to != undefined))) {
+          if ((!hashes && !numbers && !from && !to) || 
+              ((!from && to) || (from && !to)) ||
+              (from && to && (hashes || numbers)) ||
+              (numbers && (hashes || from || to)) ||
+              (hashes && (numbers || from || to))) {
             throw new Error("Please provide either: (1) both 'from' and 'to', (2) a list of block hashes in 'hashes', or (3) a list of block numbers in 'numbers'.");
           }
           if (hashes) {
             return Promise.all(hashes.map(i => web3.eth.getBlock(i, true)));
           } else if (numbers) {
             return Promise.all(numbers.map(i => web3.eth.getBlock(i, true)));
-          } else { // from && to case
+          } else {
             return Promise.all(_.range(from, to + 1).map(i => web3.eth.getBlock(i, true)));
           }
         },
