@@ -20,7 +20,8 @@
     "build": "npm run clean && tsc && npm run tslint",
     "lint":
       "tslint --fix -t stylish -c tslint.json -p tsconfig.json && prettier --parser typescript --write src/**/*.ts",
-    "precommit": "lint-staged"
+    "precommit": "lint-staged",
+    "test": "jest"
   },
   "lint-staged": {
     "*.{ts}": [
@@ -42,19 +43,23 @@
     "@types/express": "^4.11.1",
     "@types/express-graphql": "^0.6.1",
     "@types/graphql": "^0.13.1",
+    "@types/jest": "^22.2.3",
     "@types/lodash": "^4.14.104",
     "dotenv": "^5.0.1",
     "dotenv-cli": "^1.4.0",
     "husky": "^0.14.3",
+    "jest": "^23.0.0",
     "lint-staged": "^7.1.2",
     "nodemon": "^1.17.3",
     "npm-run-all": "^4.1.2",
     "prettier": "1.12.1",
     "rimraf": "^2.6.2",
+    "ts-jest": "^22.4.6",
     "ts-node": "^6.0.3",
     "tslint": "^5.10.0",
     "tslint-config-prettier": "^1.13.0",
     "typescript": "^2.7.2",
+    "typings": "^2.1.1",
     "web3-typescript-typings": "^0.10.2"
   }
 }

@@ -19,7 +19,7 @@ import { Block } from './block';
 import { DecodedTransaction, Erc20TransactionType } from './transaction';
 import { web3 } from './web3';
 
-const schema = new GraphQLSchema({
+export const schema = new GraphQLSchema({
   types: [DecodedTransaction, Erc20TransactionType],
   query: new GraphQLObjectType({
     name: 'Query',
