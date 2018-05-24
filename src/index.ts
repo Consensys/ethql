@@ -33,11 +33,12 @@ export const schema = new GraphQLSchema({
       block: {
         type: Block,
         args: { number: { type: GraphQLInt }, hash: { type: GraphQLString } },
-        resolve: (obj, { blockNumber, hash }) => {
-          if ((!hash && !blockNumber) || (hash && blockNumber)) {
+        resolve: (obj, { number, hash }) => {
+          if ((!hash && !number) || (hash && number)) {
+            console.log(hash, number)
             throw new Error("Please provide either: (1) a block hash in 'hash', or (2) a block number in 'number'.");
           }
-          return blockNumber ? web3.eth.getBlock(blockNumber, true) : web3.eth.getBlock(hash, true);
+          return number ? web3.eth.getBlock(number, true) : web3.eth.getBlock(hash, true);
         },
       },
       blocks: {
