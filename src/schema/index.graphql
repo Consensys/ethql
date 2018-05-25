@@ -1,0 +1,20 @@
+# import * from "account.graphql"
+# import * from "block.graphql"
+# import * from "transaction.graphql"
+# import * from "erc20.graphql"
+
+schema {
+  query: Query
+}
+
+type Query {
+  account(address: String!): Account
+
+  block(number: Int, hash: String, tag: BlockTag): Block
+  blockOffset(offset: BlockOffset!): Block
+
+  blocks(numbers: [Int], hashes: [String]): [Block]
+  blocksRange(numberRange: [Int], hashRange: [String]): [Block]
+
+  transaction(hash: String): Transaction
+}
