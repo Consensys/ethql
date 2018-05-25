@@ -35,10 +35,13 @@
     "express": "^4.16.2",
     "express-graphql": "^0.6.11",
     "graphql": "^0.13.1",
+    "graphql-import": "^0.6.0",
+    "graphql-tools": "^3.0.2",
     "lodash": "^4.17.5",
     "web3": "^1.0.0-beta.34"
   },
   "devDependencies": {
+    "@playlyfe/gql": "^2.6.0",
     "@types/express": "^4.11.1",
     "@types/express-graphql": "^0.6.1",
     "@types/graphql": "^0.13.1",

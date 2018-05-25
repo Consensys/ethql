@@ -1,52 +1,19 @@
-import * as graphqlHTTP from 'express-graphql';
-import {
-  GraphQLFieldConfigMap,
-  GraphQLInt,
-  GraphQLInterfaceType,
-  GraphQLList,
-  GraphQLNonNull,
-  GraphQLObjectType,
-  GraphQLScalarType,
-  GraphQLSchema,
-  GraphQLString,
-  Kind,
-} from 'graphql';
 import * as _ from 'lodash';
 
 import * as express from 'express';
-import { Account } from './account';
-import { Block } from './block';
-import { DecodedTransaction, Erc20TransactionType } from './transaction';
-import { web3 } from './web3';
+import * as graphqlHTTP from 'express-graphql';
 
-const schema = new GraphQLSchema({
-  types: [DecodedTransaction, Erc20TransactionType],
-  query: new GraphQLObjectType({
-    name: 'Query',
-    description: 'Query root',
-    fields: {
-      account: {
-        type: Account,
-        args: { address: { type: GraphQLString } },
-        resolve: (obj, { address }) => ({ address }),
-      },
-      block: {
-        type: Block,
-        args: { number: { type: GraphQLInt } },
-        resolve: (obj, { blockNumber }) => web3.eth.getBlock(blockNumber, true),
-      },
-      blocks: {
-        type: new GraphQLList(Block),
-        args: { from: { type: GraphQLInt }, to: { type: GraphQLInt } },
-        resolve: (obj, { from, to }) => Promise.all(_.range(from, to + 1).map(i => web3.eth.getBlock(i, true))),
-      },
-    },
-  }),
-});
+import { importSchema } from 'graphql-import';
+import { makeExecutableSchema } from 'graphql-tools';
+import resolvers from './resolvers';
+
+const buildSchema = () => {
+  const typeDefs = importSchema(__dirname + '/schema/index.graphql');
+  console.log(typeDefs);
+  const schema = makeExecutableSchema({ typeDefs, resolvers });
+  return schema;
+};
 
 const app = express();
-app.use('/graphql', graphqlHTTP({ schema, graphiql: true }));
-
-app.listen(4000);
-
+app.use('/graphql', graphqlHTTP({ schema: buildSchema(), graphiql: true })).listen(4000);
 console.log('Running a GraphQL API server at http://localhost:4000/graphql');

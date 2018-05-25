@@ -1,0 +1,15 @@
+# import DecodedTransaction from "transaction.graphql"
+
+enum Erc20Action {
+  approve
+  approveAndCall
+  transfer
+  transferFrom
+}
+
+type Erc20Transaction implements DecodedTransaction {
+  type: String
+  action: Erc20Action!
+  to: String
+  value: String
+}

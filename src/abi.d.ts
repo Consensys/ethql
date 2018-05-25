@@ -1,5 +1,3 @@
-/// <reference types="node" />
-
 declare module 'abi-decoder' {
   export interface DecodedParam {
     name: string;
