@@ -1,0 +1,48 @@
+enum Unit {
+  "base unit"
+  wei
+  "1 kwei == 1_000 wei"
+  kwei
+  "1 babbage == 1_000 wei"
+  babbage
+  "1 femtoether == 1_000 wei"
+  femtoether
+  "1 mwei == 1_000_000 wei"
+  mwei
+  "1 lovelace == 1_000_000 wei"
+  lovelace
+  "1 picoether == 1_000_000 wei"
+  picoether
+  "1 gwei == 1_000_000_000 wei"
+  gwei
+  "1 shannon == 1_000_000_000 wei"
+  shannon
+  "1 nanoether == 1_000_000_000 wei"
+  nanoether
+  "1 nano == 1_000_000_000 wei"
+  nano
+  "1 szabo == 1_000_000_000_000 wei"
+  szabo
+  "1 microether == 1_000_000_000_000 wei"
+  microether
+  "1 micro == 1_000_000_000_000 wei"
+  micro
+  "1 finney == 1_000_000_000_000_000 wei"
+  finney
+  "1 milliether == 1_000_000_000_000_000 wei"
+  milliether
+  "1 milli == 1_000_000_000_000_000 wei"
+  milli
+  "1 ether == 1_000_000_000_000_000_000 wei"
+  ether
+  "1 kether == 1_000_000_000_000_000_000_000 wei == 1_000 ether"
+  kether
+  "1 grand == 1_000_000_000_000_000_000_000 wei == 1_000 ether"
+  grand
+  "1 mether == 1_000_000_000_000_000_000_000_000 wei == 1_000_000 ether"
+  mether
+  "1 gether == 1_000_000_000_000_000_000_000_000_000 wei == 1_000_000_000 ether"
+  gether
+  "1 tether == 1_000_000_000_000_000_000_000_000_000_000 wei == 1_000_000_000_000 ether"
+  tether
+}

@@ -1,0 +1,27 @@
+"""
+
+"""
+type Account {
+  "The address of this account"
+  address: String
+
+  "The balance of this account"
+  balance: Int
+
+  "The code behind this account"
+  code: String
+
+  "The type of this account"
+  type: AccountType
+
+  "The number of transactions this account has sent"
+  transactionCount: Int
+}
+
+"""
+
+"""
+enum AccountType {
+  CONTRACT
+  EXTERNALLY_OWNED
+}

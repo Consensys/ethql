@@ -1,0 +1,88 @@
+"""
+An Ethereum Block.
+"""
+type Block {
+  "The block number."
+  number: Int!
+
+  "The block hash."
+  hash: String!
+
+  "The parent block."
+  parent: Block
+
+  "The block nonce."
+  nonce: String!
+
+  "The block's transactions trie root."
+  transactionRoot: String!
+
+  "The number of transactions in the block."
+  transactionCount: Int!
+
+  "The block's state trie root."
+  stateRoot: String!
+
+  "The receipt trie root."
+  receiptRoot: String!
+
+  "The miner's account."
+  miner: Account!
+
+  "Any extra data attached to the block."
+  extraData: String
+
+  "The cumulative gas limit of all transactions in this block."
+  gasLimit: Int
+
+  "The cumulative gas used of all transactions in this block."
+  gasUsed: Int
+
+  "The timestamp when block was mined, in seconds after epoch."
+  timestamp: String
+
+  "The bloom filter for the logs contained in this block."
+  logsBloom: String
+
+  "The mix hash for this block."
+  mixHash: String
+
+  "The ommer blocks (also known as 'uncles')."
+  ommers: [Block]
+
+  "Gets a single transaction from this block, addressed by its position in the block."
+  transactionAt(index: Int!): Transaction
+
+  "Gets all transactions from this block. If a filter is passed, only the transactions matching the filter will be returned."
+  transactions(filter: TransactionFilter): [Transaction]
+
+  """
+  Gets all transactions from this block as long as they involve any of the addresses specified.
+  If a filter is passed, only the transactions matching the filter will be returned.
+  """
+  transactionsInvolving(participants: [String]!, filter: TransactionFilter): [Transaction]
+
+  """
+  Gets all transactions from this block where the provided addresses take the indicated roles.
+  If a filter is passed, only the transactions matching the filter will be returned.
+  """
+  transactionsRoles(from: String, to: String, filter: TransactionFilter): [Transaction]
+}
+
+"""
+Named block identifiers.
+"""
+enum BlockTag {
+  EARLIEST
+  LATEST
+  PENDING
+}
+
+"""
+Input object to select a block by offset.
+"""
+input BlockOffset {
+  number: Int
+  hash: String
+  offset: Int
+}

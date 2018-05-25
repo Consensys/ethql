@@ -1,0 +1,59 @@
+# import Unit from "enums.graphql"
+
+"""
+An Ethereum transaction.
+"""
+type Transaction {
+  "Transaction hash"
+  hash: String!
+
+  "Transaction nonce"
+  nonce: Int!
+
+  "The index of the transaction within the block"
+  index: Int!
+
+  "Sender of this transaction"
+  from: Account
+
+  "Recipient of this transaction"
+  to: Account
+
+  "Value of the transaction"
+  value(unit: Unit): Float!
+
+  "Price set for each gas unit"
+  gasPrice(unit: Unit): Float!
+
+  "The amount of gas expended in the transaction"
+  gas: Int!
+
+  "The input data to the transaction"
+  inputData: String
+
+  "The status of the transaction"
+  status: TransactionStatus
+
+  "The block the transaction is contained in"
+  block: Block!
+
+  "The decoded transaction"
+  decoded: DecodedTransaction
+}
+
+enum TransactionStatus {
+  "Transaction failed"
+  FAILED
+
+  "Transaction was successful"
+  SUCCESS
+}
+
+input TransactionFilter {
+  withLogs: Boolean
+  withInput: Boolean
+}
+
+interface DecodedTransaction {
+  type: String
+}
