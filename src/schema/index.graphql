@@ -1,0 +1,6 @@
+# import Query from "core.graphql"
+# import * from "erc20.graphql"
+
+schema {
+  query: Query
+}

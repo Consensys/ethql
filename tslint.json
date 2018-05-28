@@ -42,7 +42,8 @@
     "no-null-keyword": true,
     "prefer-const": false,
     "jsdoc-format": true,
-    "no-console": false
+    "no-console": false,
+    "no-submodule-imports": false
   },
   "rulesDirectory": []
 }

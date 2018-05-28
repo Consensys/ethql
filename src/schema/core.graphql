@@ -1,0 +1,246 @@
+type Query {
+  "Selects an account."
+  account(address: String!): Account
+
+  "Selects a block based on either a number, hash or a tag."
+  block(number: Int, hash: String, tag: BlockTag): Block
+
+  "Selects a block based on a reference block and an offset from it."
+  blockOffset(offset: BlockOffset!): Block
+
+  "Selects an arbitrary set of blocks based on their numbers or hashes."
+  blocks(numbers: [Int], hashes: [String]): [Block]
+
+  "Selects a range of blocks."
+  blocksRange(numberRange: [Int], hashRange: [String]): [Block]
+
+  "Selects a transaction by hash."
+  transaction(hash: String): Transaction
+}
+
+"""
+An Ethereum Block.
+"""
+type Block {
+  "The block number."
+  number: Int!
+
+  "The block hash."
+  hash: String!
+
+  "The parent block."
+  parent: Block
+
+  "The block nonce."
+  nonce: String!
+
+  "The block's transactions trie root."
+  transactionRoot: String!
+
+  "The number of transactions in the block."
+  transactionCount: Int!
+
+  "The block's state trie root."
+  stateRoot: String!
+
+  "The receipt trie root."
+  receiptRoot: String!
+
+  "The miner's account."
+  miner: Account!
+
+  "Any extra data attached to the block."
+  extraData: String
+
+  "The cumulative gas limit of all transactions in this block."
+  gasLimit: Int
+
+  "The cumulative gas used of all transactions in this block."
+  gasUsed: Int
+
+  "The timestamp when block was mined, in seconds after epoch."
+  timestamp: String
+
+  "The bloom filter for the logs contained in this block."
+  logsBloom: String
+
+  "The mix hash for this block."
+  mixHash: String
+
+  "The ommer blocks (also known as 'uncles')."
+  ommers: [Block]
+
+  "Gets a single transaction from this block, addressed by its position in the block."
+  transactionAt(index: Int!): Transaction
+
+  "Gets all transactions from this block. If a filter is passed, only the transactions matching the filter will be returned."
+  transactions(filter: TransactionFilter): [Transaction]
+
+  """
+  Gets all transactions from this block as long as they involve any of the addresses specified.
+  If a filter is passed, only the transactions matching the filter will be returned.
+  """
+  transactionsInvolving(participants: [String]!, filter: TransactionFilter): [Transaction]
+
+  """
+  Gets all transactions from this block where the provided addresses take the indicated roles.
+  If a filter is passed, only the transactions matching the filter will be returned.
+  """
+  transactionsRoles(from: String, to: String, filter: TransactionFilter): [Transaction]
+}
+
+"""
+Named block identifiers.
+"""
+enum BlockTag {
+  EARLIEST
+  LATEST
+  PENDING
+}
+
+"""
+Input object to select a block by offset.
+"""
+input BlockOffset {
+  number: Int
+  hash: String
+  offset: Int
+}
+
+"""
+
+"""
+type Account {
+  "The address of this account"
+  address: String
+
+  "The balance of this account"
+  balance: Long
+
+  "The code behind this account"
+  code: String
+
+  "The type of this account"
+  type: AccountType
+
+  "The number of transactions this account has sent"
+  transactionCount: Int
+}
+
+"""
+An Ethereum transaction.
+"""
+type Transaction {
+  "Transaction hash"
+  hash: String!
+
+  "Transaction nonce"
+  nonce: Int!
+
+  "The index of the transaction within the block"
+  index: Int!
+
+  "Sender of this transaction"
+  from: Account
+
+  "Recipient of this transaction"
+  to: Account
+
+  "Value of the transaction"
+  value(unit: Unit): Float!
+
+  "Price set for each gas unit"
+  gasPrice(unit: Unit): Float!
+
+  "The amount of gas expended in the transaction"
+  gas: Int!
+
+  "The input data to the transaction"
+  inputData: String
+
+  "The status of the transaction"
+  status: TransactionStatus
+
+  "The block the transaction is contained in"
+  block: Block!
+
+  "The decoded transaction"
+  decoded: DecodedTransaction
+}
+
+enum TransactionStatus {
+  "Transaction failed"
+  FAILED
+
+  "Transaction was successful"
+  SUCCESS
+}
+
+input TransactionFilter {
+  withLogs: Boolean
+  withInput: Boolean
+}
+
+interface DecodedTransaction {
+  standard: String
+  operation: String
+}
+
+"""
+
+"""
+enum AccountType {
+  CONTRACT
+  EXTERNALLY_OWNED
+}
+
+enum Unit {
+  "base unit"
+  wei
+  "1 kwei == 1_000 wei"
+  kwei
+  "1 babbage == 1_000 wei"
+  babbage
+  "1 femtoether == 1_000 wei"
+  femtoether
+  "1 mwei == 1_000_000 wei"
+  mwei
+  "1 lovelace == 1_000_000 wei"
+  lovelace
+  "1 picoether == 1_000_000 wei"
+  picoether
+  "1 gwei == 1_000_000_000 wei"
+  gwei
+  "1 shannon == 1_000_000_000 wei"
+  shannon
+  "1 nanoether == 1_000_000_000 wei"
+  nanoether
+  "1 nano == 1_000_000_000 wei"
+  nano
+  "1 szabo == 1_000_000_000_000 wei"
+  szabo
+  "1 microether == 1_000_000_000_000 wei"
+  microether
+  "1 micro == 1_000_000_000_000 wei"
+  micro
+  "1 finney == 1_000_000_000_000_000 wei"
+  finney
+  "1 milliether == 1_000_000_000_000_000 wei"
+  milliether
+  "1 milli == 1_000_000_000_000_000 wei"
+  milli
+  "1 ether == 1_000_000_000_000_000_000 wei"
+  ether
+  "1 kether == 1_000_000_000_000_000_000_000 wei == 1_000 ether"
+  kether
+  "1 grand == 1_000_000_000_000_000_000_000 wei == 1_000 ether"
+  grand
+  "1 mether == 1_000_000_000_000_000_000_000_000 wei == 1_000_000 ether"
+  mether
+  "1 gether == 1_000_000_000_000_000_000_000_000_000 wei == 1_000_000_000 ether"
+  gether
+  "1 tether == 1_000_000_000_000_000_000_000_000_000_000 wei == 1_000_000_000_000 ether"
+  tether
+}
+
+scalar Long

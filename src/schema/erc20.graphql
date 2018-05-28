@@ -1,0 +1,26 @@
+# import Account, DecodedTransaction from "core.graphql"
+
+type ERC20Transfer implements DecodedTransaction {
+  standard: String
+  operation: String
+  from: Account
+  to: Account
+  value: String
+}
+
+type ERC20TransferFrom implements DecodedTransaction {
+  standard: String
+  operation: String
+  from: Account
+  to: Account
+  value: String
+  spender: Account
+}
+
+type ERC20Approve implements DecodedTransaction {
+  standard: String
+  operation: String
+  from: Account
+  spender: Account
+  value: String
+}
