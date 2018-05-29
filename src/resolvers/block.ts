@@ -33,10 +33,12 @@ interface IBlocksArgs {
 }
 
 const blocks: IFieldResolver<any, any> = (obj, { numbers, hashes }: IBlocksArgs) => {
-  if (blocks && hashes) {
+  if (numbers && hashes) {
     throw new Error('Only one of blocks or hashes should be provided.');
   }
-  return Promise.all(_.map(blocks ? blocks : hashes, v => web3.eth.getBlock(v, true)));
+
+  const f = v => web3.eth.getBlock(v, true);
+  return Promise.all(numbers ? numbers.map(f) : hashes.map(f));
 };
 
 const transactions = (obj, args) =>
