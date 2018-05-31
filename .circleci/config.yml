@@ -1,28 +1,61 @@
 version: 2
 jobs:
-  build:
+  build-and-test:
     docker:
-      # specify the version you desire here
       - image: circleci/node:10
-
     working_directory: ~/repo
-
     steps:
       - checkout
-
-      # Download and cache dependencies
       - restore_cache:
           keys:
-          - v1-dependencies-{{ checksum "package.json" }}
-          # fallback to using the latest cache if no exact match is found
+          - v1-dependencies-{{ checksum "yarn.lock" }}
           - v1-dependencies-
-
       - run: yarn install
-
       - save_cache:
+          key: v1-dependencies-{{ checksum "yarn.lock" }}
           paths:
             - node_modules
-          key: v1-dependencies-{{ checksum "package.json" }}
-        
-      # run tests!
+            - ~/.cache/yarn
       - run: yarn test
+      - persist_to_workspace:
+          root: ~/repo
+          paths:
+            - dist/
+            - package.json
+            - yarn.lock
+  deploy:
+    docker:
+      - image: circleci/buildpack-deps:jessie-curl-dind
+    working_directory: ~/repo
+    steps:
+      - attach_workspace:
+          at: ~/repo
+      - setup_remote_docker:
+          docker_layer_caching: true
+      - run:
+          name: Install AWS CLI
+          working_directory: /
+          command: |
+            apt-get -y -qq update
+            apt-get -y -qq install python3.6
+            curl -O https://bootstrap.pypa.io/get-pip.py
+            python3.6 get-pip.py --user
+            pip install awscli --upgrade --user
+      - run: 
+          name: Build Docker image
+          command: |
+            docker build -t ethql .
+            docker tag ethql:latest $DOCKER_REPO/ethql:latest 
+            docker push $DOCKER_REPO/ethql:latest
+
+workflows:
+  version: 2
+  build-test-deploy:
+    jobs:
+      - build-and-test
+      - deploy:
+          requires:
+            - build-and-test
+#          filters:
+#            branches:
+#              only: master
