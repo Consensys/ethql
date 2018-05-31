@@ -10,20 +10,29 @@ import resolvers from './resolvers';
 let app: express.Express;
 let httpServer: http.Server;
 
-export function startServer(schema: GraphQLSchema) {
+export async function startServer(schema: GraphQLSchema): Promise<{}> {
   if (httpServer && httpServer.listening) {
     // Server is already started.
-    return;
+    return Promise.resolve({});
   }
-  app = express();
-  app.use('/graphql', graphqlHTTP({ schema, graphiql: true }));
-  httpServer = app.listen(4000, () => console.log('Running a GraphQL API server at http://localhost:4000/graphql'));
+
+  return new Promise((resolve, reject) => {
+    app = express();
+    app.use('/graphql', graphqlHTTP({ schema, graphiql: true }));
+    httpServer = app.listen(4000, () => {
+      console.log('Running a GraphQL API server at http://localhost:4000/graphql');
+      resolve({});
+    });
+  });
 }
 
-export function stopServer() {
+export async function stopServer(): Promise<{}> {
   if (!httpServer || !httpServer.listening) {
     // Server is not started.
-    return;
+    return Promise.resolve({});
   }
-  httpServer.close();
+
+  return new Promise((resolve, reject) => {
+    httpServer.close(() => resolve({}));
+  });
 }
