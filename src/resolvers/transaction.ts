@@ -20,7 +20,7 @@ const extractParamValue = (params: [DecodedParam], name: string) => {
 
 const processors = {
   Erc20Transaction: {
-    decoder: abiDecoder('../../abi/erc20.json').decodeMethod,
+    decoder: abiDecoder('../abi/erc20.json').decodeMethod,
     transformer: (decoded: DecodedMethod, transaction) => {
       const func = decoded.name;
       const asAccount = address => ({ address });
