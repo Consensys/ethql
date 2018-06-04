@@ -58,6 +58,11 @@ const decodeTransaction: IFieldResolver<any, any> = (transaction, args) => {
 };
 
 const resolvers: IResolvers = {
+  Query: {
+    transaction(obj, { hash }) {
+      return web3.eth.getTransaction(hash);
+    }
+  },
   Transaction: {
     decoded: decodeTransaction,
   },
