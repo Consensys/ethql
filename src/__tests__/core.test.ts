@@ -76,21 +76,13 @@ it('Test multiple blocks selected by specific hashes', async () => {
 it('Test multiple blocks selected by number range', async () => {
   const query = `
     {
-      blocks(numberRange: [1202, 1204]) {
-        hash
+      blocksRange(numbers: [10, 12]) {
+        timestamp
       }
     }
   `;
 
-  const expected = {
-    data: {
-      blocks: [
-        { hash: '0x2f0e2a7b56ef50dcf8856af8d724566fbe51ecc0ff2ed67c235ca56fc67c0153' },
-        { hash: '0x8f91535cf99c1cc1846fb0be42afc2d4dd5ce4f1988567bfd25e92bbfaea76da' },
-        { hash: '0xfeeb6c4b368a1b1e2352a1294d8639c30ae0a80649774b27affafb630c374d4e' },
-      ],
-    },
-  };
+  const expected = { data: { blocksRange: [ { timestamp: "1438270128" }, { timestamp: "1438270136" }, { timestamp: "1438270144" }] }  };
 
   const result = await graphql(schema, query);
   expect(result).toEqual(expected);
@@ -99,21 +91,14 @@ it('Test multiple blocks selected by number range', async () => {
 it('Test multiple blocks selected by hash range', async () => {
   const query = `
     {
-      blocks(hashRange: ['0x2f0e2a7b56ef50dcf8856af8d724566fbe51ecc0ff2ed67c235ca56fc67c0153', '']) {
-        number
+      blocksRange(hashes: ["0x685b762b9d37807ab5c534936530afdb3794b79937f3e61e0b832d0e13e6eabf", "0x2e3d27de5a29082765794cd721c70fac641e546d683ccdc5d178e0bc2aca040e"]) {
+        timestamp
       }
     }
   `;
 
   const expected = {
-    data: {
-      blocks: [
-        { number:  },
-        { number:  },
-        { number:  },
-      ],
-    },
-  };
+    data: { blocksRange: [{ number: 20222 },{ number: 20223 },{ number: 20224 }] } };
 
   const result = await graphql(schema, query);
   expect(result).toEqual(expected);
