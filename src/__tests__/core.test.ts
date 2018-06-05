@@ -72,3 +72,49 @@ it('Test multiple blocks selected by specific hashes', async () => {
   const result = await graphql(schema, query);
   expect(result).toEqual(expected);
 });
+
+it('Test multiple blocks selected by number range', async () => {
+  const query = `
+    {
+      blocks(numberRange: [1202, 1204]) {
+        hash
+      }
+    }
+  `;
+
+  const expected = {
+    data: {
+      blocks: [
+        { hash: '0x2f0e2a7b56ef50dcf8856af8d724566fbe51ecc0ff2ed67c235ca56fc67c0153' },
+        { hash: '0x8f91535cf99c1cc1846fb0be42afc2d4dd5ce4f1988567bfd25e92bbfaea76da' },
+        { hash: '0xfeeb6c4b368a1b1e2352a1294d8639c30ae0a80649774b27affafb630c374d4e' },
+      ],
+    },
+  };
+
+  const result = await graphql(schema, query);
+  expect(result).toEqual(expected);
+});
+
+it('Test multiple blocks selected by hash range', async () => {
+  const query = `
+    {
+      blocks(hashRange: ['0x2f0e2a7b56ef50dcf8856af8d724566fbe51ecc0ff2ed67c235ca56fc67c0153', '']) {
+        number
+      }
+    }
+  `;
+
+  const expected = {
+    data: {
+      blocks: [
+        { number:  },
+        { number:  },
+        { number:  },
+      ],
+    },
+  };
+
+  const result = await graphql(schema, query);
+  expect(result).toEqual(expected);
+});
