@@ -1,6 +1,8 @@
 import { IFieldResolver, IResolvers } from 'graphql-tools';
 import * as _ from 'lodash';
 import { web3 } from '../providers/web3';
+import * as util from 'util';
+import { BlockWithoutTransactionData } from 'web3';
 
 // Select a single block.
 interface IBlockArgs {
@@ -40,17 +42,43 @@ const blocks: IFieldResolver<any, any> = (obj, { numbers, hashes }: IBlocksArgs)
   return Promise.all(numbers ? numbers.map(f) : hashes.map(f));
 };
 
-const blocksRange: IFieldResolver<any, any> = (obj, { numbers, hashes }: IBlocksArgs) => {
+// Select multiple blocks.
+interface IBlocksRangeArgs {
+  numbers?: number[];
+  hashes?: string[];
+}
+
+const blocksRange: IFieldResolver<any, any> = async (obj, { numbers, hashes }: IBlocksRangeArgs) => {
   if (numbers && hashes) {
     throw new Error('Only one of blocks or hashes should be provided.');
   }
-  if ((numbers && numbers.length > 2) || (hashes && hashes.length > 2)) {
-    throw new Error('Only the start and end of the range should be provided.');
+  type funcType = (hash: string, callback: (err: Error, res: BlockWithoutTransactionData) => void) => void;
+  
+  const getBlock: ((string) => Promise<BlockWithoutTransactionData>) = (hash) => {
+    return new Promise((res, rej) => {
+      web3.eth.getBlock(hash, (err, block) => {
+        if (err) {
+          rej(err);
+        } else {
+          res(block);
+        }
+      });
+    });
+  };
+
+  let start: number, end:number;
+
+  if (numbers && numbers.length == 2) {
+    [start, end] = numbers;
+  } else if (hashes && hashes.length == 2) {
+    const startBlock = await getBlock(hashes[0]);
+    start = startBlock.number;
+    const endBlock = await getBlock(hashes[1]);
+    end = endBlock.number;
+  } else {
+    throw new Error('Only the start and end should be provided.');
   }
 
-  const start = numbers? numbers[0] : web3.eth.getBlock(hashes[0]).number;
-  const end = numbers? numbers[1] : web3.eth.getBlock(hashes[1]).number;
-  console.log(start, end);
   const f = v => web3.eth.getBlock(v, true);
 
   const blocksRange = Array.from({length: (end - start + 1)}, (v, k) => k + start);

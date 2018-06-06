@@ -92,7 +92,7 @@ it('Test multiple blocks selected by hash range', async () => {
   const query = `
     {
       blocksRange(hashes: ["0x685b762b9d37807ab5c534936530afdb3794b79937f3e61e0b832d0e13e6eabf", "0x2e3d27de5a29082765794cd721c70fac641e546d683ccdc5d178e0bc2aca040e"]) {
-        timestamp
+        number
       }
     }
   `;
