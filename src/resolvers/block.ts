@@ -1,8 +1,7 @@
 import { IFieldResolver, IResolvers } from 'graphql-tools';
 import * as _ from 'lodash';
-import { web3 } from '../providers/web3';
-import * as util from 'util';
 import { BlockWithoutTransactionData } from 'web3';
+import { web3 } from '../providers/web3';
 
 // Select a single block.
 interface IBlockArgs {
@@ -44,46 +43,51 @@ const blocks: IFieldResolver<any, any> = (obj, { numbers, hashes }: IBlocksArgs)
 
 // Select multiple blocks.
 interface IBlocksRangeArgs {
-  numbers?: number[];
-  hashes?: string[];
+  numberRange?: [number, number];
+  hashRange?: [string, string];
 }
 
-const blocksRange: IFieldResolver<any, any> = async (obj, { numbers, hashes }: IBlocksRangeArgs) => {
-  if (numbers && hashes) {
+const blocksRange: IFieldResolver<any, any> = async (obj, { numberRange, hashRange }: IBlocksRangeArgs) => {
+  if (!(numberRange || hashRange)) {
+    throw new Error('Expected either a number range or a hash range.');
+  }
+
+  if (numberRange && hashRange) {
     throw new Error('Only one of blocks or hashes should be provided.');
   }
-  type funcType = (hash: string, callback: (err: Error, res: BlockWithoutTransactionData) => void) => void;
-  
-  const getBlock: ((string) => Promise<BlockWithoutTransactionData>) = (hash) => {
+
+  const getBlock: ((hash: string) => Promise<BlockWithoutTransactionData>) = hash => {
     return new Promise((res, rej) => {
-      web3.eth.getBlock(hash, (err, block) => {
-        if (err) {
-          rej(err);
-        } else {
-          res(block);
-        }
-      });
+      web3.eth.getBlock(hash, (err, block) => (err ? rej(err) : res(block)));
     });
   };
 
-  let start: number, end:number;
+  let start: number;
+  let end: number;
 
-  if (numbers && numbers.length == 2) {
-    [start, end] = numbers;
-  } else if (hashes && hashes.length == 2) {
-    const startBlock = await getBlock(hashes[0]);
-    start = startBlock.number;
-    const endBlock = await getBlock(hashes[1]);
-    end = endBlock.number;
+  if (numberRange && numberRange.length === 2) {
+    // We've received start and end block numbers.
+    [start, end] = numberRange;
+    if (start < 0 || end < 0) {
+      throw new Error('Invalid block number provided.');
+    }
+  } else if (hashRange && hashRange.length === 2) {
+    // We've received start and end hashes, so we need to resolve them to block numbers first to delimit the range.
+    const blocks = await Promise.all(hashRange.map(getBlock));
+    if (blocks.indexOf(null) >= 0) {
+      throw new Error('Could not resolve the block associated with one or all hashes.');
+    }
+    [start, end] = blocks.map(b => b.number);
   } else {
-    throw new Error('Only the start and end should be provided.');
+    throw new Error('Exactly two elements were expected: the start and end blocks.');
   }
 
-  const f = v => web3.eth.getBlock(v, true);
+  if (start > end) {
+    throw new Error('Start block in the range must be prior to the end block.');
+  }
 
-  const blocksRange = Array.from({length: (end - start + 1)}, (v, k) => k + start);
-
-  return Promise.all(blocksRange.map(f));
+  const blocksRange = Array.from({ length: end - start + 1 }, (v, k) => k + start);
+  return Promise.all(blocksRange.map(blockNumber => web3.eth.getBlock(blockNumber, true)));
 };
 
 const transactions = (obj, args) =>

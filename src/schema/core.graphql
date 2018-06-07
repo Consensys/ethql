@@ -12,7 +12,7 @@ type Query {
   blocks(numbers: [Int], hashes: [String]): [Block]
 
   "Selects a range of blocks."
-  blocksRange(numbers: [Int], hashes: [String]): [Block]
+  blocksRange(numberRange: [Int], hashRange: [String]): [Block]
 
   "Selects a transaction by hash."
   transaction(hash: String): Transaction
