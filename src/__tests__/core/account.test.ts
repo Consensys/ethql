@@ -1,7 +1,7 @@
 import { graphql } from 'graphql';
 import schema from '../../schema';
 
-it('Selects an address', async () => {
+test('account: select by address', async () => {
   const query = `
     {
       account(address: "0x0000000000000000000000000000000000000000") {
@@ -17,7 +17,7 @@ it('Selects an address', async () => {
   expect(result).toEqual(expected);
 });
 
-it('Returns error when address is invalid', async () => {
+test('account: error when address is invalid', async () => {
   const query = `
     {
       account(address: "0x1234") {

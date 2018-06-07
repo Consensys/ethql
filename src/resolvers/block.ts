@@ -3,6 +3,12 @@ import * as _ from 'lodash';
 import { BlockWithoutTransactionData } from 'web3';
 import { web3 } from '../providers/web3';
 
+const getBlock: ((hash: string) => Promise<BlockWithoutTransactionData>) = hash => {
+  return new Promise((res, rej) => {
+    web3.eth.getBlock(hash, (err, block) => (err ? rej(err) : res(block)));
+  });
+};
+
 // Select a single block.
 interface IBlockArgs {
   number?: number;
@@ -10,21 +16,22 @@ interface IBlockArgs {
   tag?: string;
 }
 
-const block: IFieldResolver<any, any> = (obj, args: IBlockArgs) => {
+const block: IFieldResolver<any, any> = async (obj, args: IBlockArgs) => {
   let { number: blockNumber, hash, tag } = args;
   hash = hash ? hash.trim() : hash;
   tag = tag ? tag.trim() : tag;
 
-  const arg = _.reject([blockNumber, hash, tag], _.isNil);
-  if (!arg) {
+  const params = _.reject([blockNumber, hash, tag], _.isNil);
+  if (!args) {
     throw new Error('Expected either number, hash or tag argument.');
   }
 
-  if (arg.length > 1) {
+  if (params.length > 1) {
     throw new Error('Only one of number, hash or tag argument should be provided.');
   }
 
-  return web3.eth.getBlock(arg[0], true);
+  const block = await getBlock(String(params[0]));
+  return block ? { transactionCount: block.transactions.length, ...block } : block;
 };
 
 // Select multiple blocks.
@@ -33,12 +40,12 @@ interface IBlocksArgs {
   hashes?: [string];
 }
 
-const blocks: IFieldResolver<any, any> = (obj, { numbers, hashes }: IBlocksArgs) => {
+const blocks: IFieldResolver<any, any> = async (obj, { numbers, hashes }: IBlocksArgs) => {
   if (numbers && hashes) {
     throw new Error('Only one of blocks or hashes should be provided.');
   }
-  const f = v => web3.eth.getBlock(v, true);
-  return Promise.all(numbers ? numbers.map(f) : hashes.map(f));
+  const blocks = await Promise.all(numbers ? numbers.map(String).map(getBlock) : hashes.map(getBlock));
+  return blocks.map(block => (block ? { transactionCount: block.transactions.length, ...block } : block));
 };
 
 // Select multiple blocks.
@@ -55,12 +62,6 @@ const blocksRange: IFieldResolver<any, any> = async (obj, { numberRange, hashRan
   if (numberRange && hashRange) {
     throw new Error('Only one of blocks or hashes should be provided.');
   }
-
-  const getBlock: ((hash: string) => Promise<BlockWithoutTransactionData>) = hash => {
-    return new Promise((res, rej) => {
-      web3.eth.getBlock(hash, (err, block) => (err ? rej(err) : res(block)));
-    });
-  };
 
   let start: number;
   let end: number;

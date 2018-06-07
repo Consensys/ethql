@@ -35,16 +35,16 @@ type Block {
   nonce: String!
 
   "The block's transactions trie root."
-  transactionRoot: String!
+  transactionsRoot: Hash!
 
   "The number of transactions in the block."
   transactionCount: Int!
 
   "The block's state trie root."
-  stateRoot: String!
+  stateRoot: Hash!
 
   "The receipt trie root."
-  receiptRoot: String!
+  receiptsRoot: Hash!
 
   "The miner's account."
   miner: Account!
@@ -53,10 +53,10 @@ type Block {
   extraData: String
 
   "The cumulative gas limit of all transactions in this block."
-  gasLimit: Int
+  gasLimit: Long
 
   "The cumulative gas used of all transactions in this block."
-  gasUsed: Int
+  gasUsed: Long
 
   "The timestamp when block was mined, in seconds after epoch."
   timestamp: String
@@ -66,6 +66,12 @@ type Block {
 
   "The mix hash for this block."
   mixHash: Hash
+
+  "The difficulty of this block."
+  difficulty: Long
+
+  "The total difficulty of the canonical chain this block is part of."
+  totalDifficulty: Long
 
   "The ommer blocks (also known as 'uncles')."
   ommers: [Block]
@@ -102,7 +108,7 @@ enum BlockTag {
 Input object to select a block by offset.
 """
 input BlockOffset {
-  number: Int
+  number: Long
   hash: Hash
   offset: Int
 }
@@ -135,7 +141,7 @@ type Transaction {
   hash: Hash!
 
   "Transaction nonce"
-  nonce: Int!
+  nonce: Long!
 
   "The index of the transaction within the block"
   index: Int!
@@ -153,7 +159,7 @@ type Transaction {
   gasPrice(unit: Unit): Float!
 
   "The amount of gas expended in the transaction"
-  gas: Int!
+  gas: Long!
 
   "The input data to the transaction"
   inputData: String
