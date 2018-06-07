@@ -1,5 +1,5 @@
 import { graphql } from 'graphql';
-import schema from '../schema';
+import schema from '../../schema';
 
 it('Test single block selected by number', async () => {
   const query = `
@@ -215,9 +215,8 @@ it('Test error negative block number provided', async () => {
     }
   `;
   const result = await graphql(schema, query);
-  expect(result.data.blocksRange).toBeNull();
   expect(result.errors).toHaveLength(1);
-  expect(result.errors[0].message).toBe('Invalid block number provided.');
+  expect(result.errors[0].message).toBe('Expected type BlockNumber, found -1.');
 });
 
 it('Test error due to start number larger than end number provided in blocksRange query', async () => {

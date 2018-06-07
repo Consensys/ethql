@@ -1,18 +1,18 @@
 type Query {
   "Selects an account."
-  account(address: String!): Account
+  account(address: Address!): Account
 
   "Selects a block based on either a number, hash or a tag."
-  block(number: Int, hash: String, tag: BlockTag): Block
+  block(number: BlockNumber, hash: String, tag: BlockTag): Block
 
   "Selects a block based on a reference block and an offset from it."
   blockOffset(offset: BlockOffset!): Block
 
   "Selects an arbitrary set of blocks based on their numbers or hashes."
-  blocks(numbers: [Int], hashes: [String]): [Block]
+  blocks(numbers: [BlockNumber], hashes: [String]): [Block]
 
   "Selects a range of blocks."
-  blocksRange(numberRange: [Int], hashRange: [String]): [Block]
+  blocksRange(numberRange: [BlockNumber], hashRange: [String]): [Block]
 
   "Selects a transaction by hash."
   transaction(hash: String): Transaction
@@ -23,7 +23,7 @@ An Ethereum Block.
 """
 type Block {
   "The block number."
-  number: Int!
+  number: BlockNumber!
 
   "The block hash."
   hash: String!
@@ -112,7 +112,7 @@ input BlockOffset {
 """
 type Account {
   "The address of this account"
-  address: String
+  address: Address
 
   "The balance of this account"
   balance: Long
@@ -244,3 +244,9 @@ enum Unit {
 }
 
 scalar Long
+
+scalar TxHash
+
+scalar BlockNumber
+
+scalar Address
