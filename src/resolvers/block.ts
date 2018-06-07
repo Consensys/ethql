@@ -1,5 +1,6 @@
 import { IFieldResolver, IResolvers } from 'graphql-tools';
 import * as _ from 'lodash';
+import { BlockWithoutTransactionData } from 'web3';
 import { web3 } from '../providers/web3';
 
 // Select a single block.
@@ -36,9 +37,57 @@ const blocks: IFieldResolver<any, any> = (obj, { numbers, hashes }: IBlocksArgs)
   if (numbers && hashes) {
     throw new Error('Only one of blocks or hashes should be provided.');
   }
-
   const f = v => web3.eth.getBlock(v, true);
   return Promise.all(numbers ? numbers.map(f) : hashes.map(f));
+};
+
+// Select multiple blocks.
+interface IBlocksRangeArgs {
+  numberRange?: [number, number];
+  hashRange?: [string, string];
+}
+
+const blocksRange: IFieldResolver<any, any> = async (obj, { numberRange, hashRange }: IBlocksRangeArgs) => {
+  if (!(numberRange || hashRange)) {
+    throw new Error('Expected either a number range or a hash range.');
+  }
+
+  if (numberRange && hashRange) {
+    throw new Error('Only one of blocks or hashes should be provided.');
+  }
+
+  const getBlock: ((hash: string) => Promise<BlockWithoutTransactionData>) = hash => {
+    return new Promise((res, rej) => {
+      web3.eth.getBlock(hash, (err, block) => (err ? rej(err) : res(block)));
+    });
+  };
+
+  let start: number;
+  let end: number;
+
+  if (numberRange && numberRange.length === 2) {
+    // We've received start and end block numbers.
+    [start, end] = numberRange;
+    if (start < 0 || end < 0) {
+      throw new Error('Invalid block number provided.');
+    }
+  } else if (hashRange && hashRange.length === 2) {
+    // We've received start and end hashes, so we need to resolve them to block numbers first to delimit the range.
+    const blocks = await Promise.all(hashRange.map(getBlock));
+    if (blocks.indexOf(null) >= 0) {
+      throw new Error('Could not resolve the block associated with one or all hashes.');
+    }
+    [start, end] = blocks.map(b => b.number);
+  } else {
+    throw new Error('Exactly two elements were expected: the start and end blocks.');
+  }
+
+  if (start > end) {
+    throw new Error('Start block in the range must be prior to the end block.');
+  }
+
+  const blocksRange = Array.from({ length: end - start + 1 }, (v, k) => k + start);
+  return Promise.all(blocksRange.map(blockNumber => web3.eth.getBlock(blockNumber, true)));
 };
 
 const transactions = (obj, args) =>
@@ -48,6 +97,7 @@ const resolvers: IResolvers = {
   Query: {
     block,
     blocks,
+    blocksRange,
   },
   Block: {
     transactions,

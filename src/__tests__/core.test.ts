@@ -72,3 +72,232 @@ it('Test multiple blocks selected by specific hashes', async () => {
   const result = await graphql(schema, query);
   expect(result).toEqual(expected);
 });
+
+it('Test multiple blocks selected by number range', async () => {
+  const query = `
+    {
+      blocksRange(numberRange: [10, 12]) {
+        timestamp
+      }
+    }
+  `;
+
+  const expected = {
+    data: { blocksRange: [{ timestamp: '1438270128' }, { timestamp: '1438270136' }, { timestamp: '1438270144' }] },
+  };
+
+  const result = await graphql(schema, query);
+  expect(result).toEqual(expected);
+});
+
+it('Test multiple blocks selected by hash range', async () => {
+  const query = `
+    {
+      blocksRange(hashRange:
+        ["0x685b762b9d37807ab5c534936530afdb3794b79937f3e61e0b832d0e13e6eabf",
+         "0x2e3d27de5a29082765794cd721c70fac641e546d683ccdc5d178e0bc2aca040e"]) {
+        number
+      }
+    }
+  `;
+
+  const expected = {
+    data: { blocksRange: [{ number: 20222 }, { number: 20223 }, { number: 20224 }] },
+  };
+
+  const result = await graphql(schema, query);
+  expect(result).toEqual(expected);
+});
+
+/* tslint:disable */
+it('Test error due to hash range and number range provided in blocksRange query', async () => {
+  const query = `
+    {
+      blocksRange(numberRange: [10, 12], 
+        hashRange: [
+          "0x685b762b9d37807ab5c534936530afdb3794b79937f3e61e0b832d0e13e6eabf", 
+          "0x2e3d27de5a29082765794cd721c70fac641e546d683ccdc5d178e0bc2aca040e"]) {
+        number
+      }
+    }
+  `;
+
+  const result = await graphql(schema, query);
+  expect(result.data.blocksRange).toBeNull();
+  expect(result.errors).toHaveLength(1);
+  expect(result.errors[0].message).toBe('Only one of blocks or hashes should be provided.');
+});
+
+// Provide more than two numbers in the range => error.
+it('Test error due to more than two numbers provided in blocksRange query', async () => {
+  const query = `
+    {
+      blocksRange(numberRange: [10, 12, 14]) {
+        timestamp
+      }
+    }
+  `;
+
+  const result = await graphql(schema, query);
+  expect(result.data.blocksRange).toBeNull();
+  expect(result.errors).toHaveLength(1);
+  expect(result.errors[0].message).toBe('Exactly two elements were expected: the start and end blocks.');
+});
+
+// Provide more than two hashes in the range => error.
+it('Test error due to more than two hashes provided in blocksRange query', async () => {
+  const query = `
+    {
+      blocksRange(hashRange: [
+        "0x685b762b9d37807ab5c534936530afdb3794b79937f3e61e0b832d0e13e6eab1", 
+        "0x685b762b9d37807ab5c534936530afdb3794b79937f3e61e0b832d0e13e6eab2", 
+        "0x685b762b9d37807ab5c534936530afdb3794b79937f3e61e0b832d0e13e6eab3"]) {
+        number
+      }
+    }
+  `;
+  const result = await graphql(schema, query);
+  expect(result.data.blocksRange).toBeNull();
+  expect(result.errors).toHaveLength(1);
+  expect(result.errors[0].message).toBe('Exactly two elements were expected: the start and end blocks.');
+});
+
+// Provide no numbers or hashes => error.
+it('Test error due to neither numbers or hashes provided in blocksRange query', async () => {
+  const query = `
+    {
+      blocksRange {
+        number
+      }
+    }
+  `;
+  const result = await graphql(schema, query);
+  expect(result.data.blocksRange).toBeNull();
+  expect(result.errors).toHaveLength(1);
+  expect(result.errors[0].message).toBe('Expected either a number range or a hash range.');
+});
+
+// Provide 1 number only => error.
+it('Test error due to one number only provided in blocksRange query', async () => {
+  const query = `
+    {
+      blocksRange(numberRange: [13232]) {
+        timestamp
+      }
+    }
+  `;
+  const result = await graphql(schema, query);
+  expect(result.data.blocksRange).toBeNull();
+  expect(result.errors).toHaveLength(1);
+  expect(result.errors[0].message).toBe('Exactly two elements were expected: the start and end blocks.');
+});
+
+it('Test error due to one hash only provided in blocksRange query', async () => {
+  const query = `
+    {
+      blocksRange(hashRange: ["0x685b762b9d37807ab5c534936530afdb3794b79937f3e61e0b832d0e13e6eabf"]) {
+        timestamp
+      }
+    }
+  `;
+  const result = await graphql(schema, query);
+  expect(result.data.blocksRange).toBeNull();
+  expect(result.errors).toHaveLength(1);
+  expect(result.errors[0].message).toBe('Exactly two elements were expected: the start and end blocks.');
+});
+
+it('Test error negative block number provided', async () => {
+  const query = `
+    {
+      blocksRange(numberRange: [-1, 122]) {
+        timestamp
+      }
+    }
+  `;
+  const result = await graphql(schema, query);
+  expect(result.data.blocksRange).toBeNull();
+  expect(result.errors).toHaveLength(1);
+  expect(result.errors[0].message).toBe('Invalid block number provided.');
+});
+
+it('Test error due to start number larger than end number provided in blocksRange query', async () => {
+  const query = `
+    {
+      blocksRange(numberRange: [122, 2]) {
+        timestamp
+      }
+    }
+  `;
+  const result = await graphql(schema, query);
+  expect(result.data.blocksRange).toBeNull();
+  expect(result.errors).toHaveLength(1);
+  expect(result.errors[0].message).toBe('Start block in the range must be prior to the end block.');
+});
+
+it('Test error due to start hash whose block number is higher than end hash block number provided in blocksRange query', async () => {
+  const query = `
+    {
+      blocksRange(hashRange: [
+        "0x2e3d27de5a29082765794cd721c70fac641e546d683ccdc5d178e0bc2aca040e",
+        "0x685b762b9d37807ab5c534936530afdb3794b79937f3e61e0b832d0e13e6eabf"
+      ]) {
+        timestamp
+      }
+    }
+  `;
+  const result = await graphql(schema, query);
+  expect(result.data.blocksRange).toBeNull();
+  expect(result.errors).toHaveLength(1);
+  expect(result.errors[0].message).toBe('Start block in the range must be prior to the end block.');
+});
+
+it('Test error due to nonexistent hash provided in blocksRange query', async () => {
+  const query = `
+    {
+      blocksRange(hashRange: [
+        "0x1e3d27de5a29082765794cd721c70fac641e546d683ccdc5d178e0bc2aca040e",
+        "0x685b762b9d37807ab5c534936530afdb3794b79937f3e61e0b832d0e13e6eabf"
+      ]) {
+        timestamp
+      }
+    }
+  `;
+  const result = await graphql(schema, query);
+  expect(result.data.blocksRange).toBeNull();
+  expect(result.errors).toHaveLength(1);
+  expect(result.errors[0].message).toBe('Could not resolve the block associated with one or all hashes.');
+});
+
+// Provide the same block number twice => it should just return one block.
+it('Test same block number provided twice in blocksRange returns one block', async () => {
+  const query = `
+    {
+      blocksRange(numberRange: [10, 10]) {
+        timestamp
+      }
+    }
+  `;
+
+  const expected = {
+    data: { blocksRange: [{ timestamp: '1438270128' }] },
+  };
+
+  const result = await graphql(schema, query);
+  expect(result).toEqual(expected);
+});
+
+// Provide the same hash twice => it should just return one block.
+it('Test same hash provided twice in blocksRange returns one block', async () => {
+  const query = `
+    {
+      blocksRange(hashRange: ["0x685b762b9d37807ab5c534936530afdb3794b79937f3e61e0b832d0e13e6eabf", "0x685b762b9d37807ab5c534936530afdb3794b79937f3e61e0b832d0e13e6eabf"]) {
+        number
+      }
+    }
+  `;
+
+  const expected = { data: { blocksRange: [{ number: 20222 }] } };
+
+  const result = await graphql(schema, query);
+  expect(result).toEqual(expected);
+});
