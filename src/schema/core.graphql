@@ -3,19 +3,19 @@ type Query {
   account(address: Address!): Account
 
   "Selects a block based on either a number, hash or a tag."
-  block(number: BlockNumber, hash: String, tag: BlockTag): Block
+  block(number: BlockNumber, hash: Hash, tag: BlockTag): Block
 
   "Selects a block based on a reference block and an offset from it."
   blockOffset(offset: BlockOffset!): Block
 
   "Selects an arbitrary set of blocks based on their numbers or hashes."
-  blocks(numbers: [BlockNumber], hashes: [String]): [Block]
+  blocks(numbers: [BlockNumber], hashes: [Hash]): [Block]
 
   "Selects a range of blocks."
-  blocksRange(numberRange: [BlockNumber], hashRange: [String]): [Block]
+  blocksRange(numberRange: [BlockNumber], hashRange: [Hash]): [Block]
 
   "Selects a transaction by hash."
-  transaction(hash: String): Transaction
+  transaction(hash: Hash): Transaction
 }
 
 """
@@ -26,7 +26,7 @@ type Block {
   number: BlockNumber!
 
   "The block hash."
-  hash: String!
+  hash: Hash!
 
   "The parent block."
   parent: Block
@@ -65,7 +65,7 @@ type Block {
   logsBloom: String
 
   "The mix hash for this block."
-  mixHash: String
+  mixHash: Hash
 
   "The ommer blocks (also known as 'uncles')."
   ommers: [Block]
@@ -103,7 +103,7 @@ Input object to select a block by offset.
 """
 input BlockOffset {
   number: Int
-  hash: String
+  hash: Hash
   offset: Int
 }
 
@@ -132,7 +132,7 @@ An Ethereum transaction.
 """
 type Transaction {
   "Transaction hash"
-  hash: String!
+  hash: Hash!
 
   "Transaction nonce"
   nonce: Int!
@@ -245,7 +245,7 @@ enum Unit {
 
 scalar Long
 
-scalar TxHash
+scalar Hash
 
 scalar BlockNumber
 

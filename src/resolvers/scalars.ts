@@ -30,10 +30,28 @@ export default {
   Address: new GraphQLScalarType({
     name: 'Address',
     description: 'An account address',
-    serialize: Number,
+    serialize: String,
     parseValue: input => (web3.utils.isAddress(input) ? input : undefined),
     parseLiteral: ast => {
       if (ast.kind !== Kind.STRING || !web3.utils.isAddress(ast.value)) {
+        return undefined;
+      }
+      return String(ast.value);
+    },
+  }),
+  Hash: new GraphQLScalarType({
+    name: 'Hash',
+    description: 'A Keccak hash, used to identify blocks and transactions',
+    serialize: String,
+    parseValue: input => {
+      return !web3.utils.isHexStrict(input) || web3.utils.hexToBytes(input).length !== 32 ? input : undefined;
+    },
+    parseLiteral: ast => {
+      if (
+        ast.kind !== Kind.STRING ||
+        !web3.utils.isHexStrict(ast.value) ||
+        web3.utils.hexToBytes(ast.value).length !== 32
+      ) {
         return undefined;
       }
       return String(ast.value);

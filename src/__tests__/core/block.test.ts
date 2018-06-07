@@ -31,6 +31,20 @@ it('Test single block selected by hash', async () => {
   expect(result).toEqual(expected);
 });
 
+it('Error when selecting block by invalid hash', async () => {
+  const query = `
+    {
+      block(hash: "0x1234")   {
+        number
+      }
+    }
+  `;
+
+  const result = await graphql(schema, query);
+  expect(result.errors).toHaveLength(1);
+  expect(result.errors[0].message).toMatch(/^Expected type Hash/);
+});
+
 it('Test multiple blocks selected by specific numbers', async () => {
   const query = `
     {
