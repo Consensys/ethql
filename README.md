@@ -14,7 +14,7 @@ functionality, amongst which are:
 * Automatic batching and caching of requests.
 * New filtering capabilities.
 * Simple, inline unit conversions.
-* Enhancing public data with informaton overlays imported from other sources.
+* Enhancing public data with information overlays imported from other sources.
 
 This project is in the experimental phase, and all the cited features are under heavy development.
 
