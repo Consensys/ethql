@@ -13,22 +13,14 @@ interface ITransactionArgs {
 }
 
 const transaction: IFieldResolver<any, any> = (obj, { hash }: ITransactionArgs) => {
-  
-  type funcType = (hash: string, callback: (err: Error, res: Transaction) => void) => void;
-  
-  const getTransaction: ((string) => Promise<Transaction>) = (hash) => {
+    
+  const getTransaction: ((hash: string) => Promise<Transaction>) = hash => {
     return new Promise((res, rej) => {
-      web3.eth.getTransaction(hash, (err, transaction) => {
-        if (err) {
-          rej(err);
-        } else {
-          res(transaction);
-        }
-      });
+      web3.eth.getTransaction(hash, (err, block) => (err ? rej(err) : res(transaction)));
     });
   };
-
-  return await getTransaction(hash);
+    
+  return web3.eth.getTransaction(hash);
 
 };
 
@@ -86,7 +78,9 @@ const decodeTransaction: IFieldResolver<any, any> = (transaction, args) => {
 
 const resolvers: IResolvers = {
   Query: {
-    transaction,
+    transaction(obj, { hash }) {
+      return web3.eth.getTransaction(hash);
+    },
   },
   Transaction: {
     decoded: decodeTransaction,
