@@ -41,18 +41,3 @@ test('blocks: select multiple blocks by specific hashes', async () => {
   const result = await graphql(schema, query);
   expect(result).toEqual(expected);
 });
-
-it('Test transaction selected by specific hash', async () => {
-  const query = `
-    {
-      transaction(hash: "0x6b958ef769237d2e492763ac3438dc0a67a8fe28b1095acccb6bc6c94474ec42") {
-        blockHash
-      }
-    }
-  `;
-
-  const expected = { data: { transaction: { blockHash: 21000 } } };
-
-  const result = await graphql(schema, query);
-  expect(result).toEqual(expected);
-});

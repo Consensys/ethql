@@ -13,15 +13,14 @@ interface ITransactionArgs {
 }
 
 const transaction: IFieldResolver<any, any> = (obj, { hash }: ITransactionArgs) => {
-    
-  const getTransaction: ((hash: string) => Promise<Transaction>) = hash => {
-    return new Promise((res, rej) => {
-      web3.eth.getTransaction(hash, (err, block) => (err ? rej(err) : res(transaction)));
-    });
-  };
-    
-  return web3.eth.getTransaction(hash);
+  
+  const tx = web3.eth.getTransaction(hash);
 
+  if (tx == null) {
+    throw new Error('Could not resolve the transaction associated with the hash.');
+  }
+
+  return tx;
 };
 
 function abiDecoder(path: string) {
@@ -78,9 +77,7 @@ const decodeTransaction: IFieldResolver<any, any> = (transaction, args) => {
 
 const resolvers: IResolvers = {
   Query: {
-    transaction(obj, { hash }) {
-      return web3.eth.getTransaction(hash);
-    },
+    transaction,
   },
   Transaction: {
     decoded: decodeTransaction,
