@@ -9,13 +9,13 @@ test('transaction: select transaction by specific hash', async () => {
         }
       }
     `;
-  
+
     const expected = { data: { transaction: { nonce: 10 } } };
-  
+
     const result = await graphql(schema, query);
     expect(result).toEqual(expected);
   });
-  
+
 test('transaction: select non-existent transaction', async () => {
     const query = `
       {
@@ -24,13 +24,13 @@ test('transaction: select non-existent transaction', async () => {
         }
       }
     `;
-  
+
     const expected = { data: { transaction: null } };
-  
+
     const result = await graphql(schema, query);
     expect(result).toEqual(expected);
   });
-  
+
 test('transaction: error when malformed hash provided', async () => {
     const query = `
         {
