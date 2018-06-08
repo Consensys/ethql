@@ -1,27 +1,7 @@
 import { DecodedMethod, DecodedParam } from 'abi-decoder';
-import { GraphQLTypeResolver } from 'graphql';
 import { IFieldResolver, IResolvers } from 'graphql-tools';
 import * as _ from 'lodash';
-import * as fp from 'lodash/fp';
 import { web3 } from '../providers/web3';
-import * as util from 'util';
-import { Transaction } from 'web3';
-
-// Select a single block.
-interface ITransactionArgs {
-  hash?: string;
-}
-
-const transaction: IFieldResolver<any, any> = (obj, { hash }: ITransactionArgs) => {
-  
-  const tx = web3.eth.getTransaction(hash);
-
-  if (tx == null) {
-    throw new Error('Could not resolve the transaction associated with the hash.');
-  }
-
-  return tx;
-};
 
 function abiDecoder(path: string) {
   const decoder = require('abi-decoder');
@@ -77,7 +57,9 @@ const decodeTransaction: IFieldResolver<any, any> = (transaction, args) => {
 
 const resolvers: IResolvers = {
   Query: {
-    transaction,
+    transaction(obj, { hash }) {
+      return web3.eth.getTransaction(hash);
+    },
   },
   Transaction: {
     decoded: decodeTransaction,

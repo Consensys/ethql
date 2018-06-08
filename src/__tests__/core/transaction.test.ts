@@ -1,5 +1,5 @@
 import { graphql } from 'graphql';
-import schema from '../schema';
+import schema from '../../schema';
 
 test('transaction: select transaction by specific hash', async () => {
     const query = `
@@ -34,17 +34,13 @@ test('transaction: select non-existent transaction', async () => {
 test('transaction: error when malformed hash provided', async () => {
     const query = `
         {
-        transaction(hash: "0x3aa750d4e6b2822cf300fd") {
+        transaction(hash: "0x1234") {
             nonce
-        }
+          }
         }
     `;
 
-    const expected = { data: { transaction: { nonce: 10 } } };
-
     const result = await graphql(schema, query);
-    expect(result).toEqual(expected);
-    expect(result.data.transaction).toBeNull();
     expect(result.errors).toHaveLength(1);
-    expect(result.errors[0].message).toBe('Please provide a valid hash.');  
-    });
+    expect(result.errors[0].message).toMatch(/^Expected type Hash/);
+  });
