@@ -1,13 +1,6 @@
 import { IFieldResolver, IResolvers } from 'graphql-tools';
 import * as _ from 'lodash';
-import { BlockWithoutTransactionData } from 'web3';
 import { web3 } from '../providers/web3';
-
-const getBlock: ((hash: string) => Promise<BlockWithoutTransactionData>) = hash => {
-  return new Promise((res, rej) => {
-    web3.eth.getBlock(hash, (err, block) => (err ? rej(err) : res(block)));
-  });
-};
 
 // Select a single block.
 interface IBlockArgs {
@@ -30,7 +23,7 @@ const block: IFieldResolver<any, any> = async (obj, args: IBlockArgs) => {
     throw new Error('Only one of number, hash or tag argument should be provided.');
   }
 
-  const block = await getBlock(String(params[0]));
+  const block = await web3.eth.getBlock(params[0]);
   return block ? { transactionCount: block.transactions.length, ...block } : block;
 };
 
@@ -44,7 +37,9 @@ const blocks: IFieldResolver<any, any> = async (obj, { numbers, hashes }: IBlock
   if (numbers && hashes) {
     throw new Error('Only one of blocks or hashes should be provided.');
   }
-  const blocks = await Promise.all(numbers ? numbers.map(String).map(getBlock) : hashes.map(getBlock));
+  const blocks = await Promise.all(
+    numbers ? numbers.map(n => web3.eth.getBlock(n)) : hashes.map(h => web3.eth.getBlock(h as any)),
+  );
   return blocks.map(block => (block ? { transactionCount: block.transactions.length, ...block } : block));
 };
 
@@ -74,7 +69,7 @@ const blocksRange: IFieldResolver<any, any> = async (obj, { numberRange, hashRan
     }
   } else if (hashRange && hashRange.length === 2) {
     // We've received start and end hashes, so we need to resolve them to block numbers first to delimit the range.
-    const blocks = await Promise.all(hashRange.map(getBlock));
+    const blocks = await Promise.all(hashRange.map(b => web3.eth.getBlock(b as any)));
     if (blocks.indexOf(null) >= 0) {
       throw new Error('Could not resolve the block associated with one or all hashes.');
     }

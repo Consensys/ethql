@@ -1,8 +1,6 @@
 import { DecodedMethod, DecodedParam } from 'abi-decoder';
-import { GraphQLTypeResolver } from 'graphql';
 import { IFieldResolver, IResolvers } from 'graphql-tools';
 import * as _ from 'lodash';
-import * as fp from 'lodash/fp';
 import { web3 } from '../providers/web3';
 
 function abiDecoder(path: string) {
@@ -58,6 +56,11 @@ const decodeTransaction: IFieldResolver<any, any> = (transaction, args) => {
 };
 
 const resolvers: IResolvers = {
+  Query: {
+    transaction(obj, { hash }) {
+      return web3.eth.getTransaction(hash);
+    },
+  },
   Transaction: {
     decoded: decodeTransaction,
   },
