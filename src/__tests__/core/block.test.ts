@@ -15,6 +15,56 @@ test('block: select single block by number', async () => {
   expect(result).toEqual(expected);
 });
 
+test('block: select single transaction from block by index', async () => {
+  const query =  `
+    {
+        block(number: 5771878) {
+          difficulty
+          transactionAt(index: 0) {
+            inputData
+            status
+        }
+      }
+    }
+  `;
+
+  const expected = { data: {block: { difficulty: 3351918027816898, transactionAt: { inputData: null, status: null} } } };
+  const result = await graphql(schema, query);
+  expect(result).toEqual(expected);
+});
+
+test('block: null response when selecting transaction by negative index', async () => {
+  const query =  `
+    {
+        block(number: 5771878) {
+          difficulty
+          transactionAt(index: -1) {
+            inputData
+            status
+        }
+      }
+    }
+  `;
+
+  const expected = { data: { block: { difficulty: 3351918027816898, transactionAt: null } } }
+});
+
+test('block: null response when selecting transaction by an index that does not exist in block', async () => {
+  const query =  `
+    {
+        block(number: 5771878) {
+          difficulty
+          transactionAt(index: 140) {
+            inputData
+            status
+        }
+      }
+    }
+  `;
+
+  const expected = { data: { block: { difficulty: 3351918027816898, transactionAt: null } } }
+});
+
 test('block: select single block by hash', async () => {
   const query = `
     {
