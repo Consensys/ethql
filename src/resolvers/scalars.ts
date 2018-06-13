@@ -1,17 +1,21 @@
 import { GraphQLScalarType, Kind } from 'graphql';
+import { IResolvers } from 'graphql-tools';
 
 // tslint:disable-next-line
-const web3 = require('web3');
+import Web3 = require('web3');
 
-export default {
-  Long: new GraphQLScalarType({
+export default function(web3: Web3): IResolvers {
+  const isHexStrict: (input: string) => boolean = (web3.utils as any).isHexStrict;
+
+  const Long = new GraphQLScalarType({
     name: 'Long',
     description: '64-bit unsigned integer',
     serialize: Number,
     parseValue: Number,
     parseLiteral: ast => (ast.kind === Kind.INT ? parseInt(ast.value, 10) : undefined),
-  }),
-  BlockNumber: new GraphQLScalarType({
+  });
+
+  const BlockNumber = new GraphQLScalarType({
     name: 'BlockNumber',
     description: 'A block number (unsigned 64-bit integer)',
     serialize: Number,
@@ -26,8 +30,9 @@ export default {
       const val = parseInt(ast.value, 10);
       return val >= 0 ? val : undefined;
     },
-  }),
-  Address: new GraphQLScalarType({
+  });
+
+  const Address = new GraphQLScalarType({
     name: 'Address',
     description: 'An account address',
     serialize: String,
@@ -38,23 +43,22 @@ export default {
       }
       return String(ast.value);
     },
-  }),
-  Hash: new GraphQLScalarType({
+  });
+
+  const Hash = new GraphQLScalarType({
     name: 'Hash',
     description: 'A Keccak hash, used to identify blocks and transactions',
     serialize: String,
     parseValue: input => {
-      return !web3.utils.isHexStrict(input) || web3.utils.hexToBytes(input).length !== 32 ? input : undefined;
+      return !isHexStrict(input) || web3.utils.hexToBytes(input).length !== 32 ? input : undefined;
     },
     parseLiteral: ast => {
-      if (
-        ast.kind !== Kind.STRING ||
-        !web3.utils.isHexStrict(ast.value) ||
-        web3.utils.hexToBytes(ast.value).length !== 32
-      ) {
+      if (ast.kind !== Kind.STRING || !isHexStrict(ast.value) || web3.utils.hexToBytes(ast.value).length !== 32) {
         return undefined;
       }
       return String(ast.value);
     },
-  }),
-};
+  });
+
+  return { Long, BlockNumber, Address, Hash };
+}

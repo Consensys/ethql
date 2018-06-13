@@ -1,5 +1,7 @@
-import { graphql } from 'graphql';
-import schema from '../../schema';
+import { graphql, GraphQLSchema } from 'graphql';
+import { testSchema } from '../utils';
+
+let schema = testSchema();
 
 test('blocksRange: select multiple blocks by number range', async () => {
   const query = `

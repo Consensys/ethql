@@ -1,5 +1,7 @@
-import { graphql } from 'graphql';
-import schema from '../../schema';
+import { graphql, GraphQLSchema } from 'graphql';
+import { testSchema } from '../utils';
+
+let schema = testSchema();
 
 test('account: select by address', async () => {
   const query = `

@@ -1,8 +1,10 @@
-import { graphql } from 'graphql';
-import schema from '../../schema';
+import { graphql, GraphQLSchema } from 'graphql';
+import { testSchema } from '../utils';
+
+let schema = testSchema();
 
 test('transaction: select transaction by specific hash', async () => {
-    const query = `
+  const query = `
       {
         transaction(hash: "0xdccbeb289f6630fd76fa2681837422fda9f76449653aa750d4e6b2822cf300fd") {
           nonce
@@ -10,14 +12,14 @@ test('transaction: select transaction by specific hash', async () => {
       }
     `;
 
-    const expected = { data: { transaction: { nonce: 10 } } };
+  const expected = { data: { transaction: { nonce: 10 } } };
 
-    const result = await graphql(schema, query);
-    expect(result).toEqual(expected);
-  });
+  const result = await graphql(schema, query);
+  expect(result).toEqual(expected);
+});
 
 test('transaction: select non-existent transaction', async () => {
-    const query = `
+  const query = `
       {
         transaction(hash: "0x0000000000000000000000000000000000000000000000000000000000000001") {
           nonce
@@ -25,14 +27,14 @@ test('transaction: select non-existent transaction', async () => {
       }
     `;
 
-    const expected = { data: { transaction: null } };
+  const expected = { data: { transaction: null } };
 
-    const result = await graphql(schema, query);
-    expect(result).toEqual(expected);
-  });
+  const result = await graphql(schema, query);
+  expect(result).toEqual(expected);
+});
 
 test('transaction: error when malformed hash provided', async () => {
-    const query = `
+  const query = `
         {
         transaction(hash: "0x1234") {
             nonce
@@ -40,7 +42,7 @@ test('transaction: error when malformed hash provided', async () => {
         }
     `;
 
-    const result = await graphql(schema, query);
-    expect(result.errors).toHaveLength(1);
-    expect(result.errors[0].message).toMatch(/^Expected type Hash/);
-  });
+  const result = await graphql(schema, query);
+  expect(result.errors).toHaveLength(1);
+  expect(result.errors[0].message).toMatch(/^Expected type Hash/);
+});

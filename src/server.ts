@@ -1,11 +1,7 @@
 import * as express from 'express';
 import * as graphqlHTTP from 'express-graphql';
 import { GraphQLSchema } from 'graphql';
-import { importSchema } from 'graphql-import';
-import { makeExecutableSchema } from 'graphql-tools';
 import * as http from 'http';
-import * as util from 'util';
-import resolvers from './resolvers';
 
 let app: express.Express;
 let httpServer: http.Server;

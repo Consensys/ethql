@@ -1,15 +1,11 @@
-import schema from './schema';
+import config from './config';
+import { initWeb3 } from './providers/web3';
+import { initSchema } from './schema';
 import { startServer, stopServer } from './server';
 
-async function start() {
-  startServer(schema);
-}
+process.on('SIGINT', async () => (await stopServer()) || process.exit(0));
+process.on('SIGTERM', async () => (await stopServer()) || process.exit(0));
 
-async function shutdown() {
-  await stopServer();
-}
-
-process.on('SIGINT', () => shutdown() || process.exit(0));
-process.on('SIGTERM', () => shutdown() || process.exit(0));
-
-start();
+const web3 = initWeb3(config.jsonrpc);
+const schema = initSchema(web3, config);
+startServer(schema);
