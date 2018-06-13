@@ -56,6 +56,10 @@ jobs:
             docker push ${DOCKER_REPO}/ethql:latest
             docker tag ethql:latest ${DOCKER_REPO}/ethql:${CIRCLE_SHA1}
             docker push ${DOCKER_REPO}/ethql:${CIRCLE_SHA1}
+      - run:
+          name: Deploy new version on ECS
+          command: |
+            aws ecs update-service --cluster ethql --service ethql-service --force-new-deployment
 
 workflows:
   version: 2
