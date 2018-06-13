@@ -47,6 +47,9 @@ export default function(web3: Web3, config: Options): IResolvers {
     if (!(numbers || hashes)) {
       throw new Error('At least one of numbers or hashes must be provided.');
     }
+    if ((numbers && numbers.length > config.queryMaxSize) || (hashes && hashes.length > config.queryMaxSize)) {
+      throw new Error(`Too large a multiple selection. Maximum length allowed: ${config.queryMaxSize}.`);
+    }
 
     let input: any[] = numbers
       ? numbers.map(n => web3.eth.getBlock(n, true))
@@ -85,6 +88,9 @@ export default function(web3: Web3, config: Options): IResolvers {
 
     if (start > end) {
       throw new Error('Start block in the range must be prior to the end block.');
+    }
+    if (end - start + 1 > config.queryMaxSize) {
+      throw new Error(`Too large a multiple selection. Maximum length allowed: ${config.queryMaxSize}.`);
     }
 
     const blocksRange = Array.from({ length: end - start + 1 }, (v, k) => k + start);
