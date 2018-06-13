@@ -23,7 +23,7 @@ const block: IFieldResolver<any, any> = async (obj, args: IBlockArgs) => {
     throw new Error('Only one of number, hash or tag argument should be provided.');
   }
 
-  const block = await web3.eth.getBlock(params[0]);
+  const block = await web3.eth.getBlock(params[0], true);
   return block ? { transactionCount: block.transactions.length, ...block } : block;
 };
 
@@ -89,6 +89,8 @@ const blocksRange: IFieldResolver<any, any> = async (obj, { numberRange, hashRan
 const transactions = (obj, args) =>
   obj.transactions.map(tx => ({ ...tx, from: { address: tx.from }, to: { address: tx.to }, inputData: tx.input }));
 
+const transactionAt = (obj, args) => obj.transactions[args.index];
+
 const resolvers: IResolvers = {
   Query: {
     block,
@@ -97,6 +99,7 @@ const resolvers: IResolvers = {
   },
   Block: {
     transactions,
+    transactionAt,
   },
 };
 

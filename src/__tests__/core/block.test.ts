@@ -15,6 +15,57 @@ test('block: select single block by number', async () => {
   expect(result).toEqual(expected);
 });
 
+test('block: select single transaction from block by index', async () => {
+  const query = `
+  {
+    block(number: 5771878) {
+      difficulty
+      transactionAt(index: 22) {
+        hash
+        nonce
+      }
+    }
+  }`;
+
+  const expected = { data: { block: { difficulty: 3351918027816898, transactionAt: { hash: '0xb0804426b4c800f962416f0e7155d9c6be007e95d0af9820bd6cec8d95efdfd5', nonce: 156806 } } } };
+  const result = await graphql(schema, query);
+  expect(result).toEqual(expected);
+});
+
+test('block: null response when selecting transaction by negative index', async () => {
+  const query = `
+  {
+    block(number: 5771878) {
+      difficulty
+      transactionAt(index: -1) {
+        hash
+        nonce
+      }
+    }
+  }`;
+
+  const expected = { data: { block: { difficulty: 3351918027816898, transactionAt: null } } };
+  const result = await graphql(schema, query);
+  expect(result).toEqual(expected);
+});
+
+test('block: null response when selecting transaction by an index that does not exist in block', async () => {
+  const query = `
+  {
+    block(number: 5771878) {
+      difficulty
+      transactionAt(index: 140) {
+        hash
+        nonce
+      }
+    }
+  }`;
+
+  const expected = { data: { block: { difficulty: 3351918027816898, transactionAt: null } } };
+  const result = await graphql(schema, query);
+  expect(result).toEqual(expected);
+});
+
 test('block: select single block by hash', async () => {
   const query = `
     {
