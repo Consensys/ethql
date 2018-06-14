@@ -86,7 +86,7 @@ type Block {
   Gets all transactions from this block as long as they involve any of the addresses specified.
   If a filter is passed, only the transactions matching the filter will be returned.
   """
-  transactionsInvolving(participants: [String]!, filter: TransactionFilter): [Transaction]
+  transactionsInvolving(participants: [Address]!, filter: TransactionFilter): [Transaction]
 
   """
   Gets all transactions from this block where the provided addresses take the indicated roles.

@@ -22,6 +22,10 @@ interface IBlocksRangeArgs {
   hashRange?: [string, string];
 }
 
+interface ITransactionsInvolvingArgs {
+  participants: [string];
+}
+
 export default function(web3: Web3, config: Options): IResolvers {
   const block: IFieldResolver<any, any> = async (obj, args: IBlockArgs) => {
     let { number: blockNumber, hash, tag } = args;
@@ -102,6 +106,13 @@ export default function(web3: Web3, config: Options): IResolvers {
 
   const transactionAt = (obj, args) => obj.transactions[args.index];
 
+  const transactionsInvolving: IFieldResolver<any, any> = async (obj, { participants }: ITransactionsInvolvingArgs) => {
+    if (!participants || !participants.length) {
+      throw new Error('Expected at least one participant.');
+    }
+    return obj.transactions.filter(tx => participants.includes(tx.from) || participants.includes(tx.to));
+  };
+
   return {
     Query: {
       block,
@@ -110,6 +121,7 @@ export default function(web3: Web3, config: Options): IResolvers {
     },
     Block: {
       transactions,
+      transactionsInvolving,
       transactionAt,
     },
   };
