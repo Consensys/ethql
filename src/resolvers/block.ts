@@ -23,7 +23,7 @@ interface IBlocksRangeArgs {
 }
 
 interface ITransactionsInvolvingArgs {
-  participants: [string];
+  participants: string[];
 }
 
 export default function(web3: Web3, config: Options): IResolvers {
@@ -110,7 +110,14 @@ export default function(web3: Web3, config: Options): IResolvers {
     if (!participants || !participants.length) {
       throw new Error('Expected at least one participant.');
     }
-    return obj.transactions.filter(tx => participants.includes(tx.from) || participants.includes(tx.to));
+
+    participants = participants.map(s => s.toLowerCase());
+
+    return obj.transactions
+      .filter(tx =>
+        participants.includes((tx.from || '').toLowerCase() || participants.includes((tx.to || '').toLowerCase())),
+      )
+      .map(tx => ({ ...tx, from: { address: tx.from }, to: { address: tx.to }, inputData: tx.input }));
   };
 
   return {
