@@ -1,7 +1,6 @@
-import { graphql, GraphQLSchema } from 'graphql';
-import { testSchema } from '../utils';
+import { testGraphql } from '../utils';
 
-let schema = testSchema();
+const { execQuery } = testGraphql();
 
 test('block: select single block by number', async () => {
   const query = `
@@ -13,7 +12,7 @@ test('block: select single block by number', async () => {
   `;
 
   const expected = { data: { block: { hash: '0x767c2bfb3bdee3f78676c1285cd757bcd5d8c272cef2eb30d9733800a78c0b6d' } } };
-  const result = await graphql(schema, query);
+  const result = await execQuery(query);
   expect(result).toEqual(expected);
 });
 
@@ -37,7 +36,7 @@ test('block: select single transaction from block by index', async () => {
       },
     },
   };
-  const result = await graphql(schema, query);
+  const result = await execQuery(query);
   expect(result).toEqual(expected);
 });
 
@@ -54,7 +53,7 @@ test('block: null response when selecting transaction by negative index', async 
   }`;
 
   const expected = { data: { block: { difficulty: 3351918027816898, transactionAt: null } } };
-  const result = await graphql(schema, query);
+  const result = await execQuery(query);
   expect(result).toEqual(expected);
 });
 
@@ -71,7 +70,7 @@ test('block: null response when selecting transaction by an index that does not 
   }`;
 
   const expected = { data: { block: { difficulty: 3351918027816898, transactionAt: null } } };
-  const result = await graphql(schema, query);
+  const result = await execQuery(query);
   expect(result).toEqual(expected);
 });
 
@@ -85,7 +84,7 @@ test('block: select single block by hash', async () => {
   `;
 
   const expected = { data: { block: { number: 12344 } } };
-  const result = await graphql(schema, query);
+  const result = await execQuery(query);
   expect(result).toEqual(expected);
 });
 
@@ -98,7 +97,7 @@ test('block: error when selecting block by invalid hash', async () => {
     }
   `;
 
-  const result = await graphql(schema, query);
+  const result = await execQuery(query);
   expect(result.errors).toHaveLength(1);
   expect(result.errors[0].message).toMatch(/^Expected type Hash/);
 });
@@ -144,7 +143,7 @@ test('block: all scalar fields successfully returned', async () => {
     },
   };
 
-  const result = await graphql(schema, query);
+  const result = await execQuery(query);
   expect(result).toEqual(expected);
 });
 
@@ -159,7 +158,7 @@ test('block->transactionsInvolving: error when no participants are provided', as
     }
   `;
 
-  const result = await graphql(schema, query);
+  const result = await execQuery(query);
   expect(result.data.block.transactionsInvolving).toBeNull();
   expect(result.errors).toHaveLength(1);
   expect(result.errors[0].message).toBe('Expected at least one participant.');
@@ -176,7 +175,7 @@ test('block->transactionsInvolving: error when invalid participant hash provided
     }
   `;
 
-  const result = await graphql(schema, query);
+  const result = await execQuery(query);
   expect(result.errors).toHaveLength(1);
   expect(result.errors[0].message).toMatch(/^Expected type Address/);
 });
@@ -213,6 +212,6 @@ test.skip('block->transactionsInvolving: transactions successfully returned', as
     },
   };
 
-  const result = await graphql(schema, query);
+  const result = await execQuery(query);
   expect(result).toEqual(expected);
 });

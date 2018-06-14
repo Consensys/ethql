@@ -1,7 +1,6 @@
-import { graphql, GraphQLSchema } from 'graphql';
-import { testSchema } from '../utils';
+import { testGraphql } from '../utils';
 
-let schema = testSchema();
+const { execQuery } = testGraphql();
 
 test('transaction: select transaction by specific hash', async () => {
   const query = `
@@ -14,7 +13,7 @@ test('transaction: select transaction by specific hash', async () => {
 
   const expected = { data: { transaction: { nonce: 10 } } };
 
-  const result = await graphql(schema, query);
+  const result = await execQuery(query);
   expect(result).toEqual(expected);
 });
 
@@ -29,7 +28,7 @@ test('transaction: select non-existent transaction', async () => {
 
   const expected = { data: { transaction: null } };
 
-  const result = await graphql(schema, query);
+  const result = await execQuery(query);
   expect(result).toEqual(expected);
 });
 
@@ -42,7 +41,7 @@ test('transaction: error when malformed hash provided', async () => {
         }
     `;
 
-  const result = await graphql(schema, query);
+  const result = await execQuery(query);
   expect(result.errors).toHaveLength(1);
   expect(result.errors[0].message).toMatch(/^Expected type Hash/);
 });

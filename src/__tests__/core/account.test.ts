@@ -1,7 +1,6 @@
-import { graphql, GraphQLSchema } from 'graphql';
-import { testSchema } from '../utils';
+import { testGraphql } from '../utils';
 
-let schema = testSchema();
+const { execQuery } = testGraphql();
 
 test('account: select by address', async () => {
   const query = `
@@ -15,7 +14,7 @@ test('account: select by address', async () => {
 
   const expected = { data: { account: { code: '0x', transactionCount: 0 } } };
 
-  const result = await graphql(schema, query);
+  const result = await execQuery(query);
   expect(result).toEqual(expected);
 });
 
@@ -29,7 +28,7 @@ test('account: error when address is invalid', async () => {
     }
   `;
 
-  const result = await graphql(schema, query);
+  const result = await execQuery(query);
   expect(result.errors).toHaveLength(1);
   expect(result.errors[0].message).toMatch(/^Expected type Address\!/);
 });

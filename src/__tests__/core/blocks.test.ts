@@ -1,7 +1,6 @@
-import { graphql, GraphQLSchema } from 'graphql';
-import { testSchema } from '../utils';
+import { testGraphql } from '../utils';
 
-let schema = testSchema();
+const { execQuery } = testGraphql();
 
 test('blocks: select multiple blocks by specific numbers', async () => {
   const query = `
@@ -22,7 +21,7 @@ test('blocks: select multiple blocks by specific numbers', async () => {
     },
   };
 
-  const result = await graphql(schema, query);
+  const result = await execQuery(query);
   expect(result).toEqual(expected);
 });
 
@@ -40,6 +39,6 @@ test('blocks: select multiple blocks by specific hashes', async () => {
   `;
 
   const expected = { data: { blocks: [{ number: 1234 }, { number: 1235 }, { number: 12342 }] } };
-  const result = await graphql(schema, query);
+  const result = await execQuery(query);
   expect(result).toEqual(expected);
 });
