@@ -30,7 +30,7 @@ export default function(web3: Web3, config: Options): IResolvers {
   const block: IFieldResolver<any, any> = async (obj, args: IBlockArgs) => {
     let { number: blockNumber, hash, tag } = args;
     hash = hash ? hash.trim() : hash;
-    tag = tag ? tag.trim() : tag;
+    tag = tag ? tag.trim().toLowerCase() : tag;
 
     const params = _.reject([blockNumber, hash, tag], _.isNil);
     if (!args) {
