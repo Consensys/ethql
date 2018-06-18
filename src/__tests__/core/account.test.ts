@@ -35,13 +35,13 @@ test('account: error when address is invalid', async () => {
 test('account: select account balance', async () => {
   const query = `
     {
-      account(address: "0xF7c74BBC9b7e643193d46D9889538899321e5712") {
+      account(address: "0x0000000000000000000000000000000000000000") {
         balance
       }
     }
   `;
 
-  const expected = { data: { account: { balance: 201749298394112000 } } };
   const result = await execQuery(query);
-  expect(result).toEqual(expected);
+  expect(result.errors).toBeUndefined();
+  expect(result.data.account.balance).toBeGreaterThan(0);
 });
