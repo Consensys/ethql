@@ -24,7 +24,7 @@ class EthqlTransaction {
 
     this.from = new EthqlAccount(from);
     this.to = new EthqlAccount(to);
-    this.inputData = tx.input;
+    this.inputData = !tx.input || tx.input === '0x' ? null : tx.input;
   }
 
   public get index() {
