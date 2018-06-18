@@ -26,7 +26,7 @@ test('block: select single block by tag', async () => {
   `;
 
   const expected = { data: { block: { hash: expect.any(String) } } };
-  const result = await graphql(schema, query);
+  const result = await execQuery(query);
   expect(result).toEqual(expected);
 });
 
