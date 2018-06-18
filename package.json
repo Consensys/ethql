@@ -35,6 +35,9 @@
     ],
     "*.{js,css,scss,html,json,graphql,md}": ["prettier --write", "git add"]
   },
+  "nodemonConfig": {
+    "ignore": ["src/__tests__/*"]
+  },
   "dependencies": {
     "abi-decoder": "^1.1.0",
     "commander": "^2.15.1",
