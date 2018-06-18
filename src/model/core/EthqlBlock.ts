@@ -1,4 +1,3 @@
-import * as _ from 'lodash';
 import { Block } from 'web3/eth/types';
 import EthqlTransaction from './EthqlTransaction';
 

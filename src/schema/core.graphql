@@ -16,6 +16,9 @@ type Query {
 
   "Selects a transaction by hash."
   transaction(hash: Hash): Transaction
+
+  "Returns the health of the server."
+  health: String!
 }
 
 """

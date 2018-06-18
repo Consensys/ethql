@@ -12,9 +12,7 @@ const options: Options = {
   queryMaxSize: 10,
 };
 
-export function testGraphql(
-  overrides?: Options,
-): { schema: GraphQLSchema; execQuery: (query: string) => ReturnType<typeof graphql> } {
+export function testGraphql(overrides?: Options) {
   const config = _.merge({}, options, overrides || {});
   const web3 = initWeb3(config.jsonrpc);
   const context = new EthqlContext(web3, config, txDecodingEngine);
@@ -22,5 +20,5 @@ export function testGraphql(
   const execQuery = (query: string) => {
     return graphql(schema, query, new EthqlQuery(), context);
   };
-  return { schema, execQuery };
+  return { schema, context, execQuery };
 }

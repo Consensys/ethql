@@ -116,6 +116,10 @@ class EthqlQuery {
     const tx = await web3.eth.getTransaction(hash);
     return tx && new EthqlTransaction(tx);
   }
+
+  public health() {
+    return 'ok';
+  }
 }
 
 export default EthqlQuery;
