@@ -101,3 +101,40 @@ test('block->transactionsInvolving: match non-checksummed addresses', async () =
   const result = await execQuery(query);
   expect(result).toEqual(expected);
 });
+
+test('block->transactionsInvolving: block with contract creations (null to address) does not fail', async () => {
+  const query = `
+    {
+      block(number: 5000000) {
+        transactionsInvolving(participants: [
+          "0x52bc44d5378309ee2abf1539bf71de1b7d7be3b5",
+          "0x49bca73765cadce6b80dd17d2a957d3d55d53836",
+          "0xbaa705866f77af9194a8a91b8104438b20272958"]) {
+          hash
+        }
+      }
+    }
+  `;
+
+  const expected = {
+    data: {
+      block: {
+        transactionsInvolving: [
+          {
+            hash: '0x7cc930cef131502bb78c13012caf0d99117892601b81fb95958aac98191fe6fb',
+          },
+          {
+            hash: '0xc18604dd4c911148f43900ca26480527022132b0fe821a03a72ec6b69d761d1c',
+          },
+          {
+            hash: '0x218651412101c68079b2e1a91e9b9c69c4269107a00c88c4c5cee249af7f2d7e',
+          },
+        ],
+      },
+    },
+  };
+
+  const result = await execQuery(query);
+  expect(result.errors).toBeUndefined();
+  expect(result).toEqual(expected);
+});

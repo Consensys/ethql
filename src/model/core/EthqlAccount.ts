@@ -16,6 +16,10 @@ class EthqlAccount {
   }
 
   public equals(addressOrAccount: string | EthqlAccount) {
+    // Fail soon if any of the addresses is null, which could stand for contract creation.
+    if (!this.address || !addressOrAccount) {
+      return false;
+    }
     const address = typeof addressOrAccount === 'string' ? addressOrAccount : addressOrAccount.address;
     return this.address.toLowerCase() === address.toLowerCase();
   }
