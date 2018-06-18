@@ -13,6 +13,11 @@ interface TransactionsInvolvingArgs {
   participants: string[];
 }
 
+interface TransactionsRolesArgs {
+  from: string;
+  to: string;
+}
+
 class EthqlBlock implements EthqlBlock {
   public transactions: EthqlTransaction[];
 
@@ -36,6 +41,15 @@ class EthqlBlock implements EthqlBlock {
       throw new Error('Expected at least one participant.');
     }
     return this.transactions.filter(tx => participants.some(p => tx.from.equals(p) || tx.to.equals(p)));
+  }
+
+  public transactionsRoles({ from, to }: TransactionsRolesArgs) {
+    if (!(from || to)) {
+      throw new Error('Expected one or both of a from address and a to address.');
+    }
+
+    // Note: the EthqlAccount#equals method is lenient to nulls/undefined.
+    return this.transactions.filter(tx => tx.from.equals(from) || tx.to.equals(to));
   }
 }
 
