@@ -12,6 +12,7 @@ interface EthqlBlock extends Overwrite<Block, Overwritten> {}
 interface TransactionFilter {
   withInput?: boolean;
   withLogs?: boolean;
+  contractCreation?: boolean;
 }
 
 interface WithTransactionFilter {
@@ -29,11 +30,21 @@ interface TransactionsRolesArgs extends WithTransactionFilter {
 
 class EthqlBlock implements EthqlBlock {
   private static transactionFilter(filter: TransactionFilter): (tx: EthqlTransaction) => boolean {
-    return !filter || filter.withInput === undefined //
-      ? tx => true
-      : filter.withInput
-        ? tx => !!tx.inputData
-        : tx => !tx.inputData;
+    const withInput =
+      !filter || filter.withInput === undefined
+        ? tx => true
+        : filter.withInput
+          ? tx => !!tx.inputData
+          : tx => !tx.inputData;
+
+    const contractCreation =
+      !filter || filter.contractCreation === undefined
+        ? tx => true
+        : filter.contractCreation
+          ? tx => tx.to.address === null
+          : tx => tx.to.address !== null;
+
+    return tx => withInput(tx) && contractCreation(tx);
   }
 
   //tslint:disable-next-line

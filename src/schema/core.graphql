@@ -188,6 +188,7 @@ enum TransactionStatus {
 input TransactionFilter {
   withLogs: Boolean
   withInput: Boolean
+  contractCreation: Boolean
 }
 
 interface DecodedTransaction {
