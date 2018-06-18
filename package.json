@@ -20,6 +20,7 @@
     "build": "npm run build:ts && npm run build:docker",
     "build:ts": "npm run clean && tsc && $(npm bin)/copyfiles -u 1 src/schema/**/*.graphql src/abi/** dist",
     "build:docker": "docker image build -t ethql .",
+    "lint": "$(npm bin)/npm-run-all lint:ts lint:rest",
     "lint:ts": "$(npm bin)/tslint --fix -t stylish -c tslint.json -p tsconfig.json && $(npm bin)/prettier --parser typescript --write src/**/*.ts",
     "lint:rest": "$(npm bin)/prettier **/*.{md,json} --write",
     "test": "$(npm bin)/jest",
