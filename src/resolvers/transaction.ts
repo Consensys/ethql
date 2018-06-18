@@ -43,12 +43,12 @@ const processors = {
 };
 
 const decodeTransaction: IFieldResolver<any, any> = (transaction, args) => {
-  const { inputData } = transaction;
-  if (!inputData || inputData === '0x') {
+  const { input } = transaction;
+  if (!input || input === '0x') {
     return;
   }
   for (const [c, { decoder, transformer }] of Object.entries(processors)) {
-    const decoded = decoder(inputData);
+    const decoded = decoder(input);
     if (decoded) {
       return transformer(decoded, transaction);
     }

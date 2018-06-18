@@ -46,3 +46,22 @@ test('transaction: error when malformed hash provided', async () => {
   expect(result.errors).toHaveLength(1);
   expect(result.errors[0].message).toMatch(/^Expected type Hash/);
 });
+
+test('transaction: requesting decoded field', async () => {
+  const query = `
+      {
+        transaction(hash: "0xd72b7a9e3461ee34b37da8b9bbc1b58e7bad37702c404400f01631080262a293") {
+          nonce
+          decoded {
+            operation
+          }
+      }
+   }
+ `;
+
+ const expected =  {data: { transaction: { decoded:
+   { operation: 'transfer' }, nonce: 5125979 } } };
+
+ const result = await graphql(schema, query);
+ expect(result).toEqual(expected);
+});
