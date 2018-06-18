@@ -95,7 +95,7 @@ type Block {
   Gets all transactions from this block where the provided addresses take the indicated roles.
   If a filter is passed, only the transactions matching the filter will be returned.
   """
-  transactionsRoles(from: String, to: String, filter: TransactionFilter): [Transaction]
+  transactionsRoles(from: Address, to: Address, filter: TransactionFilter): [Transaction]
 }
 
 """
