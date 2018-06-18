@@ -28,7 +28,7 @@ class SimpleTxDecodingEngine implements TxDecodingEngine {
         return {
           standard: txType.standard,
           operation: decoded.name,
-          __typename: `${txType.standard}${_.capitalize(decoded.name)}`,
+          __typename: `${txType.standard}${_.upperFirst(decoded.name)}`,
           ...txType.transformers[decoded.name](decoded, tx),
         };
       }
