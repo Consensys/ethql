@@ -33,7 +33,7 @@ class EthqlQuery {
   public async block(args: BlockArgs, { web3 }: EthqlContext): Promise<EthqlBlock> {
     let { number: blockNumber, hash, tag } = args;
     hash = hash ? hash.trim() : hash;
-    tag = tag ? tag.trim() : tag;
+    tag = tag ? tag.trim().toLowerCase() : tag;
 
     const params = _.reject([blockNumber, hash, tag], _.isNil);
     if (!args) {
