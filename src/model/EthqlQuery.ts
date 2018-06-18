@@ -1,33 +1,36 @@
-import { IFieldResolver, IResolvers } from 'graphql-tools';
 import * as _ from 'lodash';
-import Web3 = require('web3');
-import { Options } from '../config';
+import EthqlAccount from './core/EthqlAccount';
+import EthqlBlock from './core/EthqlBlock';
+import EthqlTransaction from './core/EthqlTransaction';
+import EthqlContext from './EthqlContext';
 
 // Select a single block.
-interface IBlockArgs {
+interface BlockArgs {
   number?: number;
   hash?: string;
   tag?: string;
 }
 
 // Select multiple blocks.
-interface IBlocksArgs {
+interface BlocksArgs {
   numbers?: [number];
   hashes?: [string];
 }
 
 // Select multiple blocks.
-interface IBlocksRangeArgs {
+interface BlocksRangeArgs {
   numberRange?: [number, number];
   hashRange?: [string, string];
 }
 
-interface ITransactionsInvolvingArgs {
-  participants: string[];
-}
-
-export default function(web3: Web3, config: Options): IResolvers {
-  const block: IFieldResolver<any, any> = async (obj, args: IBlockArgs) => {
+class EthqlQuery {
+  /**
+   * Returns a block.
+   *
+   * @param obj
+   * @param args
+   */
+  public async block(args: BlockArgs, { web3 }: EthqlContext): Promise<EthqlBlock> {
     let { number: blockNumber, hash, tag } = args;
     hash = hash ? hash.trim() : hash;
     tag = tag ? tag.trim().toLowerCase() : tag;
@@ -41,10 +44,10 @@ export default function(web3: Web3, config: Options): IResolvers {
     }
 
     const block = await web3.eth.getBlock(params[0], true);
-    return block ? { transactionCount: block.transactions.length, ...block } : block;
-  };
+    return new EthqlBlock(block);
+  }
 
-  const blocks: IFieldResolver<any, any> = async (obj, { numbers, hashes }: IBlocksArgs) => {
+  public async blocks({ numbers, hashes }: BlocksArgs, { web3, config }: EthqlContext): Promise<EthqlBlock[]> {
     if (numbers && hashes) {
       throw new Error('Only one of numbers or hashes should be provided.');
     }
@@ -55,14 +58,17 @@ export default function(web3: Web3, config: Options): IResolvers {
       throw new Error(`Too large a multiple selection. Maximum length allowed: ${config.queryMaxSize}.`);
     }
 
-    let input: any[] = numbers
+    let input = numbers
       ? numbers.map(n => web3.eth.getBlock(n, true))
       : hashes.map(h => web3.eth.getBlock(h as any, true));
     const blocks = await Promise.all(input);
-    return blocks.map(block => (block ? { transactionCount: block.transactions.length, ...block } : block));
-  };
+    return blocks.map(b => new EthqlBlock(b));
+  }
 
-  const blocksRange: IFieldResolver<any, any> = async (obj, { numberRange, hashRange }: IBlocksRangeArgs) => {
+  public async blocksRange(
+    { numberRange, hashRange }: BlocksRangeArgs,
+    { web3, config }: EthqlContext,
+  ): Promise<EthqlBlock[]> {
     if (numberRange && hashRange) {
       throw new Error('Only one of blocks or hashes should be provided.');
     }
@@ -98,38 +104,18 @@ export default function(web3: Web3, config: Options): IResolvers {
     }
 
     const blocksRange = Array.from({ length: end - start + 1 }, (v, k) => k + start);
-    return Promise.all(blocksRange.map(blockNumber => web3.eth.getBlock(blockNumber, true)));
-  };
+    const blocks = await Promise.all(blocksRange.map(blockNumber => web3.eth.getBlock(blockNumber, true)));
+    return blocks.map(b => new EthqlBlock(b));
+  }
 
-  const transactions = (obj, args) =>
-    obj.transactions.map(tx => ({ ...tx, from: { address: tx.from }, to: { address: tx.to }, inputData: tx.input }));
+  public account({ address }): EthqlAccount {
+    return new EthqlAccount(address);
+  }
 
-  const transactionAt = (obj, args) => obj.transactions[args.index];
-
-  const transactionsInvolving: IFieldResolver<any, any> = async (obj, { participants }: ITransactionsInvolvingArgs) => {
-    if (!participants || !participants.length) {
-      throw new Error('Expected at least one participant.');
-    }
-
-    participants = participants.map(s => s.toLowerCase());
-
-    return obj.transactions
-      .filter(tx =>
-        participants.includes((tx.from || '').toLowerCase() || participants.includes((tx.to || '').toLowerCase())),
-      )
-      .map(tx => ({ ...tx, from: { address: tx.from }, to: { address: tx.to }, inputData: tx.input }));
-  };
-
-  return {
-    Query: {
-      block,
-      blocks,
-      blocksRange,
-    },
-    Block: {
-      transactions,
-      transactionsInvolving,
-      transactionAt,
-    },
-  };
+  public async transaction({ hash }, { web3 }: EthqlContext): Promise<EthqlTransaction> {
+    const tx = await web3.eth.getTransaction(hash);
+    return tx && new EthqlTransaction(tx);
+  }
 }
+
+export default EthqlQuery;

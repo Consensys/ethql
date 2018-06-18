@@ -1,7 +1,6 @@
-import { graphql, GraphQLSchema } from 'graphql';
-import { testSchema } from '../utils';
+import { testGraphql } from '../utils';
 
-let schema = testSchema();
+const { execQuery } = testGraphql();
 
 test('blocks: error when selecting too many blocks by numbers', async () => {
   const query = `
@@ -12,7 +11,7 @@ test('blocks: error when selecting too many blocks by numbers', async () => {
     }
   `;
 
-  const result = await graphql(schema, query);
+  const result = await execQuery(query);
   expect(result.data.blocks).toBeNull();
   expect(result.errors).toHaveLength(1);
   expect(result.errors[0].message).toMatch(/^Too large a multiple selection/);
@@ -38,7 +37,7 @@ test('blocks: error when selecting too many blocks by hashes', async () => {
     }
   `;
 
-  const result = await graphql(schema, query);
+  const result = await execQuery(query);
   expect(result.data.blocks).toBeNull();
   expect(result.errors).toHaveLength(1);
   expect(result.errors[0].message).toMatch(/^Too large a multiple selection/);
@@ -53,7 +52,7 @@ test('blockRange: error when selecting too many blocks in range by numbers', asy
     }
   `;
 
-  const result = await graphql(schema, query);
+  const result = await execQuery(query);
   expect(result.data.blocksRange).toBeNull();
   expect(result.errors).toHaveLength(1);
   expect(result.errors[0].message).toMatch(/^Too large a multiple selection/);
@@ -71,7 +70,7 @@ test('blockRange: error when selecting too many blocks in range by hashes', asyn
     }
   `;
 
-  const result = await graphql(schema, query);
+  const result = await execQuery(query);
   expect(result.data.blocksRange).toBeNull();
   expect(result.errors).toHaveLength(1);
   expect(result.errors[0].message).toMatch(/^Too large a multiple selection/);
