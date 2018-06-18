@@ -1,3 +1,4 @@
+import * as _ from 'lodash';
 import { Block } from 'web3/eth/types';
 import EthqlTransaction from './EthqlTransaction';
 
@@ -31,16 +32,11 @@ class EthqlBlock implements EthqlBlock {
     return this.transactions[args.index];
   }
 
-  public transactionsInvolving(obj, { participants }: TransactionsInvolvingArgs): EthqlTransaction[] {
+  public transactionsInvolving({ participants }: TransactionsInvolvingArgs): EthqlTransaction[] {
     if (!participants || !participants.length) {
       throw new Error('Expected at least one participant.');
     }
-
-    participants = participants.map(s => s.toLowerCase());
-
-    return obj.transactions.filter(tx =>
-      participants.includes((tx.from || '').toLowerCase() || participants.includes((tx.to || '').toLowerCase())),
-    );
+    return this.transactions.filter(tx => participants.some(p => tx.from.equals(p) || tx.to.equals(p)));
   }
 }
 

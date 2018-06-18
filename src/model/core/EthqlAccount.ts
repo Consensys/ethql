@@ -14,6 +14,11 @@ class EthqlAccount {
   public async transactionCount(_, { web3 }: EthqlContext) {
     return web3.eth.getTransactionCount(this.address);
   }
+
+  public equals(addressOrAccount: string | EthqlAccount) {
+    const address = typeof addressOrAccount === 'string' ? addressOrAccount : addressOrAccount.address;
+    return this.address.toLowerCase() === address.toLowerCase();
+  }
 }
 
 export default EthqlAccount;
