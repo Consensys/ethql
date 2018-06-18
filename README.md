@@ -9,12 +9,12 @@ tooling while preserving compile-time type safety.
 ethql regards blockchain data as a graph, and leverages the extensibility of GraphQL to introduce additional
 functionality, amongst which are:
 
-* Decoding of standard transactions (e.g. ERC20, ENS, ERC223, etc.) out of the box.
-* New query patterns enabled by indexing solutions (e.g. all transactions between any two accounts).
-* Automatic batching and caching of requests.
-* New filtering capabilities.
-* Simple, inline unit conversions.
-* Enhancing public data with information overlays imported from other sources.
+- Decoding of standard transactions (e.g. ERC20, ENS, ERC223, etc.) out of the box.
+- New query patterns enabled by indexing solutions (e.g. all transactions between any two accounts).
+- Automatic batching and caching of requests.
+- New filtering capabilities.
+- Simple, inline unit conversions.
+- Enhancing public data with information overlays imported from other sources.
 
 This project is in the experimental phase, and all the cited features are under heavy development.
 
@@ -22,8 +22,8 @@ This project is in the experimental phase, and all the cited features are under 
 
 You need a running Node environment with at least:
 
-* nodejs >= 8.0.0
-* [yarn](https://yarnpkg.com/)
+- nodejs >= 8.0.0
+- [yarn](https://yarnpkg.com/)
 
 Clone the repo and run:
 
@@ -42,8 +42,8 @@ $ INFURA_ID=myid npm run dev
 
 ## Development team
 
-* Raúl Kripalani <mailto:raul.kripalani@consensys.net>
-* Akhila Raju <mailto:akhila.raju@consensys.net>
+- Raúl Kripalani <mailto:raul.kripalani@consensys.net>
+- Akhila Raju <mailto:akhila.raju@consensys.net>
 
 # Who we are
 
