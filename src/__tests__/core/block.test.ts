@@ -16,6 +16,20 @@ test('block: select single block by number', async () => {
   expect(result).toEqual(expected);
 });
 
+test('block: select single block by tag', async () => {
+  const query = `
+    {
+      block(tag: LATEST) {
+        hash
+      }
+    }
+  `;
+
+  const expected = { data: { block: { hash: expect.any(String) } } };
+  const result = await execQuery(query);
+  expect(result).toEqual(expected);
+});
+
 test('block: select single transaction from block by index', async () => {
   const query = `
   {
