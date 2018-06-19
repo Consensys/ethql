@@ -1,4 +1,4 @@
-# A GraphQL interface to Ethereum 🔥
+# A GraphQL interface for Ethereum 🔥
 
 **This repo is currently in its Proof of Concept stages.**
 
