@@ -4,8 +4,6 @@ import * as _ from 'lodash';
 import EthqlContext from '../model/EthqlContext';
 
 export default function initResolvers({ web3 }: EthqlContext): IResolvers {
-  const isHexStrict: (input: string) => boolean = (web3.utils as any).isHexStrict;
-
   const scalarResolvers = {
     Long: new GraphQLScalarType({
       name: 'Long',
@@ -50,10 +48,14 @@ export default function initResolvers({ web3 }: EthqlContext): IResolvers {
       description: 'A Keccak hash, used to identify blocks and transactions',
       serialize: String,
       parseValue: input => {
-        return !isHexStrict(input) || web3.utils.hexToBytes(input).length !== 32 ? input : undefined;
+        return !web3.utils.isHexStrict(input) || web3.utils.hexToBytes(input).length !== 32 ? input : undefined;
       },
       parseLiteral: ast => {
-        if (ast.kind !== Kind.STRING || !isHexStrict(ast.value) || web3.utils.hexToBytes(ast.value).length !== 32) {
+        if (
+          ast.kind !== Kind.STRING ||
+          !web3.utils.isHexStrict(ast.value) ||
+          web3.utils.hexToBytes(ast.value).length !== 32
+        ) {
           return undefined;
         }
         return String(ast.value);
