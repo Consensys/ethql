@@ -116,6 +116,34 @@ test('block: error when selecting block by invalid hash', async () => {
   expect(result.errors[0].message).toMatch(/^Expected type Hash/);
 });
 
+test('block: error when selecting block with no number, hash, or tag', async () => {
+  const query = `
+    {
+      block {
+        number
+      }
+    }
+  `;
+
+  const result = await execQuery(query);
+  expect(result.errors).toHaveLength(1);
+  expect(result.errors[0].message).toMatch(/^Expected either number, hash or tag argument/);
+});
+
+test('block: error when selecting block with more than one argument', async () => {
+  const query = `
+    {
+      block(hash: "0x4b3c1d7e65a507b62734feca1ee9f27a5379e318bd52ae62de7ba67dbeac66a3", number: 12344)   {
+        number
+      }
+    }
+  `;
+
+  const result = await execQuery(query);
+  expect(result.errors).toHaveLength(1);
+  expect(result.errors[0].message).toMatch(/^Only one of number, hash or tag argument should be provided/);
+});
+
 test('block: all scalar fields successfully returned', async () => {
   const query = `
     {

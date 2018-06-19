@@ -36,7 +36,8 @@ class EthqlQuery {
     tag = tag ? tag.trim().toLowerCase() : tag;
 
     const params = _.reject([blockNumber, hash, tag], _.isNil);
-    if (!args) {
+
+    if (!params.length) {
       throw new Error('Expected either number, hash or tag argument.');
     }
     if (params.length > 1) {

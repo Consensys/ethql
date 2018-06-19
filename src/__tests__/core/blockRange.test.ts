@@ -131,10 +131,24 @@ test('blocksRange: error when only one hash provided', async () => {
   expect(result.errors[0].message).toBe('Exactly two elements were expected: the start and end blocks.');
 });
 
-test('blocksRange: error when negative number provided', async () => {
+test('blocksRange: error when negative number provided as start', async () => {
   const query = `
     {
       blocksRange(numberRange: [-1, 122]) {
+        timestamp
+      }
+    }
+  `;
+
+  const result = await execQuery(query);
+  expect(result.errors).toHaveLength(1);
+  expect(result.errors[0].message).toBe('Expected type BlockNumber, found -1.');
+});
+
+test('blocksRange: error when negative number provided as end', async () => {
+  const query = `
+    {
+      blocksRange(numberRange: [122, -1]) {
         timestamp
       }
     }

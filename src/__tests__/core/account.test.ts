@@ -13,7 +13,6 @@ test('account: select by address', async () => {
   `;
 
   const expected = { data: { account: { code: '0x', transactionCount: 0 } } };
-
   const result = await execQuery(query);
   expect(result).toEqual(expected);
 });
@@ -31,4 +30,18 @@ test('account: error when address is invalid', async () => {
   const result = await execQuery(query);
   expect(result.errors).toHaveLength(1);
   expect(result.errors[0].message).toMatch(/^Expected type Address\!/);
+});
+
+test('account: select account balance', async () => {
+  const query = `
+    {
+      account(address: "0x0000000000000000000000000000000000000000") {
+        balance
+      }
+    }
+  `;
+
+  const result = await execQuery(query);
+  expect(result.errors).toBeUndefined();
+  expect(result.data.account.balance).toBeGreaterThan(0);
 });
