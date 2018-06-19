@@ -9,7 +9,7 @@
     "baseUrl": ".",
     "lib": ["esnext", "dom"],
     "paths": {
-      "web3": ["node_modules/@types/web3/index.d.ts"],
+      "web3": ["src/types/web3/index.d.ts"],
       "*": ["node_modules/*", "src/types/*"]
     }
   },

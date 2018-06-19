@@ -22,12 +22,6 @@
   dependencies:
     any-observable "^0.3.0"
 
-"@types/bn.js@*":
-  version "4.11.0"
-  resolved "https://registry.yarnpkg.com/@types/bn.js/-/bn.js-4.11.0.tgz#401cb20874f0a7b8414e46308a99c449759b7de9"
-  dependencies:
-    "@types/node" "*"
-
 "@types/body-parser@*":
   version "1.17.0"
   resolved "https://registry.yarnpkg.com/@types/body-parser/-/body-parser-1.17.0.tgz#9f5c9d9bd04bb54be32d5eb9fc0d8c974e6cf58c"
@@ -108,17 +102,6 @@
   dependencies:
     "@types/express-serve-static-core" "*"
     "@types/mime" "*"
-
-"@types/underscore@*":
-  version "1.8.8"
-  resolved "https://registry.yarnpkg.com/@types/underscore/-/underscore-1.8.8.tgz#510fe1ca5e7fa87fccd405b9a8b566d420bc3d1b"
-
-"@types/web3@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@types/web3/-/web3-1.0.0.tgz#d55544ec861f464646740131e0bf2b1992f13a4a"
-  dependencies:
-    "@types/bn.js" "*"
-    "@types/underscore" "*"
 
 abab@^1.0.4:
   version "1.0.4"
