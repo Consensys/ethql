@@ -1,3 +1,5 @@
+import { GraphQLResolveInfo } from 'graphql';
+import getFieldList = require('graphql-list-fields');
 import * as _ from 'lodash';
 import EthqlAccount from './core/EthqlAccount';
 import EthqlBlock from './core/EthqlBlock';
@@ -30,7 +32,7 @@ class EthqlQuery {
    * @param obj
    * @param args
    */
-  public async block(args: BlockArgs, { web3 }: EthqlContext): Promise<EthqlBlock> {
+  public async block(args: BlockArgs, { web3 }: EthqlContext, info: GraphQLResolveInfo): Promise<EthqlBlock> {
     let { number: blockNumber, hash, tag } = args;
     hash = hash ? hash.trim() : hash;
     tag = tag ? tag.trim().toLowerCase() : tag;
@@ -44,11 +46,15 @@ class EthqlQuery {
       throw new Error('Only one of number, hash or tag argument should be provided.');
     }
 
-    const block = await web3.eth.getBlock(params[0], true);
+    const block = await web3.eth.getBlock(params[0], this.queryContainsTxs(info));
     return new EthqlBlock(block);
   }
 
-  public async blocks({ numbers, hashes }: BlocksArgs, { web3, config }: EthqlContext): Promise<EthqlBlock[]> {
+  public async blocks(
+    { numbers, hashes }: BlocksArgs,
+    { web3, config }: EthqlContext,
+    info: GraphQLResolveInfo,
+  ): Promise<EthqlBlock[]> {
     if (numbers && hashes) {
       throw new Error('Only one of numbers or hashes should be provided.');
     }
@@ -60,8 +66,8 @@ class EthqlQuery {
     }
 
     let input = numbers
-      ? numbers.map(n => web3.eth.getBlock(n, true))
-      : hashes.map(h => web3.eth.getBlock(h as any, true));
+      ? numbers.map(n => web3.eth.getBlock(n, this.queryContainsTxs(info)))
+      : hashes.map(h => web3.eth.getBlock(h as any, this.queryContainsTxs(info)));
     const blocks = await Promise.all(input);
     return blocks.map(b => new EthqlBlock(b));
   }
@@ -69,6 +75,7 @@ class EthqlQuery {
   public async blocksRange(
     { numberRange, hashRange }: BlocksRangeArgs,
     { web3, config }: EthqlContext,
+    info: GraphQLResolveInfo,
   ): Promise<EthqlBlock[]> {
     if (numberRange && hashRange) {
       throw new Error('Only one of blocks or hashes should be provided.');
@@ -88,7 +95,7 @@ class EthqlQuery {
       }
     } else if (hashRange && hashRange.length === 2) {
       // We've received start and end hashes, so we need to resolve them to block numbers first to delimit the range.
-      const blocks = await Promise.all(hashRange.map(b => web3.eth.getBlock(b as any, true)));
+      const blocks = await Promise.all(hashRange.map(b => web3.eth.getBlock(b as any, this.queryContainsTxs(info))));
       if (blocks.indexOf(null) >= 0) {
         throw new Error('Could not resolve the block associated with one or all hashes.');
       }
@@ -105,7 +112,9 @@ class EthqlQuery {
     }
 
     const blocksRange = Array.from({ length: end - start + 1 }, (v, k) => k + start);
-    const blocks = await Promise.all(blocksRange.map(blockNumber => web3.eth.getBlock(blockNumber, true)));
+    const blocks = await Promise.all(
+      blocksRange.map(blockNumber => web3.eth.getBlock(blockNumber, this.queryContainsTxs(info))),
+    );
     return blocks.map(b => new EthqlBlock(b));
   }
 
@@ -120,6 +129,15 @@ class EthqlQuery {
 
   public health() {
     return 'ok';
+  }
+
+  private queryContainsTxs(info: GraphQLResolveInfo): boolean {
+    const fields = getFieldList(info);
+    return (
+      !!fields.find(
+        a => a.includes('transactions') || a.includes('transactionsInvolving') || a.includes('transactionsRoles'),
+      ) || false
+    );
   }
 }
 
