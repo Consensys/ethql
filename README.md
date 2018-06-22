@@ -1,7 +1,7 @@
 # A GraphQL interface to Ethereum 🔥
 
 [![Gitter](https://img.shields.io/gitter/room/ethql/lobby.js.svg?style=for-the-badge)](https://gitter.im/ethql/Lobby)
- 
+
 **This repo is currently in its Proof of Concept stages.**
 
 ethql is a server that exposes a GraphQL endpoint to the public Ethereum ledger. It works against the standard JSON-RPC
