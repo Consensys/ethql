@@ -30,16 +30,16 @@ interface TransactionsRolesArgs extends WithTransactionFilter {
 
 class EthqlBlock implements EthqlBlock {
   private static transactionFilter(filter: TransactionFilter): (tx: EthqlTransaction) => boolean {
+    if (!filter) {
+      return _ => true;
+    }
+
     const withInput =
-      !filter || filter.withInput === undefined
-        ? tx => true
-        : filter.withInput
-          ? tx => !!tx.inputData
-          : tx => !tx.inputData;
+      filter.withInput === undefined ? _ => true : filter.withInput ? tx => !!tx.inputData : tx => !tx.inputData;
 
     const contractCreation =
-      !filter || filter.contractCreation === undefined
-        ? tx => true
+      filter.contractCreation === undefined
+        ? _ => true
         : filter.contractCreation
           ? tx => tx.to.address === null
           : tx => tx.to.address !== null;
