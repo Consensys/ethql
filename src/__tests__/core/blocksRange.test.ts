@@ -1,3 +1,4 @@
+import EthqlQuery from '../../model/EthqlQuery';
 import { testGraphql } from '../utils';
 
 const { execQuery } = testGraphql();
@@ -242,4 +243,21 @@ test('blocksRange: same block hash provided twice returns one block', async () =
 
   const result = await execQuery(query);
   expect(result).toEqual(expected);
+});
+
+test('blocksRange: web3.eth.getBlock called with 2nd param false value', async () => {
+  const query = `
+    {
+      blocksRange(numberRange: [10, 10]) {
+        number
+      }
+    }
+  `;
+
+  const spy = jest.spyOn(EthqlQuery.prototype, 'queryContainsTxs');
+  const result = await execQuery(query);
+  expect(spy).toHaveBeenCalledTimes(1);
+  expect(spy).toReturnWith(false);
+  spy.mockReset();
+  spy.mockRestore();
 });

@@ -131,7 +131,7 @@ class EthqlQuery {
     return 'ok';
   }
 
-  private queryContainsTxs(info: GraphQLResolveInfo): boolean {
+  public queryContainsTxs(info: GraphQLResolveInfo): boolean {
     const fields = getFieldList(info);
     return (
       !!fields.find(

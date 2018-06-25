@@ -1,3 +1,4 @@
+import EthqlQuery from '../../model/EthqlQuery';
 import { testGraphql } from '../utils';
 
 const { execQuery } = testGraphql();
@@ -61,16 +62,19 @@ test('blocks: error when selecting blocks with both numbers and hashes', async (
   expect(result.errors[0].message).toMatch(/^Only one of numbers or hashes should be provided/);
 });
 
-test('blocks: error when selecting blocks with no numbers or hashes', async () => {
+test('blocks: web3.eth.getBlock called with 2nd param false value', async () => {
   const query = `
     {
-      blocks {
-        number
+      blocks(numbers: [1202, 20502, 292]) {
+        hash
       }
     }
   `;
 
+  const spy = jest.spyOn(EthqlQuery.prototype, 'queryContainsTxs');
   const result = await execQuery(query);
-  expect(result.errors).toHaveLength(1);
-  expect(result.errors[0].message).toMatch(/^At least one of numbers or hashes must be provided/);
+  expect(spy).toHaveBeenCalledTimes(3);
+  expect(spy).toReturnWith(false);
+  spy.mockReset();
+  spy.mockRestore();
 });

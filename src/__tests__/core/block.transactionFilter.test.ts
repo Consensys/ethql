@@ -1,3 +1,4 @@
+import EthqlQuery from '../../model/EthqlQuery';
 import { testGraphql } from '../utils';
 
 const { execQuery } = testGraphql();
@@ -878,5 +879,26 @@ describe('transactionFilter on Block->transactionsRoles', async () => {
     };
     const result = await execQuery(query);
     expect(result).toEqual(expected);
+  });
+});
+
+describe('web3.eth.getBlock on Block->transactionsRoles', async () => {
+  test('web3.eth.getBlock called with 2nd param true value', async () => {
+    const query = `
+      {
+        block(hash: "0x4b3c1d7e65a507b62734feca1ee9f27a5379e318bd52ae62de7ba67dbeac66a3") {
+          transactionsRoles(from: "0xA88C0bFD7FfB73201C0DF4a065439a9DB79198Fc", filter: { contractCreation: true, withInput: true }) {
+            hash
+        }
+        }
+      }
+    `;
+
+    const spy = jest.spyOn(EthqlQuery.prototype, 'queryContainsTxs');
+    const result = await execQuery(query);
+    expect(spy).toHaveBeenCalledTimes(1);
+    expect(spy).toReturnWith(true);
+    spy.mockReset();
+    spy.mockRestore();
   });
 });
