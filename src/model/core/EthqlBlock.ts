@@ -72,9 +72,10 @@ class EthqlBlock implements EthqlBlock {
     this._transactions = transactions.map(t => new EthqlTransaction(t));
   }
 
-  /**
-   * Gets all transactions from this block.
-   */
+  public async parent(_, context: EthqlContext, info: GraphQLResolveInfo): Promise<EthqlBlock> {
+    return EthqlBlock.load(this.parentHash, context, info);
+  }
+
   public transactions({ filter }: WithTransactionFilter) {
     return this._transactions.filter(EthqlBlock.transactionFilter(filter));
   }
