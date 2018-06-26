@@ -13,6 +13,8 @@
     "no-var-keyword": true,
     "quotemark": [true, "single", "avoid-escape"],
     "semicolon": [true, "always", "ignore-bound-class-methods"],
+    "ban-types": [false],
+    "variable-name": [true, "allow-leading-underscore"],
     "object-literal-sort-keys": false,
     "whitespace": [
       true,

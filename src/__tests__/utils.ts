@@ -11,6 +11,7 @@ const options: Options = {
   jsonrpc: 'https://mainnet.infura.io',
   queryMaxSize: 10,
   batching: true,
+  caching: true,
 };
 
 export function testGraphql(overrides?: Options) {

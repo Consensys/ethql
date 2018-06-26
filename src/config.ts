@@ -6,6 +6,7 @@ export class Options {
   public queryMaxSize?: number;
   public port?: number;
   public batching?: boolean;
+  public caching?: boolean;
 }
 
 /* tslint:disable */
@@ -31,6 +32,11 @@ const options: Options | commander.Command = commander
     'enables or disables JSON-RPC batching (default: true)',
     true,
   )
+  .option(
+    '-c, --caching <enabled>', //
+    'enables or disables JSON-RPC caching (default: true)',
+    true,
+  )
   .parse(process.argv)
   .opts();
 /* tslint: enable */
@@ -40,6 +46,7 @@ const env: Options = {
   queryMaxSize: parseInt(process.env.ETHQL_QUERY_MAX_SIZE) || undefined,
   port: parseInt(process.env.ETHQL_PORT) || undefined,
   batching: process.env.ETHQL_BATCHING === undefined || process.env.ETHQL_BATCHING === 'true',
+  caching: process.env.ETHQL_CACHING === undefined || process.env.ETHQL_CACHING === 'true',
 };
 
 export default _.merge(options, env);
