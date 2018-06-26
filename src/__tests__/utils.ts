@@ -10,11 +10,12 @@ import txDecodingEngine from '../txdec';
 const options: Options = {
   jsonrpc: 'https://mainnet.infura.io',
   queryMaxSize: 10,
+  batching: true,
 };
 
 export function testGraphql(overrides?: Options) {
   const config = _.merge({}, options, overrides || {});
-  const web3 = initWeb3(config.jsonrpc);
+  const web3 = initWeb3(config);
   const context = new EthqlContext(web3, config, txDecodingEngine);
   const schema = initSchema(context);
   const execQuery = (query: string) => {

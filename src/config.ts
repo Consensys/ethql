@@ -5,6 +5,7 @@ export class Options {
   public jsonrpc?: string;
   public queryMaxSize?: number;
   public port?: number;
+  public batching?: boolean;
 }
 
 /* tslint:disable */
@@ -25,6 +26,11 @@ const options: Options | commander.Command = commander
     'specify the port number on which the GraphQL HTTP server will listen on',
     4000,
   )
+  .option(
+    '-b, --batching <enabled>', //
+    'enables or disables JSON-RPC batching (default: true)',
+    true,
+  )
   .parse(process.argv)
   .opts();
 /* tslint: enable */
@@ -33,6 +39,7 @@ const env: Options = {
   jsonrpc: process.env.ETHQL_JSONRPC_ENDPOINT,
   queryMaxSize: parseInt(process.env.ETHQL_QUERY_MAX_SIZE) || undefined,
   port: parseInt(process.env.ETHQL_PORT) || undefined,
+  batching: process.env.ETHQL_BATCHING === undefined || process.env.ETHQL_BATCHING === 'true',
 };
 
 export default _.merge(options, env);
