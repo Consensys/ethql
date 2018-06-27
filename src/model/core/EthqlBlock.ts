@@ -1,4 +1,5 @@
 import { Block } from 'web3/eth/types';
+import EthqlContext from '../EthqlContext';
 import EthqlTransaction from './EthqlTransaction';
 
 type Overwrite<T1, T2> = { [P in Exclude<keyof T1, keyof T2>]: T1[P] } & T2;
@@ -65,8 +66,12 @@ class EthqlBlock implements EthqlBlock {
     return this._transactions.length;
   }
 
-  public transactionAt(args): EthqlTransaction {
-    return this._transactions[args.index];
+  public async transactionAt(args, { web3 }: EthqlContext): Promise<EthqlTransaction> {
+    if (args.index < 0) {
+      return null;
+    }
+    const tx = await web3.eth.getTransactionFromBlock(this.hash, args.index);
+    return tx && new EthqlTransaction(tx);
   }
 
   public transactionsInvolving({ participants, filter }: TransactionsInvolvingArgs): EthqlTransaction[] {
