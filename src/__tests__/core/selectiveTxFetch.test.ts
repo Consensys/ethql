@@ -1,4 +1,3 @@
-import EthqlQuery from '../../model/EthqlQuery';
 import { testGraphql } from '../utils';
 
 const {
