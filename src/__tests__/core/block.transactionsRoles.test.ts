@@ -319,22 +319,3 @@ test('block->transactionsRoles: both from and to addresses, multiple matching tr
   const result = await execQuery(query);
   expect(result).toEqual(expected);
 });
-
-test('block: web3.eth.getBlock called with 2nd param true value', async () => {
-  const query = `
-    {
-      block(hash: "0x4b3c1d7e65a507b62734feca1ee9f27a5379e318bd52ae62de7ba67dbeac66a3") {
-        transactionsRoles(from: "0xCcF1D27AfE45BA5F8c15265199E5b635AF4cb889", to: "0xfa52274dd61e1643d2205169732f29114bc240b3") {
-          hash
-        }
-      }
-    }
-  `;
-
-  const spy = jest.spyOn(EthqlQuery.prototype, 'queryContainsTxs');
-  const result = await execQuery(query);
-  expect(spy).toHaveBeenCalledTimes(1);
-  expect(spy).toReturnWith(true);
-  spy.mockReset();
-  spy.mockRestore();
-});

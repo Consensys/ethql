@@ -67,7 +67,9 @@ class EthqlBlock implements EthqlBlock {
   }
 
   public async transactionAt(args, { web3 }: EthqlContext): Promise<EthqlTransaction> {
-    if (args.index < 0) { return null; }
+    if (args.index < 0) {
+      return null;
+    }
     const tx = await web3.eth.getTransactionFromBlock(this.hash, args.index);
     return tx && new EthqlTransaction(tx);
   }

@@ -189,20 +189,3 @@ test('block: all scalar fields successfully returned', async () => {
   const result = await execQuery(query);
   expect(result).toEqual(expected);
 });
-
-test('block: web3.eth.getBlock called with 2nd param false value', async () => {
-  const query = `
-    {
-      block(hash: "0x4b3c1d7e65a507b62734feca1ee9f27a5379e318bd52ae62de7ba67dbeac66a3") {
-        number
-      }
-    }
-  `;
-
-  const spy = jest.spyOn(EthqlQuery.prototype, 'queryContainsTxs');
-  const result = await execQuery(query);
-  expect(spy).toHaveBeenCalledTimes(1);
-  expect(spy).toReturnWith(false);
-  spy.mockReset();
-  spy.mockRestore();
-});

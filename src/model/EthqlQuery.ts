@@ -1,5 +1,4 @@
 import { GraphQLResolveInfo } from 'graphql';
-import getFieldList = require('graphql-list-fields');
 import * as _ from 'lodash';
 import EthqlAccount from './core/EthqlAccount';
 import EthqlBlock from './core/EthqlBlock';
@@ -26,6 +25,14 @@ interface BlocksRangeArgs {
 }
 
 class EthqlQuery {
+  private static TX_REQUIRING_FIELDS = ['transactions', 'transactionsInvolving', 'transactionsRoles'];
+
+  private static requiresFetchingTxs(info: GraphQLResolveInfo): boolean {
+    return !!info.fieldNodes[0].selectionSet.selections.find(
+      s => s.kind === 'Field' && EthqlQuery.TX_REQUIRING_FIELDS.indexOf(s.name.value) >= 0,
+    );
+  }
+
   /**
    * Returns a block.
    *
@@ -46,7 +53,7 @@ class EthqlQuery {
       throw new Error('Only one of number, hash or tag argument should be provided.');
     }
 
-    const block = await web3.eth.getBlock(params[0], this.queryContainsTxs(info));
+    const block = await web3.eth.getBlock(params[0], EthqlQuery.requiresFetchingTxs(info));
     return new EthqlBlock(block);
   }
 
@@ -66,8 +73,8 @@ class EthqlQuery {
     }
 
     let input = numbers
-      ? numbers.map(n => web3.eth.getBlock(n, this.queryContainsTxs(info)))
-      : hashes.map(h => web3.eth.getBlock(h as any, this.queryContainsTxs(info)));
+      ? numbers.map(n => web3.eth.getBlock(n, EthqlQuery.requiresFetchingTxs(info)))
+      : hashes.map(h => web3.eth.getBlock(h as any, EthqlQuery.requiresFetchingTxs(info)));
     const blocks = await Promise.all(input);
     return blocks.map(b => new EthqlBlock(b));
   }
@@ -95,7 +102,9 @@ class EthqlQuery {
       }
     } else if (hashRange && hashRange.length === 2) {
       // We've received start and end hashes, so we need to resolve them to block numbers first to delimit the range.
-      const blocks = await Promise.all(hashRange.map(b => web3.eth.getBlock(b as any, this.queryContainsTxs(info))));
+      const blocks = await Promise.all(
+        hashRange.map(b => web3.eth.getBlock(b as any, EthqlQuery.requiresFetchingTxs(info))),
+      );
       if (blocks.indexOf(null) >= 0) {
         throw new Error('Could not resolve the block associated with one or all hashes.');
       }
@@ -113,7 +122,7 @@ class EthqlQuery {
 
     const blocksRange = Array.from({ length: end - start + 1 }, (v, k) => k + start);
     const blocks = await Promise.all(
-      blocksRange.map(blockNumber => web3.eth.getBlock(blockNumber, this.queryContainsTxs(info))),
+      blocksRange.map(blockNumber => web3.eth.getBlock(blockNumber, EthqlQuery.requiresFetchingTxs(info))),
     );
     return blocks.map(b => new EthqlBlock(b));
   }
@@ -129,15 +138,6 @@ class EthqlQuery {
 
   public health() {
     return 'ok';
-  }
-
-  public queryContainsTxs(info: GraphQLResolveInfo): boolean {
-    const fields = getFieldList(info);
-    return (
-      !!fields.find(
-        a => a.includes('transactions') || a.includes('transactionsInvolving') || a.includes('transactionsRoles'),
-      ) || false
-    );
   }
 }
 

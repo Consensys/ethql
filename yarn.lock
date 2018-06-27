@@ -68,12 +68,6 @@
     "@types/express-serve-static-core" "*"
     "@types/serve-static" "*"
 
-"@types/graphql-list-fields@^2.0.0":
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/@types/graphql-list-fields/-/graphql-list-fields-2.0.0.tgz#b3db15be8c8cbc3dce3f936c3e036157eea02478"
-  dependencies:
-    "@types/graphql" "*"
-
 "@types/graphql@*", "@types/graphql@^0.13.1":
   version "0.13.1"
   resolved "https://registry.yarnpkg.com/@types/graphql/-/graphql-0.13.1.tgz#7d39750355c9ecb921816d6f76c080405b5f6bea"
@@ -2547,10 +2541,6 @@ graphql-import@^0.6.0:
   resolved "https://registry.yarnpkg.com/graphql-import/-/graphql-import-0.6.0.tgz#c00cb8a269ceea263e062922c8c81a2272d1ffcb"
   dependencies:
     lodash "^4.17.4"
-
-graphql-list-fields@^2.0.2:
-  version "2.0.2"
-  resolved "https://registry.yarnpkg.com/graphql-list-fields/-/graphql-list-fields-2.0.2.tgz#a4ade3cfa2028a2ac32d3f2870f5f8c5b5d5b466"
 
 graphql-tools@^3.0.2:
   version "3.0.2"
