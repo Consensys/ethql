@@ -60,3 +60,17 @@ test('blocks: error when selecting blocks with both numbers and hashes', async (
   expect(result.errors).toHaveLength(1);
   expect(result.errors[0].message).toMatch(/^Only one of numbers or hashes should be provided/);
 });
+
+test('blocks: error when selecting blocks with no numbers or hashes', async () => {
+  const query = `
+    {
+      blocks {
+        number
+      }
+    }
+  `;
+
+  const result = await execQuery(query);
+  expect(result.errors).toHaveLength(1);
+  expect(result.errors[0].message).toMatch(/^At least one of numbers or hashes must be provided/);
+});
