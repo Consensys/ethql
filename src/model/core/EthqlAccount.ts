@@ -4,15 +4,15 @@ class EthqlAccount {
   constructor(public address: string) {}
 
   public async balance({ unit }, { web3 }: EthqlContext) {
-    return web3.eth.getBalance(this.address);
+    return this.address && web3.eth.getBalance(this.address);
   }
 
   public async code(_, { web3 }: EthqlContext) {
-    return web3.eth.getCode(this.address);
+    return this.address && web3.eth.getCode(this.address);
   }
 
   public async transactionCount(_, { web3 }: EthqlContext) {
-    return web3.eth.getTransactionCount(this.address);
+    return this.address && web3.eth.getTransactionCount(this.address);
   }
 
   public equals(addressOrAccount: string | EthqlAccount) {

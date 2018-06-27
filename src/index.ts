@@ -8,7 +8,7 @@ import txDecodingEngine from './txdec';
 process.on('SIGINT', async () => (await stopServer()) || process.exit(0));
 process.on('SIGTERM', async () => (await stopServer()) || process.exit(0));
 
-const web3 = initWeb3(config.jsonrpc);
+const web3 = initWeb3(config);
 const context = new EthqlContext(web3, config, txDecodingEngine);
 const schema = initSchema(context);
 

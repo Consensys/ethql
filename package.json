@@ -45,10 +45,14 @@
     ]
   },
   "dependencies": {
+    "@types/bluebird": "^3.5.20",
     "abi-decoder": "^1.1.0",
     "axios": "^0.18.0",
+    "bluebird": "^3.5.1",
+    "bn.js": "^4.11.8",
     "commander": "^2.15.1",
     "cors": "^2.8.4",
+    "dataloader": "^1.4.0",
     "express": "^4.16.3",
     "express-graphql": "^0.6.12",
     "graphql": "^0.13.2",

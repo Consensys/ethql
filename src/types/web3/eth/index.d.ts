@@ -1,22 +1,30 @@
 import BigNumber = require('bn.js');
-import { Provider } from '../providers';
-import Contract, { CustomOptions as CustomContractOptions } from './contract';
 import PromiEvent from '../promiEvent';
+import { Provider } from '../providers';
+import { Callback, EncodedTransaction, Log, Logs, Subscribe, TransactionReceipt } from '../types';
 import ABI from './abi';
 import Accounts from './accounts';
+import Contract, { CustomOptions as CustomContractOptions } from './contract';
 import {
   BatchRequest,
-  Iban,
-  BlockHeader,
-  CompileResult,
   Block,
-  Transaction,
-  Tx,
+  BlockHeader,
   BlockType,
+  CompileResult,
+  Iban,
   Net,
   Personal,
+  Transaction,
+  Tx,
 } from './types';
-import { Callback, TransactionReceipt, Logs, Log, Subscribe, EncodedTransaction } from '../types';
+
+/* tslint:disable:member-ordering */
+type GetPastLogsOpts = {
+  fromBlock?: BlockType;
+  toBlock?: BlockType;
+  address: string;
+  topics?: Array<string | string[]>;
+};
 
 export default interface Eth {
   defaultAccount: string;
@@ -27,7 +35,7 @@ export default interface Eth {
   abi: ABI;
   setProvider: (provider: Provider) => void;
   accounts: Accounts;
-  call(callObject: Tx, defaultBloc?: BlockType, callBack?: Callback<string>): Promise<string>;
+  call(callObject: Tx, defaultBlock?: BlockType, callBack?: Callback<string>): Promise<string>;
   clearSubscriptions(): boolean;
   subscribe(type: 'logs', options?: Logs, callback?: Callback<Subscribe<Log>>): Promise<Subscribe<Log>>;
   subscribe(type: 'syncing', callback?: Callback<Subscribe<any>>): Promise<Subscribe<any>>;
@@ -47,42 +55,101 @@ export default interface Eth {
   };
   currentProvider: Provider;
   estimateGas(tx: Tx, callback?: Callback<number>): Promise<number>;
+
   getAccounts(cb?: Callback<string[]>): Promise<string[]>;
-  getBalance(address: string, defaultBlock?: BlockType, cb?: Callback<number>): Promise<number>;
-  getBlock(number: BlockType, returnTransactionObjects?: boolean, cb?: Callback<Block>): Promise<Block>;
-  getBlockNumber(callback?: Callback<number>): Promise<number>;
-  getBlockTransactionCount(number: BlockType, cb?: Callback<number>): Promise<number>;
-  getBlockUncleCount(number: BlockType, cb?: Callback<number>): Promise<number>;
-  getCode(address: string, defaultBlock?: BlockType, cb?: Callback<string>): Promise<string>;
-  getCoinbase(cb?: Callback<string>): Promise<string>;
+
+  getBalance: {
+    (address: string, defaultBlock?: BlockType, cb?: Callback<number>): Promise<number>;
+    request(address: string, defaultBlock?: BlockType, cb?: Callback<number>): object;
+  };
+
+  getBlock: {
+    (blockNumber: BlockType, returnTransactionObjects?: boolean, cb?: Callback<Block>): Promise<Block>;
+    request(blockNumber: BlockType, returnTransactionObjects?: boolean, cb?: Callback<Block>): object;
+  };
+
+  getBlockNumber: {
+    (callback?: Callback<number>): Promise<number>;
+    request(callback?: Callback<number>): object;
+  };
+
+  getBlockTransactionCount: {
+    (blockNumber: BlockType, cb?: Callback<number>): Promise<number>;
+    request(blockNumber: BlockType, cb?: Callback<number>): object;
+  };
+
+  getBlockUncleCount: {
+    (blockNumber: BlockType, cb?: Callback<number>): Promise<number>;
+    request(blockNumber: BlockType, cb?: Callback<number>): object;
+  };
+
+  getCode: {
+    (address: string, defaultBlock?: BlockType, cb?: Callback<string>): Promise<string>;
+    request(address: string, defaultBlock?: BlockType, cb?: Callback<string>): object;
+  };
+
+  getCoinbase: {
+    (cb?: Callback<string>): Promise<string>;
+    request(cb?: Callback<string>): object;
+  };
+
   getCompilers(cb?: Callback<string[]>): Promise<string[]>;
-  getGasPrice(cb?: Callback<number>): Promise<number>;
-  getHashrate(cb?: Callback<number>): Promise<number>;
-  getPastLogs(
-    options: {
-      fromBlock?: BlockType;
-      toBlock?: BlockType;
-      address: string;
-      topics?: Array<string | string[]>;
-    },
-    cb?: Callback<Log[]>,
-  ): Promise<Log[]>;
-  getProtocolVersion(cb?: Callback<string>): Promise<string>;
-  getStorageAt(address: string, defaultBlock?: BlockType, cb?: Callback<string>): Promise<string>;
-  getTransactionReceipt(hash: string, cb?: Callback<TransactionReceipt>): Promise<TransactionReceipt>;
-  getTransaction(hash: string, cb?: Callback<Transaction>): Promise<Transaction>;
-  getTransactionCount(address: string, defaultBlock?: BlockType, cb?: Callback<number>): Promise<number>;
-  getTransactionFromBlock(block: BlockType, index: number, cb?: Callback<Transaction>): Promise<Transaction>;
-  getUncle(
-    blockHashOrBlockNumber: BlockType,
-    uncleIndex: number,
-    returnTransactionObjects?: boolean,
-    cb?: Callback<Block>,
-  ): Promise<Block>;
+  getGasPrice: {
+    (cb?: Callback<number>): Promise<number>;
+    request(cb?: Callback<number>): object;
+  };
+  getHashrate: {
+    (cb?: Callback<number>): Promise<number>;
+    request(cb?: Callback<number>): object;
+  };
+
+  getPastLogs: {
+    (options: GetPastLogsOpts, cb?: Callback<Log[]>): Promise<Log[]>;
+    request(options: GetPastLogsOpts, cb?: Callback<Log[]>): object;
+  };
+
+  getProtocolVersion: {
+    (cb?: Callback<string>): Promise<string>;
+    request(cb?: Callback<string>): object;
+  };
+
+  getStorageAt: {
+    (address: string, defaultBlock?: BlockType, cb?: Callback<string>): Promise<string>;
+    request(address: string, defaultBlock?: BlockType, cb?: Callback<string>): object;
+  };
+
+  getTransactionReceipt: {
+    (hash: string, cb?: Callback<TransactionReceipt>): Promise<TransactionReceipt>;
+    request(hash: string, cb?: Callback<TransactionReceipt>): object;
+  };
+
+  getTransaction: {
+    (hash: string, cb?: Callback<Transaction>): Promise<Transaction>;
+    request(hash: string, cb?: Callback<Transaction>): object;
+  };
+
+  getTransactionCount: {
+    (address: string, defaultBlock?: BlockType, cb?: Callback<number>): Promise<number>;
+    request(address: string, defaultBlock?: BlockType, cb?: Callback<number>): object;
+  };
+
+  getTransactionFromBlock: {
+    (block: BlockType, index: number, cb?: Callback<Transaction>): Promise<Transaction>;
+    request(block: BlockType, index: number, cb?: Callback<Transaction>): object;
+  };
+
+  getUncle: {
+    (block: BlockType, uncleIndex: number, returnTransactionObjects?: boolean, cb?: Callback<Block>): Promise<Block>;
+    request(block: BlockType, uncleIndex: number, returnTransactionObjects?: boolean, cb?: Callback<Block>): object;
+  };
+
   getWork(cb?: Callback<string[]>): Promise<string[]>;
   givenProvider: Provider;
   isMining(cb?: Callback<boolean>): Promise<boolean>;
-  isSyncing(cb?: Callback<boolean>): Promise<boolean>;
+  isSyncing: {
+    (cb?: Callback<boolean>): Promise<boolean>;
+    request(cb?: Callback<boolean>): object;
+  };
   net: Net;
   personal: Personal;
   signTransaction(tx: Tx, address?: string, cb?: Callback<string>): Promise<EncodedTransaction>;
