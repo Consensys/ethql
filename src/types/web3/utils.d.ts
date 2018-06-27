@@ -8,7 +8,7 @@ type Unit =
   | 'mwei'
   | 'picoether'
   | 'lovelace'
-  | 'qwei'
+  | 'gwei'
   | 'nanoether'
   | 'shannon'
   | 'microether'

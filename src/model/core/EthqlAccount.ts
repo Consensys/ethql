@@ -7,7 +7,6 @@ class EthqlAccount {
     if (!this.address) {
       return null;
     }
-    // if (typeof unit !== 'string') { return 'Please enter a valid unit.'; }
     const bal = await web3.eth.getBalance(this.address);
     if (unit) {
       return web3.utils.fromWei(bal, unit);
