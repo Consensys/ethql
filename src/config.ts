@@ -34,7 +34,7 @@ const options: Options | commander.Command = commander
   )
   .option(
     '-c, --caching <enabled>', //
-    'enables or disables JSON-RPC caching (default: true)',
+    'enables or disables JSON-RPC caching; ignored and disabled if batching is disabled (default: true)',
     true,
   )
   .parse(process.argv)
@@ -45,8 +45,8 @@ const env: Options = {
   jsonrpc: process.env.ETHQL_JSONRPC_ENDPOINT,
   queryMaxSize: parseInt(process.env.ETHQL_QUERY_MAX_SIZE) || undefined,
   port: parseInt(process.env.ETHQL_PORT) || undefined,
-  batching: process.env.ETHQL_BATCHING === undefined || process.env.ETHQL_BATCHING === 'true',
-  caching: process.env.ETHQL_CACHING === undefined || process.env.ETHQL_CACHING === 'true',
+  batching: process.env.ETHQL_BATCHING === undefined ? undefined : process.env.ETHQL_BATCHING === 'true',
+  caching: process.env.ETHQL_CACHING === undefined ? undefined : process.env.ETHQL_CACHING === 'true',
 };
 
 export default _.merge(options, env);
