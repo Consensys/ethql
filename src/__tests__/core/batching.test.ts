@@ -1,9 +1,8 @@
 import { testGraphql } from '../utils';
 
-const { execQuery, context } = testGraphql();
+const { execQuery, prepareContext } = testGraphql();
 
 test('batching: requests are batched', async () => {
-  const spy = jest.spyOn(context.web3.currentProvider, 'send');
   const query = `
     {
       block(number: 5000000) {
@@ -16,13 +15,15 @@ test('batching: requests are batched', async () => {
     }
   `;
 
-  await execQuery(query);
+  const context = prepareContext();
+  const spy = jest.spyOn(context.web3.currentProvider, 'send');
+
+  await execQuery(query, context);
   expect(spy).toHaveBeenCalledTimes(2);
 });
 
 test('batching: requests are not batched', async () => {
-  const { execQuery, context } = testGraphql({ batching: false });
-  const spy = jest.spyOn(context.web3.currentProvider, 'send');
+  const { execQuery, prepareContext } = testGraphql({ batching: false });
   const query = `
     {
       block(number: 5000000) {
@@ -34,6 +35,9 @@ test('batching: requests are not batched', async () => {
       }
     }
   `;
+
+  const context = prepareContext();
+  const spy = jest.spyOn(context.web3.currentProvider, 'send');
 
   await execQuery(query);
   expect(spy).toHaveBeenCalledTimes(110);

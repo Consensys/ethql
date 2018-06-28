@@ -1,5 +1,5 @@
 import { Block } from 'web3/eth/types';
-import EthqlContext from '../EthqlContext';
+import { EthqlContext } from '../EthqlContext';
 import EthqlTransaction from './EthqlTransaction';
 
 type Overwrite<T1, T2> = { [P in Exclude<keyof T1, keyof T2>]: T1[P] } & T2;

@@ -1,14 +1,17 @@
 import { testGraphql } from '../utils';
 
-const {
-  execQuery,
-  context: { web3 },
-} = testGraphql();
+const { execQuery, prepareContext } = testGraphql();
 
-let spy = jest.spyOn(web3.eth, 'getBlock');
+let context;
+let spy: jest.SpyInstance;
+
+beforeEach(() => {
+  context = prepareContext();
+  spy = jest.spyOn(context.web3.eth, 'getBlock');
+});
 
 afterEach(() => {
-  spy.mockReset();
+  spy.mockClear();
 });
 
 test('selective TX fetch: block with transactions (triggered by transactionsRoles)', async () => {

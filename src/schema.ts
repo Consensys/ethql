@@ -1,14 +1,15 @@
 import { GraphQLSchema } from 'graphql';
 import { importSchema } from 'graphql-import';
 import { makeExecutableSchema } from 'graphql-tools';
-import EthqlContext from './model/EthqlContext';
+import { EthqlContextFactory } from './model/EthqlContext';
 import initResolvers from './resolvers';
 
-export function initSchema(context: EthqlContext): GraphQLSchema {
+export function initSchema(ctxFactory: EthqlContextFactory): GraphQLSchema {
   const typeDefs = importSchema(__dirname + '/schema/index.graphql');
   return makeExecutableSchema({
     typeDefs,
-    resolvers: initResolvers(context),
+    // create a dummy web3 for resolvers to initialize themselves.
+    resolvers: initResolvers(ctxFactory.create()),
     resolverValidationOptions: { requireResolversForResolveType: false },
   });
 }

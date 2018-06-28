@@ -1,7 +1,7 @@
 import { GraphQLScalarType, Kind } from 'graphql';
 import { IResolvers } from 'graphql-tools';
 import * as _ from 'lodash';
-import EthqlContext from '../model/EthqlContext';
+import { EthqlContext } from '../model/EthqlContext';
 
 export default function initResolvers({ web3 }: EthqlContext): IResolvers {
   const scalarResolvers = {

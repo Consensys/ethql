@@ -6,7 +6,7 @@ import Web3 = require('web3');
 import { Provider } from 'web3/providers';
 import { Options } from '../config';
 
-interface IMatchers {
+interface Matchers {
   [name: string]: {
     test: (uri: url.UrlWithStringQuery) => boolean;
     provider: (uri: url.UrlWithStringQuery) => Provider;
@@ -16,7 +16,7 @@ interface IMatchers {
 /**
  * Encapsulates the logic to parse JSON-RPC endpoint URLs and to initialize the appropriate web3 provider.
  */
-const matchers: IMatchers = {
+const matchers: Matchers = {
   IPC: {
     test: uri => !uri.protocol || uri.protocol.startsWith('ipc'),
     provider: uri => new Web3.providers.IpcProvider(uri.path, net),
@@ -31,12 +31,15 @@ const matchers: IMatchers = {
   },
 };
 
+type Web3Thunk = () => Web3;
+
 /**
  * Initializes the web3 client object.
  *
  * @param uri URI of the JSON-RPC endpoint. Supported transports: HTTP(S), WS(S), IPC.
+ * @return A thunk that, when called, returns a web3 instance for the request.
  */
-export function initWeb3(config: Options): Web3 {
+export function initWeb3(config: Options): Web3Thunk {
   let web3: Web3;
   const uri = config.jsonrpc;
 
@@ -57,7 +60,7 @@ export function initWeb3(config: Options): Web3 {
   console.log(`JSON-RPC (web3): Using ${name} provider with endpoint: ${uri}`);
   web3 = new Web3(provider(u));
 
-  return config.batching ? batchingProxy(web3, config) : web3;
+  return config.batching ? () => batchingProxy(web3, config) : () => web3;
 }
 
 /**
@@ -134,14 +137,22 @@ function batchingProxy(web3: Web3, config: Options): Web3 {
   );
 
   const isBatchable = val => val && typeof val.request === 'function';
-  web3.eth = new Proxy(web3.eth, {
-    get: (obj, prop) => {
-      // pass-through if the property doesn't exist, or if the method is not batchable.
-      return !isBatchable(obj[prop])
-        ? obj[prop]
-        : (...args: any[]) => dataloader.load(new Web3EthCommand(prop as string, obj[prop], args));
-    },
-  });
 
-  return web3;
+  // IIFE is used here to seal the scope of eth.
+  return (() => {
+    // Proxy the web3.eth object.
+    const eth = new Proxy(web3.eth, {
+      get: (obj, prop) => {
+        // pass-through if the property doesn't exist, or if the method is not batchable.
+        return !isBatchable(obj[prop])
+          ? obj[prop]
+          : (...args: any[]) => dataloader.load(new Web3EthCommand(prop as string, obj[prop], args));
+      },
+    });
+
+    // Proxy web3 to return the eth proxy.
+    return new Proxy(web3, {
+      get: (obj, prop) => (prop === 'eth' ? eth : obj[prop]),
+    });
+  })();
 }

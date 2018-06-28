@@ -3,7 +3,7 @@ import * as _ from 'lodash';
 import EthqlAccount from './core/EthqlAccount';
 import EthqlBlock from './core/EthqlBlock';
 import EthqlTransaction from './core/EthqlTransaction';
-import EthqlContext from './EthqlContext';
+import { EthqlContext } from './EthqlContext';
 
 // Select a single block.
 interface BlockArgs {

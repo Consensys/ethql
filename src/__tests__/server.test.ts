@@ -1,5 +1,6 @@
-import axios, { AxiosError } from 'axios';
+import axios from 'axios';
 import * as net from 'net';
+import { EthqlContextFactory } from '../model/EthqlContext';
 import { getAddress, startServer, stopServer } from '../server';
 import { testGraphql } from './utils';
 
@@ -22,42 +23,42 @@ const availablePort = async () => {
 };
 
 test('server starts with random port', async () => {
-  const { schema, context } = testGraphql();
-  context.config.port = 0;
+  const { schema, ctxFactory } = testGraphql();
+  ctxFactory.config.port = 0;
 
-  await startServer(schema, context);
+  await startServer(schema, ctxFactory);
 
   const address = getAddress();
   expect(address.port).toBeGreaterThan(0);
 });
 
 test('server starts with an available port', async () => {
-  const { schema, context } = testGraphql();
-  context.config.port = await availablePort();
+  const { schema, ctxFactory } = testGraphql();
+  ctxFactory.config.port = await availablePort();
 
-  await startServer(schema, context);
+  await startServer(schema, ctxFactory);
 
   const address = getAddress();
-  expect(address.port).toBe(context.config.port);
+  expect(address.port).toBe(ctxFactory.config.port);
 
   await healthcheckOk();
 });
 
 test('start twice does nothing on second attempt', async () => {
-  const { schema, context } = testGraphql();
-  context.config.port = 0;
+  const { schema, ctxFactory } = testGraphql();
+  ctxFactory.config.port = 0;
 
-  await startServer(schema, context);
-  await startServer(schema, context);
+  await startServer(schema, ctxFactory);
+  await startServer(schema, ctxFactory);
 
   await healthcheckOk();
 });
 
 test('stop twice does nothing on second attempt', async () => {
-  const { schema, context } = testGraphql();
-  context.config.port = 0;
+  const { schema, ctxFactory } = testGraphql();
+  ctxFactory.config.port = 0;
 
-  await startServer(schema, context);
+  await startServer(schema, ctxFactory);
 
   const address = getAddress();
   await healthcheckOk();
