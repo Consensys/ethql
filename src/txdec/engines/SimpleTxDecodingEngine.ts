@@ -1,5 +1,6 @@
 import * as _ from 'lodash';
 import EthqlTransaction from '../../model/core/EthqlTransaction';
+import { EthqlContext } from '../../model/EthqlContext';
 import { DecodedTx, TxDecoderDefinition, TxDecodingEngine } from '../types';
 
 /**
@@ -16,7 +17,7 @@ class SimpleTxDecodingEngine implements TxDecodingEngine {
    * Decodes the transaction as a known type, or returns undefined if unable to.
    * @param tx The transaction to decode.
    */
-  public decodeTransaction<T extends DecodedTx>(tx: EthqlTransaction): T | undefined {
+  public decodeTransaction<T extends DecodedTx>(tx: EthqlTransaction, context: EthqlContext): T | undefined {
     const { inputData } = tx;
     if (!inputData || inputData === '0x') {
       return;
@@ -29,7 +30,7 @@ class SimpleTxDecodingEngine implements TxDecodingEngine {
           standard: txType.standard,
           operation: decoded.name,
           __typename: `${txType.standard}${_.upperFirst(decoded.name)}`,
-          ...txType.transformers[decoded.name](decoded, tx),
+          ...txType.transformers[decoded.name](decoded, tx, context),
         };
       }
     }

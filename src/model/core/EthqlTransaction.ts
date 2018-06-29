@@ -1,5 +1,6 @@
 import { Transaction } from 'web3/eth/types';
 import engine from '../../txdec';
+import { EthqlContext } from '../EthqlContext';
 import EthqlAccount from './EthqlAccount';
 
 type Overwrite<T1, T2> = { [P in Exclude<keyof T1, keyof T2>]: T1[P] } & T2;
@@ -31,11 +32,11 @@ class EthqlTransaction {
     return this.transactionIndex;
   }
 
-  public get decoded() {
+  public async decoded(_, context: EthqlContext) {
     if (!this.inputData || this.inputData === '0x') {
       return null;
     }
-    return engine.decodeTransaction(this);
+    return engine.decodeTransaction(this, context);
   }
 }
 

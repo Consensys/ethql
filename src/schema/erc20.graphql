@@ -1,26 +1,44 @@
 # import Account, DecodedTransaction from "core.graphql"
 
-type ERC20Transfer implements DecodedTransaction {
-  standard: String
-  operation: String
-  from: Account
-  to: Account
-  value: String
+type TokenContract {
+  account: Account
+  symbol: String
+  totalSupply: Long
 }
 
-type ERC20TransferFrom implements DecodedTransaction {
+interface ERC20Transaction {
+  tokenContract: TokenContract
+}
+
+type TokenHolder {
+  account: Account!
+  tokenBalance: Long
+}
+
+type ERC20Transfer implements DecodedTransaction & ERC20Transaction {
   standard: String
   operation: String
-  from: Account
-  to: Account
+  from: TokenHolder
+  to: TokenHolder
   value: String
-  spender: Account
+  tokenContract: TokenContract
+}
+
+type ERC20TransferFrom implements DecodedTransaction & ERC20Transaction {
+  standard: String
+  operation: String
+  from: TokenHolder
+  to: TokenHolder
+  value: String
+  spender: TokenHolder
+  tokenContract: TokenContract
 }
 
 type ERC20Approve implements DecodedTransaction {
   standard: String
   operation: String
-  from: Account
-  spender: Account
+  from: TokenHolder
+  spender: TokenHolder
   value: String
+  tokenContract: TokenContract
 }

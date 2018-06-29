@@ -16,6 +16,7 @@
     "ban-types": [false],
     "variable-name": [true, "allow-leading-underscore"],
     "object-literal-sort-keys": false,
+    "max-classes-per-file": false,
     "whitespace": [
       true,
       "check-branch",
