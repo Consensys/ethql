@@ -2,7 +2,9 @@
 
 [![Gitter](https://img.shields.io/gitter/room/ethql/lobby.js.svg?style=for-the-badge)](https://gitter.im/ethql/Lobby)
 
-**This repo is currently in its Proof of Concept stages.**
+**▶️ Try it out: http://ethql-lb-979715030.eu-west-3.elb.amazonaws.com/graphql.**
+
+[Example queries](#example-queries).
 
 ethql is a server that exposes a GraphQL endpoint to the public Ethereum ledger. It works against the standard JSON-RPC
 APIs offered by all Ethereum clients. It is built in TypeScript, and thus leverages the vast ecosystem of GraphQL
@@ -18,7 +20,7 @@ functionality, amongst which are:
 - Simple, inline unit conversions.
 - Enhancing public data with information overlays imported from other sources.
 
-This project is in the experimental phase, and all the cited features are under heavy development.
+_NOTE: This project is under heavy development._
 
 ## Quickstart
 
@@ -32,7 +34,8 @@ Clone the repo and run:
 ```
 $ yarn install
 $ npm run dev
-Running a GraphQL API server at http://localhost:4000/graphql
+JSON-RPC (web3): Using HTTP(S) provider with endpoint: https://mainnet.infura.io/
+Running a GraphQL API server at http://0.0.0.0:4000/graphql (browse here: http://localhost:4000/graphql)
 ```
 
 This ethql server uses [Infura](https://infura.io/) as a backend in anonymous mode. If you have an Infura ID (and if you
@@ -42,10 +45,72 @@ don't, you should sign up for one!) you can set it like this:
 $ INFURA_ID=myid npm run dev
 ```
 
+## Example queries
+
+_Fetch all transactions from block 5000000 that have input data, and for those that can be decoded as token transfers, return the token symbol, sending and receiving addresses, as well as the token balance of the sending address._
+
+```
+{
+  block(number: 5000000) {
+    hash
+    transactions(filter: { withInput: true }) {
+      index
+      hash
+      from {
+        address
+      }
+      to {
+        address
+      }
+      decoded {
+        ... on ERC20Transfer {
+          tokenContract {
+            symbol
+          }
+          from {
+            account {
+            	address
+            }
+            tokenBalance
+          }
+          to {
+            account {
+              address
+            }
+          }
+          value
+        }
+      }
+    }
+  }
+}
+```
+
+_For all blocks between 5400000 and 5400005 inclusive (6 blocks), get the balance of all addresses that sent a transaction._
+
+```
+{
+  blocksRange(numberRange: [5400000, 5400005]) {
+    transactions {
+      hash
+      value
+      from {
+        address
+        balance
+      }
+      to {
+        address
+      }
+    }
+  }
+}
+```
+
+
 ## Development team
 
-- Raúl Kripalani <mailto:raul.kripalani@consensys.net>
-- Akhila Raju <mailto:akhila.raju@consensys.net>
+- Raúl Kripalani <raul.kripalani@consensys.net>
+- Akhila Raju <akhila.raju@consensys.net>
 
 # Who we are
 
