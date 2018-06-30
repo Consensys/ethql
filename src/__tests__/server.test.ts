@@ -1,7 +1,7 @@
 import axios from 'axios';
 import * as net from 'net';
 import { getAddress, startServer, stopServer } from '../server';
-import { testGraphql } from './utils';
+import { testGraphql, TestMode } from './utils';
 
 afterEach(() => {
   stopServer();
@@ -86,8 +86,11 @@ test('server starts with random port', async () => {
 
 test('JSON RPC endpoint configuration works correctly', async () => {
   const ropsten = testGraphql({
-    jsonrpc: 'https://ropsten.infura.io',
-    port: 0,
+    configOverride: {
+      jsonrpc: 'https://ropsten.infura.io',
+      port: 0,
+    },
+    mode: TestMode.passthrough,
   });
 
   await startServer(ropsten.schema, ropsten.ctxFactory);
@@ -99,7 +102,10 @@ test('JSON RPC endpoint configuration works correctly', async () => {
   stopServer();
 
   const mainnet = testGraphql({
-    port: 0,
+    configOverride: {
+      port: 0,
+    },
+    mode: TestMode.replay,
   });
 
   await startServer(mainnet.schema, mainnet.ctxFactory);

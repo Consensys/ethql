@@ -25,7 +25,7 @@ test('selective TX fetch: block with transactions (triggered by transactionsRole
     }
   `;
 
-  await execQuery(query);
+  await execQuery(query, context);
   expect(spy).toHaveBeenCalledTimes(1);
   expect(spy.mock.calls[0][1]).toBe(true);
 });
@@ -44,7 +44,7 @@ test('selective TX fetch: blocksRange with transactions (triggered by transactio
     }
   `;
 
-  await execQuery(query);
+  await execQuery(query, context);
   expect(spy).toHaveBeenCalledTimes(3);
   spy.mock.calls.forEach(c => expect(c[1]).toBe(true));
 });
@@ -58,7 +58,7 @@ test('selective TX fetch: block without transactions', async () => {
     }
   `;
 
-  await execQuery(query);
+  await execQuery(query, context);
   expect(spy).toHaveBeenCalledTimes(4);
   spy.mock.calls.forEach(c => expect(c[1]).toBe(false));
 });
@@ -72,7 +72,7 @@ test('selective TX fetch: blocksRange without transactions', async () => {
     }
   `;
 
-  await execQuery(query);
+  await execQuery(query, context);
   expect(spy).toHaveBeenCalledTimes(10);
   spy.mock.calls.forEach(c => expect(c[1]).toBe(false));
 });
@@ -88,7 +88,7 @@ test('selective TX fetch: blocks with transactions (triggered by transactions)',
     }
   `;
 
-  await execQuery(query);
+  await execQuery(query, context);
   expect(spy).toHaveBeenCalledTimes(5);
   spy.mock.calls.forEach(c => expect(c[1]).toBe(true));
 });
