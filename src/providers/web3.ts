@@ -31,15 +31,13 @@ const matchers: Matchers = {
   },
 };
 
-type Web3Thunk = () => Web3;
-
 /**
  * Initializes the web3 client object.
  *
  * @param uri URI of the JSON-RPC endpoint. Supported transports: HTTP(S), WS(S), IPC.
  * @return A thunk that, when called, returns a web3 instance for the request.
  */
-export function initWeb3(config: Options): Web3Thunk {
+export function initWeb3(config: Options): () => Web3 {
   let web3: Web3;
   const uri = config.jsonrpc;
 
@@ -75,23 +73,9 @@ function batchingProxy(web3: Web3, config: Options): Web3 {
    *
    * This is the key type of the batch-loading function.
    */
-  class Web3EthCommand {
-    private _cacheKey: string;
-
-    /**
-     * Constructor.
-     *
-     * @param name The name of the web3.eth function that was called.
-     * @param func A reference to the web3.eth function.
-     * @param parameters The parameters that were passed.
-     */
-    public constructor(public name: string, public func: { request: Function }, public parameters: any[]) {
-      this._cacheKey = `${name}-${parameters.join(':')}`;
-    }
-
-    get cacheKey() {
-      return this._cacheKey;
-    }
+  interface Web3EthCommand {
+    cacheKey: string;
+    requestFunc: (cb: (err: any, res: any) => void) => any;
   }
 
   // The dataloader performs the grouping of requests happening in a single tick.
@@ -108,7 +92,7 @@ function batchingProxy(web3: Web3, config: Options): Web3 {
       const promises = keys.map(rq =>
         BPromise.fromCallback(cb => {
           try {
-            batch.add(rq.func.request(...rq.parameters, cb));
+            batch.add(rq.requestFunc(cb));
           } catch (err) {
             cb(err);
           }
@@ -140,13 +124,44 @@ function batchingProxy(web3: Web3, config: Options): Web3 {
 
   // IIFE is used here to seal the scope of eth.
   return (() => {
+    // Proxy the web3.eth.Contract objects to wire contract calls to the data loader.
+    const contract = new Proxy(web3.eth.Contract, {
+      construct: (target, ctorArgs) => {
+        const contract = Reflect.construct(target, ctorArgs);
+        const address = ctorArgs[ctorArgs.length - 1];
+        const methods = new Proxy(contract.methods, {
+          get: (obj, prop: string) => {
+            return (...callArgs: any[]) => ({
+              call: () =>
+                dataloader.load({
+                  cacheKey: `call:${address}:${prop}/${callArgs.join(':')}`,
+                  requestFunc: obj[prop](...callArgs).call.request,
+                }),
+            });
+          },
+        });
+
+        // Return the proxified contract instrumenting the methods field.
+        return new Proxy(contract, {
+          get: (obj, prop) => (prop === 'methods' ? methods : obj[prop]),
+        });
+      },
+    });
+
     // Proxy the web3.eth object.
     const eth = new Proxy(web3.eth, {
       get: (obj, prop) => {
+        if (prop === 'Contract') {
+          return contract;
+        }
         // pass-through if the property doesn't exist, or if the method is not batchable.
         return !isBatchable(obj[prop])
           ? obj[prop]
-          : (...args: any[]) => dataloader.load(new Web3EthCommand(prop as string, obj[prop], args));
+          : (...args: any[]) =>
+              dataloader.load({
+                cacheKey: `${prop.toString()}/${args.join(':')}`,
+                requestFunc: cb => obj[prop].request(...args, cb),
+              });
       },
     });
 
