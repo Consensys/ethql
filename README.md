@@ -47,7 +47,8 @@ $ INFURA_ID=myid npm run dev
 
 ## Example queries
 
-_Fetch all transactions from block 5000000 that have input data, and for those that can be decoded as token transfers, return the token symbol, sending and receiving addresses, as well as the token balance of the sending address._
+_Fetch all transactions from block 5000000 that have input data, and for those that can be decoded as token transfers,
+return the token symbol, sending and receiving addresses, as well as the token balance of the sending address._
 
 ```
 {
@@ -86,7 +87,8 @@ _Fetch all transactions from block 5000000 that have input data, and for those t
 }
 ```
 
-_For all blocks between 5400000 and 5400005 inclusive (6 blocks), get the balance of all addresses that sent a transaction._
+_For all blocks between 5400000 and 5400005 inclusive (6 blocks), get the balance of all addresses that sent a
+transaction._
 
 ```
 {
@@ -106,11 +108,10 @@ _For all blocks between 5400000 and 5400005 inclusive (6 blocks), get the balanc
 }
 ```
 
-
 ## Development team
 
-- Raúl Kripalani <raul.kripalani@consensys.net>
-- Akhila Raju <akhila.raju@consensys.net>
+- Raúl Kripalani [(contact)](mailto:raul.kripalani@consensys.net)
+- Akhila Raju [(contact)](mailto:akhila.raju@consensys.net)
 
 # Who we are
 
