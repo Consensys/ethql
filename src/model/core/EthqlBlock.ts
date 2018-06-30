@@ -1,3 +1,4 @@
+import { GraphQLResolveInfo } from 'graphql';
 import { Block } from 'web3/eth/types';
 import { EthqlContext } from '../EthqlContext';
 import EthqlTransaction from './EthqlTransaction';
@@ -30,6 +31,19 @@ interface TransactionsRolesArgs extends WithTransactionFilter {
 }
 
 class EthqlBlock implements EthqlBlock {
+  public static async load(id: number | string, context: EthqlContext, info: GraphQLResolveInfo): Promise<EthqlBlock> {
+    const block = await context.web3.eth.getBlock(id, this.requiresFetchingTxs(info));
+    return block && new EthqlBlock(block);
+  }
+
+  private static TX_REQUIRING_FIELDS = ['transactions', 'transactionsInvolving', 'transactionsRoles'];
+
+  private static requiresFetchingTxs(info: GraphQLResolveInfo): boolean {
+    return !!info.fieldNodes[0].selectionSet.selections.find(
+      s => s.kind === 'Field' && EthqlBlock.TX_REQUIRING_FIELDS.indexOf(s.name.value) >= 0,
+    );
+  }
+
   private static transactionFilter(filter: TransactionFilter): (tx: EthqlTransaction) => boolean {
     if (!filter) {
       return _ => true;
@@ -58,31 +72,47 @@ class EthqlBlock implements EthqlBlock {
     this._transactions = transactions.map(t => new EthqlTransaction(t));
   }
 
+  /**
+   * Gets all transactions from this block.
+   */
   public transactions({ filter }: WithTransactionFilter) {
     return this._transactions.filter(EthqlBlock.transactionFilter(filter));
   }
 
+  /**
+   * Returns the number of transactions in this block.
+   */
   public transactionCount() {
     return this._transactions.length;
   }
 
-  public async transactionAt(args, { web3 }: EthqlContext): Promise<EthqlTransaction> {
-    if (args.index < 0) {
+  /**
+   * Gets the transaction at the specified index.
+   */
+  public async transactionAt({ index }, context: EthqlContext): Promise<EthqlTransaction> {
+    if (index < 0) {
       return null;
     }
-    const tx = await web3.eth.getTransactionFromBlock(this.hash, args.index);
-    return tx && new EthqlTransaction(tx);
+    return EthqlTransaction.loadFromBlock(this.hash, index, context);
   }
 
+  /**
+   * Gets all transactions from the block involving any of the specified participants.
+   */
   public transactionsInvolving({ participants, filter }: TransactionsInvolvingArgs): EthqlTransaction[] {
     if (!participants || !participants.length) {
       throw new Error('Expected at least one participant.');
     }
+
     return this._transactions
       .filter(tx => participants.some(p => tx.from.equals(p) || tx.to.equals(p)))
       .filter(EthqlBlock.transactionFilter(filter));
   }
 
+  /**
+   * Gets transactions whose from and/or to addresses match the provided ones.
+   * The operator is an OR (i.e. any of the participants, or both, match).
+   */
   public transactionsRoles({ from, to, filter }: TransactionsRolesArgs): EthqlTransaction[] {
     if (!(from || to)) {
       throw new Error('Expected one or both of a from address and a to address.');
