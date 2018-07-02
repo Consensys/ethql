@@ -1,12 +1,14 @@
 import { GraphQLResolveInfo } from 'graphql';
 import { Block } from 'web3/eth/types';
 import { EthqlContext } from '../EthqlContext';
+import EthqlAccount from './EthqlAccount';
 import EthqlTransaction from './EthqlTransaction';
 
 type Overwrite<T1, T2> = { [P in Exclude<keyof T1, keyof T2>]: T1[P] } & T2;
 
 type Overwritten = {
   transactions: (filter: WithTransactionFilter) => EthqlTransaction[];
+  miner: EthqlAccount;
 };
 
 interface EthqlBlock extends Overwrite<Block, Overwritten> {}
@@ -66,16 +68,20 @@ class EthqlBlock implements EthqlBlock {
   private _transactions: EthqlTransaction[];
 
   constructor(block: Block) {
-    const { transactions, ...rest } = block;
+    const { transactions, miner, ...rest } = block;
     Object.assign(this, rest);
 
     this._transactions = transactions.map(t => new EthqlTransaction(t));
+    this.miner = new EthqlAccount(block.miner);
   }
 
   public async parent(_, context: EthqlContext, info: GraphQLResolveInfo): Promise<EthqlBlock> {
     return EthqlBlock.load(this.parentHash, context, info);
   }
 
+  /**
+   * Gets all transactions from this block.
+   */
   public transactions({ filter }: WithTransactionFilter) {
     return this._transactions.filter(EthqlBlock.transactionFilter(filter));
   }
