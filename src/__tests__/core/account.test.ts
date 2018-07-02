@@ -1,5 +1,10 @@
+import BigNumber = require('bn.js');
+import Web3 = require('web3');
+import { Unit } from '../../types/web3/utils';
 import { testGraphql } from '../utils';
-const { execQuery } = testGraphql();
+
+
+const { execQuery, ctxFactory } = testGraphql();
 
 test('account: select by address', async () => {
   const query = `
@@ -46,31 +51,22 @@ test('account: select account balance', async () => {
 });
 
 test('account: select account balance with unit conversion', async () => {
-  const units =  {'wei': 1,
-                  'kwei': 1000, 'babbage': 1000, 'femtoether': 1000,
-                  'mwei': 1000000, 'lovelace': 1000000, 'picoether': 1000000,
-                  'gwei': 1000000000, 'shannon': 1000000000, 'nanoether': 1000000000, 'nano': 1000000000,
-                  'microether': 1000000000000, 'micro': 1000000000000, 'szabo': 1000000000000,
-                  'milliether': 1000000000000000, 'milli': 1000000000000000, 'finney': 1000000000000000,
-                  'ether': 1000000000000000000,
-                  'kether': 1000000000000000000000, 'grand': 1000000000000000000000,
-                  'mether': 1000000000000000000000000,
-                  'gether': 1000000000000000000000000000,
-                  'tether': 1000000000000000000000000000000};
-
-  let wei;
-  for (const unit of Object.keys(units)) {
+  let cmpr; // variable for baseline of comparison, in wei, for conversion
+  const {web3} = ctxFactory.create();
+  for (const unit of Object.keys(web3.utils.unitMap)) {
+    if (unit === 'noether') { continue; }
     const query = `
     {
-      account(address: "0x0000000000000000000000000000000000000000") {
-        balance(unit:` + unit + `)
+      account(address: "0x0000000000000000000000000000000000000001") {
+        balance(unit: ${unit.toLowerCase()})
       }
     }
     `;
-    const result = await execQuery(query);
-    if (!wei) { wei = result.data.account.balance; }
-    expect(result.data.account.balance).toEqual(wei / units[unit]);
+    let result = await execQuery(query);
     expect(result.errors).toBeUndefined();
+    result = (result.data.account.balance).toFixed(5);
+    if (!cmpr) { cmpr = result; } // set baseline of comparison in wei
+    expect(result).toEqual((cmpr / web3.utils.unitMap[unit]).toFixed(5)); // compare conversion in wei to baseline
   }
 });
 

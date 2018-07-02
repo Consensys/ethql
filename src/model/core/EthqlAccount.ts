@@ -8,11 +8,7 @@ class EthqlAccount {
       return null;
     }
     const bal = await web3.eth.getBalance(this.address);
-    if (unit) {
-      return web3.utils.fromWei(bal, unit);
-    } else {
-      return bal;
-    }
+    return unit ? web3.utils.fromWei(bal, unit) : bal;
   }
 
   public async code(_, { web3 }: EthqlContext) {
