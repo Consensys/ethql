@@ -4,7 +4,11 @@ class EthqlAccount {
   constructor(public address: string) {}
 
   public async balance({ unit }, { web3 }: EthqlContext) {
-    return this.address && web3.eth.getBalance(this.address);
+    if (!this.address) {
+      return null;
+    }
+    const bal = await web3.eth.getBalance(this.address);
+    return unit ? web3.utils.fromWei(bal, unit) : bal;
   }
 
   public async code(_, { web3 }: EthqlContext) {

@@ -124,7 +124,7 @@ type Account {
   address: Address
 
   "The balance of this account"
-  balance: Long
+  balance(unit: Unit): Long
 
   "The code behind this account"
   code: String
