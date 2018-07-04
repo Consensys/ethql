@@ -117,7 +117,34 @@ input BlockOffset {
 }
 
 """
+Contract storage.
+"""
+type Storage {
+  value(at: Int): String
+  solidityMap(at: Int, isNumericalKey: Boolean): SolidityMap
+  solidityList(at: Int, dynamic: Boolean): SolidityList
+}
 
+"""
+A solidity mapping type.
+"""
+type SolidityMap {
+  value(at: String): String
+  solidityMap(at: String, isNumericalKey: Boolean): SolidityMap
+  solidityList(at: String, isDynamic: Boolean): SolidityList
+}
+
+"""
+A solidity dynamic list type.
+"""
+type SolidityList {
+  value(at: Int): String
+  solidityMap(at: String, isNumericalKey: Boolean): SolidityMap
+  solidityList(at: String, isDynamic: Boolean): SolidityList
+}
+
+"""
+An Ethereum account.
 """
 type Account {
   "The address of this account"
@@ -134,6 +161,9 @@ type Account {
 
   "The number of transactions this account has sent"
   transactionCount: Int
+
+  "The storage of this account"
+  storage: Storage!
 }
 
 """
