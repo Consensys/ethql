@@ -1,10 +1,7 @@
 import axios from 'axios';
 import * as net from 'net';
-import { Options } from '../config';
-import { EthqlContextFactory } from '../model/EthqlContext';
 import { getAddress, startServer, stopServer } from '../server';
 import { testGraphql } from './utils';
-
 
 afterEach(() => {
   stopServer();
@@ -77,39 +74,39 @@ test('stop twice does nothing on second attempt', async () => {
   fail('expected a connection error as server should be closed');
 });
 
-const getPort = async (options?: Options) => {
-  const { schema, ctxFactory } = testGraphql(options);
-  ctxFactory.config.port = await availablePort();
+test('server starts with random port', async () => {
+  const { schema, ctxFactory } = testGraphql();
+  ctxFactory.config.port = 0;
 
   await startServer(schema, ctxFactory);
 
   const address = getAddress();
-  await healthcheckOk;
-  return address.port;
-};
-
-const ropstenOptions: Options = {
-  jsonrpc: 'https://ropsten.infura.io',
-};
+  expect(address.port).toBeGreaterThan(0);
+});
 
 test('JSON RPC endpoint configuration works correctly', async () => {
-  let query;
+  const ropsten = testGraphql({
+    jsonrpc: 'https://ropsten.infura.io',
+    port: 0,
+  });
 
-  try {
-    query = await axios.post(`http://localhost:${await getPort()}/graphql`, { query: '{ block(number: 1) { hash } }' });
-  } catch (err) {
-    return;
-  }
-  const mainnetHash = query.data.data.block.hash;
+  await startServer(ropsten.schema, ropsten.ctxFactory);
+  let query = await axios.post(`http://localhost:${getAddress().port}/graphql`, {
+    query: '{ block(number: 1) { hash } }',
+  });
+  const ropstenHash = query.data.data.block.hash;
 
   stopServer();
 
-  try {
-    query = await axios.post(`http://localhost:${await getPort(ropstenOptions)}/graphql`, { query: '{ block(number: 1) { hash } }' });
-  } catch (err) {
-    return;
-  }
-  const ropstenHash = query.data.data.block.hash;
+  const mainnet = testGraphql({
+    port: 0,
+  });
 
-  expect(mainnetHash === ropstenHash).toEqual(false);
+  await startServer(mainnet.schema, mainnet.ctxFactory);
+  query = await axios.post(`http://localhost:${getAddress().port}/graphql`, { query: '{ block(number: 1) { hash } }' });
+  const mainnetHash = query.data.data.block.hash;
+
+  expect(mainnetHash).not.toBeUndefined();
+  expect(ropstenHash).not.toBeUndefined();
+  expect(mainnetHash).not.toEqual(ropstenHash);
 });
