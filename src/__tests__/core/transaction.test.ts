@@ -20,7 +20,7 @@ test('transaction: select transaction by specific hash', async () => {
 test('transaction: select non-existent transaction', async () => {
   const query = `
       {
-        transaction(hash: "0x0000000000000000000000000000000000000000000000000000000000000001") {
+        transaction(hash: "0xdccbeb289f6630fd76fa2681837422fda9f76449653aa750d4e6b2822cf300f1") {
           nonce
         }
       }

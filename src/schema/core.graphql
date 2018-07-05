@@ -164,7 +164,7 @@ type Account {
   address: Address
 
   "The balance of this account"
-  balance: Long
+  balance(unit: Unit): Long
 
   "The code behind this account"
   code: String
@@ -216,7 +216,12 @@ type Transaction {
   "The block the transaction is contained in"
   block: Block!
 
-  "The decoded transaction"
+  """
+  The decoded transaction.
+
+  This is a best-effort interpretation of the transaction data.  There may be cases where a transaction cannot be unambiguously decoded.
+  For example, because some standards share function signatures, a single transaction may appear to match several different standards.
+  """
   decoded: DecodedTransaction
 }
 

@@ -1,5 +1,5 @@
 import Web3 = require('web3');
-import EthqlContext from '../EthqlContext';
+import { EthqlContext } from '../EthqlContext';
 
 interface PathObject {
   storageType: string;

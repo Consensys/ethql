@@ -1,4 +1,5 @@
 import EthqlTransaction from '../model/core/EthqlTransaction';
+import { EthqlContext } from '../model/EthqlContext';
 
 /**
  * A definition for a transaction decoder, where TBindings is a dictionary of ABI
@@ -9,7 +10,9 @@ import EthqlTransaction from '../model/core/EthqlTransaction';
 export interface TxDecoderDefinition<TBindings> {
   readonly standard: string;
   readonly decoder: any;
-  readonly transformers: { [P in keyof TBindings]: (decoded: any, tx: EthqlTransaction) => TBindings[P] };
+  readonly transformers: {
+    [P in keyof TBindings]: (decoded: any, tx: EthqlTransaction, context: EthqlContext) => TBindings[P]
+  };
 }
 
 /**
@@ -25,5 +28,5 @@ export type DecodedTx = {
  * A decoding engine.
  */
 export type TxDecodingEngine = {
-  decodeTransaction<T extends DecodedTx>(tx: EthqlTransaction): T;
+  decodeTransaction<T extends DecodedTx>(tx: EthqlTransaction, context: EthqlContext): T;
 };
