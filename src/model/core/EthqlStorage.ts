@@ -66,8 +66,7 @@ class EthqlStorage {
       this.base = this.newBase(step, web3);
     }
 
-    //return web3.eth.getStorageAt(this.address, this.base);
-    return this.base;
+    return web3.eth.getStorageAt(this.address, this.base);
   }
 
   private pad(val, web3: Web3) {
