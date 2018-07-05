@@ -1,83 +1,97 @@
 import Web3 = require('web3');
+import EthqlContext from '../EthqlContext';
 
-interface pathObject {
+interface PathObject {
   storageType: string;
-  storageDetail: string;
+  isNumKey: boolean;
   query: string;
 }
 
 class EthqlStorage {
-  address: string;
-  web3: Web3;
-  path: Array<pathObject> = [];
+  public address: string;
+  public path: PathObject[];
+  public base: string;
+  public previousType: string;
 
-  constructor(address: string, web3: Web3) {
+  constructor(address: string) {
     this.address = address;
-    this.web3 = web3;
-  }
-
-  private pad (val) {
-    let rtn = this.web3.utils.toHex(val);
-    rtn = this.web3.utils.leftPad(rtn, 64, '0');
-    return rtn.slice(2);
+    this.path = [];
+    this.base = '';
+    this.previousType = '';
   }
 
   public solidityMap(args) {
-    if(args.isNumericalKey) {
-      this.path.push({storageType: 'mapping', storageDetail: 'numericalKey', query: args.at.toString()})
+    if (this.base === '') {
+      this.base = args.at.toString();
     } else {
-      this.path.push({storageType: 'mapping', storageDetail: 'stringKey', query: args.at.toString()})
+      this.path.push({ storageType: 'mapping', isNumKey: args.isNumKey, query: args.at.toString() });
     }
-    
-    return this
-  }
 
-  public solidityList(args) {
-    if (args.isDynamic) {
-      this.path.push({storageType: 'list', storageDetail: 'dynamic', query: args.at.toString()});
-    } else {
-      this.path.push({storageType: 'list', storageDetail: 'fixed', query: args.at.toString()});
-    }
-    
+    this.previousType = 'mapping';
     return this;
   }
 
-
-  public async value(args): Promise<string> {
-    const previousQuery = this.path.slice(-1)[0];
-    this.path.push({storageType: previousQuery.storageType, storageDetail: previousQuery.storageDetail, query: args.at.toString()});
-
-    let base = '';
-    //for(___ of ____)
-    for (let step of this.path) {
-      base = this.newBase(base, step);
+  public solidityFixedArray(args) {
+    if (this.base === '') {
+      this.base = args.at.toString();
+    } else {
+      this.path.push({ storageType: 'fixedArray', isNumKey: args.isNumKey, query: args.at.toString() });
     }
 
-    const stor = await this.web3.eth.getStorageAt(this.address, base);
-    return stor;
+    this.previousType = 'fixedArray';
+    return this;
   }
 
-  public newBase(base: string, step: pathObject) {
-    let rtn = '';
-    if (base === '') {
-      rtn = step.query;
+  public solidityDynamicArray(args) {
+    if (this.base === '') {
+      this.base = args.at.toString();
     } else {
-      if (step.storageType === 'mapping') {
-        if (step.storageDetail === 'numericalKey') {
-          rtn = this.web3.utils.sha3('0x' + this.pad(step.query) + this.pad(base));
-        } else {
-          rtn = this.web3.utils.sha3(this.web3.utils.toHex(step.query) + this.pad(base));
-        }
+      this.path.push({ storageType: 'dynamicArray', isNumKey: args.isNumKey, query: args.at.toString() });
+    }
+
+    this.previousType = 'dynamicArray';
+    return this;
+  }
+
+  public async value(args, { web3 }: EthqlContext): Promise<string> {
+    if (this.previousType === 'mapping') {
+      this.solidityMap(args);
+    } else if (this.previousType === 'fixedArray') {
+      this.solidityFixedArray(args);
+    } else {
+      this.solidityDynamicArray(args);
+    }
+
+    for (let step of this.path) {
+      this.base = this.newBase(step, web3);
+    }
+
+    //return web3.eth.getStorageAt(this.address, this.base);
+    return this.base;
+  }
+
+  private pad(val, web3: Web3) {
+    let rtn = web3.utils.toHex(val);
+    rtn = web3.utils.leftPad(rtn, 64, '0');
+    return rtn.slice(2);
+  }
+
+  private newBase(step: PathObject, web3: Web3) {
+    if (typeof step.isNumKey !== 'undefined') {
+      if (step.isNumKey) {
+        return web3.utils.sha3('0x' + this.pad(step.query, web3) + this.pad(this.base, web3));
       } else {
-        if (step.storageDetail === 'dynamic') {
-          rtn = this.web3.utils.toHex(this.web3.utils.toBN(this.web3.utils.sha3('0x' + this.pad(base))).add(this.web3.utils.toBN(step.query)))
-        } else {
-          rtn = this.web3.utils.toHex(this.web3.utils.toBN(base).add(this.web3.utils.toBN(step.query)));
-        }
+        return web3.utils.sha3(web3.utils.toHex(step.query) + this.pad(this.base, web3));
+      }
+    } else {
+      if (step.storageType === 'fixedArray') {
+        return web3.utils.toHex(web3.utils.toBN(this.base).add(web3.utils.toBN(step.query)));
+      } else {
+        return web3.utils.toHex(
+          web3.utils.toBN(web3.utils.sha3('0x' + this.pad(this.base, web3))).add(web3.utils.toBN(step.query)),
+        );
       }
     }
-    
-    return rtn;
   }
 }
 

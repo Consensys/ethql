@@ -120,27 +120,40 @@ input BlockOffset {
 Contract storage.
 """
 type Storage {
-  value(at: Int): String
-  solidityMap(at: Int, isNumericalKey: Boolean): SolidityMap
-  solidityList(at: Int, dynamic: Boolean): SolidityList
+  value(at: Int!): String
+  solidityMap(at: Int!): SolidityMap
+  solidityFixedArray(at: Int!): SolidityFixedArray
+  solidityDynamicArray(at: Int!): SolidityDynamicArray
 }
 
 """
 A solidity mapping type.
 """
 type SolidityMap {
-  value(at: String): String
-  solidityMap(at: String, isNumericalKey: Boolean): SolidityMap
-  solidityList(at: String, isDynamic: Boolean): SolidityList
+  value(at: String!, isNumKey: Boolean!): String
+  solidityMap(at: String!, isNumKey: Boolean!): SolidityMap
+  solidityFixedArray(at: String!, isNumKey: Boolean!): SolidityFixedArray
+  solidityDynamicArray(at: String!, isNumKey: Boolean!): SolidityDynamicArray
 }
 
 """
-A solidity dynamic list type.
+A solidity fixed array type.
 """
-type SolidityList {
-  value(at: Int): String
-  solidityMap(at: String, isNumericalKey: Boolean): SolidityMap
-  solidityList(at: String, isDynamic: Boolean): SolidityList
+type SolidityFixedArray {
+  value(at: Int!): String
+  solidityMap(at: Int!): SolidityMap
+  solidityFixedArray(at: Int!): SolidityFixedArray
+  solidityDynamicArray(at: Int!): SolidityDynamicArray
+}
+
+"""
+A solidity dynamic array type.
+"""
+type SolidityDynamicArray {
+  value(at: Int!): String
+  solidityMap(at: Int!): SolidityMap
+  solidityFixedArray(at: Int!): SolidityFixedArray
+  solidityDynamicArray(at: Int!): SolidityDynamicArray
 }
 
 """

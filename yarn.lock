@@ -3788,6 +3788,10 @@ lint-staged@^7.2.0:
     string-argv "^0.0.2"
     stringify-object "^3.2.2"
 
+lint@^1.1.2:
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/lint/-/lint-1.1.2.tgz#35ed064f322547c331358d899868664968ba371f"
+
 listr-silent-renderer@^1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/listr-silent-renderer/-/listr-silent-renderer-1.1.1.tgz#924b5a3757153770bf1a8e3fbf74b8bbf3f9242e"
