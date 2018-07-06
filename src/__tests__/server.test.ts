@@ -1,6 +1,5 @@
 import axios from 'axios';
 import * as net from 'net';
-import { EthqlContextFactory } from '../model/EthqlContext';
 import { getAddress, startServer, stopServer } from '../server';
 import { testGraphql } from './utils';
 
@@ -73,4 +72,41 @@ test('stop twice does nothing on second attempt', async () => {
   }
 
   fail('expected a connection error as server should be closed');
+});
+
+test('server starts with random port', async () => {
+  const { schema, ctxFactory } = testGraphql();
+  ctxFactory.config.port = 0;
+
+  await startServer(schema, ctxFactory);
+
+  const address = getAddress();
+  expect(address.port).toBeGreaterThan(0);
+});
+
+test('JSON RPC endpoint configuration works correctly', async () => {
+  const ropsten = testGraphql({
+    jsonrpc: 'https://ropsten.infura.io',
+    port: 0,
+  });
+
+  await startServer(ropsten.schema, ropsten.ctxFactory);
+  let query = await axios.post(`http://localhost:${getAddress().port}/graphql`, {
+    query: '{ block(number: 1) { hash } }',
+  });
+  const ropstenHash = query.data.data.block.hash;
+
+  stopServer();
+
+  const mainnet = testGraphql({
+    port: 0,
+  });
+
+  await startServer(mainnet.schema, mainnet.ctxFactory);
+  query = await axios.post(`http://localhost:${getAddress().port}/graphql`, { query: '{ block(number: 1) { hash } }' });
+  const mainnetHash = query.data.data.block.hash;
+
+  expect(mainnetHash).not.toBeUndefined();
+  expect(ropstenHash).not.toBeUndefined();
+  expect(mainnetHash).not.toEqual(ropstenHash);
 });

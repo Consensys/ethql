@@ -1,5 +1,6 @@
 import { EthqlContext } from '../EthqlContext';
 import EthqlStorage from './EthqlStorage';
+import EthQlBlock from './EthqlBlock';
 
 class EthqlAccount {
   constructor(public address: string) {}
