@@ -3,7 +3,6 @@ import { EthqlContext } from '../EthqlContext';
 
 interface PathObject {
   storageType: string;
-  isNumKey: boolean;
   query: string;
 }
 
@@ -20,47 +19,28 @@ class EthqlStorage {
     this.previousType = '';
   }
 
-  public solidityMap(args) {
-    if (this.base === '') {
-      this.base = args.at.toString();
-    } else {
-      this.path.push({ storageType: 'mapping', isNumKey: args.isNumKey, query: args.at.toString() });
-    }
+  public solidityStringMap(args) {
+    this.addToPath(args.at, 'stringMap');
+    return this;
+  }
 
-    this.previousType = 'mapping';
+  public solidityNumberMap(args) {
+    this.addToPath(args.at, 'numberMap');
     return this;
   }
 
   public solidityFixedArray(args) {
-    if (this.base === '') {
-      this.base = args.at.toString();
-    } else {
-      this.path.push({ storageType: 'fixedArray', isNumKey: args.isNumKey, query: args.at.toString() });
-    }
-
-    this.previousType = 'fixedArray';
+    this.addToPath(args.at.toString(), 'fixedArray');
     return this;
   }
 
   public solidityDynamicArray(args) {
-    if (this.base === '') {
-      this.base = args.at.toString();
-    } else {
-      this.path.push({ storageType: 'dynamicArray', isNumKey: args.isNumKey, query: args.at.toString() });
-    }
-
-    this.previousType = 'dynamicArray';
+    this.addToPath(args.at.toString(), 'dynamicArray');
     return this;
   }
 
   public async value(args, { web3 }: EthqlContext): Promise<string> {
-    if (this.previousType === 'mapping') {
-      this.solidityMap(args);
-    } else if (this.previousType === 'fixedArray') {
-      this.solidityFixedArray(args);
-    } else {
-      this.solidityDynamicArray(args);
-    }
+    this.addToPath(args.at.toString(), 'value');
 
     for (let step of this.path) {
       this.base = this.newBase(step, web3);
@@ -75,23 +55,46 @@ class EthqlStorage {
     return rtn.slice(2);
   }
 
-  private newBase(step: PathObject, web3: Web3) {
-    if (typeof step.isNumKey !== 'undefined') {
-      if (step.isNumKey) {
-        return web3.utils.sha3('0x' + this.pad(step.query, web3) + this.pad(this.base, web3));
-      } else {
-        return web3.utils.sha3(web3.utils.toHex(step.query) + this.pad(this.base, web3));
-      }
+  private addToPath(query: string, type: string) {
+    if (this.base === '') {
+      this.base = query;
     } else {
-      if (step.storageType === 'fixedArray') {
-        return web3.utils.toHex(web3.utils.toBN(this.base).add(web3.utils.toBN(step.query)));
-      } else {
-        return web3.utils.toHex(
-          web3.utils.toBN(web3.utils.sha3('0x' + this.pad(this.base, web3))).add(web3.utils.toBN(step.query)),
-        );
-      }
+      this.path.push({storageType: this.previousType, query: query});
+    }
+
+    this.previousType = type;
+  }
+
+  private newBase(step: PathObject, web3: Web3) {
+    if(step.storageType === 'numberMap') {
+      return web3.utils.sha3('0x' + this.pad(step.query, web3) + this.pad(this.base, web3));
+    } else if(step.storageType === 'stringMap') {
+      return web3.utils.sha3(web3.utils.toHex(step.query) + this.pad(this.base, web3));
+    } else if(step.storageType === 'fixedArray') {
+      return web3.utils.toHex(web3.utils.toBN(this.base).add(web3.utils.toBN(step.query)));
+    } else {
+      return web3.utils.toHex(web3.utils.toBN(web3.utils.sha3('0x' + this.pad(this.base, web3))).add(web3.utils.toBN(step.query)));
     }
   }
 }
 
 export default EthqlStorage;
+
+
+
+
+/*if (typeof step.isNumKey !== 'undefined') {
+  if (step.isNumKey) {
+    return web3.utils.sha3('0x' + this.pad(step.query, web3) + this.pad(this.base, web3));
+  } else {
+    return web3.utils.sha3(web3.utils.toHex(step.query) + this.pad(this.base, web3));
+  }
+} else {
+  if (step.storageType === 'fixedArray') {
+    return web3.utils.toHex(web3.utils.toBN(this.base).add(web3.utils.toBN(step.query)));
+  } else {
+    return web3.utils.toHex(
+      web3.utils.toBN(web3.utils.sha3('0x' + this.pad(this.base, web3))).add(web3.utils.toBN(step.query)),
+    );
+  }
+}*/
