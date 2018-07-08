@@ -121,30 +121,17 @@ Contract storage.
 """
 type Storage {
   value(at: Int!): String
-  solidityStringMap(at: Int!): SolidityStringMap
-  solidityNumberMap(at: Int!): SolidityNumberMap
+  solidityMap(at: Int!, keyType: String!): SolidityMap
   solidityFixedArray(at: Int!): SolidityFixedArray
   solidityDynamicArray(at: Int!): SolidityDynamicArray
 }
 
 """
-A solidity string map type.
+A solidity mapping type.
 """
-type SolidityStringMap {
+type SolidityMap {
   value(at: String!): String
-  solidityStringMap(at: String!): SolidityStringMap
-  solidityNumberMap(at: String!): SolidityNumberMap
-  solidityFixedArray(at: String!): SolidityFixedArray
-  solidityDynamicArray(at: String!): SolidityDynamicArray
-}
-
-"""
-A solidity number map type.
-"""
-type SolidityNumberMap {
-  value(at: String!): String
-  solidityStringMap(at: String!): SolidityStringMap
-  solidityNumberMap(at: String!): SolidityNumberMap
+  solidityMap(at: String!, keyType: String!): SolidityMap
   solidityFixedArray(at: String!): SolidityFixedArray
   solidityDynamicArray(at: String!): SolidityDynamicArray
 }
@@ -154,8 +141,7 @@ A solidity fixed array type.
 """
 type SolidityFixedArray {
   value(at: Int!): String
-  solidityStringMap(at: Int!): SolidityStringMap
-  solidityNumberMap(at: Int!): SolidityNumberMap
+  solidityMap(at: Int!, keyType: String!): SolidityMap
   solidityFixedArray(at: Int!): SolidityFixedArray
   solidityDynamicArray(at: Int!): SolidityDynamicArray
 }
@@ -165,8 +151,7 @@ A solidity dynamic array type.
 """
 type SolidityDynamicArray {
   value(at: Int!): String
-  solidityStringMap(at: Int!): SolidityStringMap
-  solidityNumberMap(at: Int!): SolidityNumberMap
+  solidityMap(at: Int!, keyType: String!): SolidityMap
   solidityFixedArray(at: Int!): SolidityFixedArray
   solidityDynamicArray(at: Int!): SolidityDynamicArray
 }

@@ -1,6 +1,6 @@
 import { EthqlContext } from '../EthqlContext';
-import EthqlStorage from './EthqlStorage';
 import EthQlBlock from './EthqlBlock';
+import EthqlStorage from './EthqlStorage';
 
 class EthqlAccount {
   constructor(public address: string) {}
@@ -21,7 +21,7 @@ class EthqlAccount {
     return this.address && web3.eth.getTransactionCount(this.address);
   }
 
-  public async storage(_, { web3 }: EthqlContext) {
+  public async storage(_) {
     return new EthqlStorage(this.address);
   }
 

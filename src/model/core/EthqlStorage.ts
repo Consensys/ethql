@@ -19,13 +19,15 @@ class EthqlStorage {
     this.previousType = '';
   }
 
-  public solidityStringMap(args) {
-    this.addToPath(args.at, 'stringMap');
-    return this;
-  }
+  public solidityMap(args) {
+    if (args.keyType.toLowerCase() === 'address') {
+      this.addToPath(args.at, 'addressMap');
+    } else if (args.keyType.toLowerCase() === 'string') {
+      this.addToPath(args.at, 'stringMap');
+    } else {
+      this.addToPath(args.at, 'numberMap');
+    }
 
-  public solidityNumberMap(args) {
-    this.addToPath(args.at, 'numberMap');
     return this;
   }
 
@@ -59,42 +61,25 @@ class EthqlStorage {
     if (this.base === '') {
       this.base = query;
     } else {
-      this.path.push({storageType: this.previousType, query: query});
+      this.path.push({ storageType: this.previousType, query });
     }
 
     this.previousType = type;
   }
 
   private newBase(step: PathObject, web3: Web3) {
-    if(step.storageType === 'numberMap') {
+    if (step.storageType === 'numberMap' || step.storageType === 'addressMap') {
       return web3.utils.sha3('0x' + this.pad(step.query, web3) + this.pad(this.base, web3));
-    } else if(step.storageType === 'stringMap') {
+    } else if (step.storageType === 'stringMap') {
       return web3.utils.sha3(web3.utils.toHex(step.query) + this.pad(this.base, web3));
-    } else if(step.storageType === 'fixedArray') {
+    } else if (step.storageType === 'fixedArray') {
       return web3.utils.toHex(web3.utils.toBN(this.base).add(web3.utils.toBN(step.query)));
     } else {
-      return web3.utils.toHex(web3.utils.toBN(web3.utils.sha3('0x' + this.pad(this.base, web3))).add(web3.utils.toBN(step.query)));
+      return web3.utils.toHex(
+        web3.utils.toBN(web3.utils.sha3('0x' + this.pad(this.base, web3))).add(web3.utils.toBN(step.query)),
+      );
     }
   }
 }
 
 export default EthqlStorage;
-
-
-
-
-/*if (typeof step.isNumKey !== 'undefined') {
-  if (step.isNumKey) {
-    return web3.utils.sha3('0x' + this.pad(step.query, web3) + this.pad(this.base, web3));
-  } else {
-    return web3.utils.sha3(web3.utils.toHex(step.query) + this.pad(this.base, web3));
-  }
-} else {
-  if (step.storageType === 'fixedArray') {
-    return web3.utils.toHex(web3.utils.toBN(this.base).add(web3.utils.toBN(step.query)));
-  } else {
-    return web3.utils.toHex(
-      web3.utils.toBN(web3.utils.sha3('0x' + this.pad(this.base, web3))).add(web3.utils.toBN(step.query)),
-    );
-  }
-}*/
