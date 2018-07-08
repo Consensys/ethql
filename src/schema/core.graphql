@@ -117,42 +117,82 @@ input BlockOffset {
 }
 
 """
-Contract storage.
+The storage of this contract.
 """
 type Storage {
+  "Gets the value at this storage slot."
   value(at: Int!): String
+
+  """
+  Steps into a map at this storage slot.
+  keyType refers to the key's type and can be "address", "string", or "number".
+  """
   solidityMap(at: Int!, keyType: String!): SolidityMap
+
+  "Steps into a fixed array at this storage slot."
   solidityFixedArray(at: Int!): SolidityFixedArray
+
+  "Steps into a dynamic array at this storage slot."
   solidityDynamicArray(at: Int!): SolidityDynamicArray
 }
 
 """
-A solidity mapping type.
+A solidity map.
 """
 type SolidityMap {
+  "Gets the value returned by this key."
   value(at: String!): String
+
+  """
+  Steps into the map returned by this key.
+  keyType can be "address", "string", or "number".
+  """
   solidityMap(at: String!, keyType: String!): SolidityMap
+
+  "Steps into the fixed array returned by this key."
   solidityFixedArray(at: String!): SolidityFixedArray
+
+  "Steps into the dynamic array returned by this key."
   solidityDynamicArray(at: String!): SolidityDynamicArray
 }
 
 """
-A solidity fixed array type.
+A fixed solidity array.
 """
 type SolidityFixedArray {
+  "Gets value at this index."
   value(at: Int!): String
+
+  """
+  Steps into the map at this index.
+  keyType can be "address", "string", or "number".
+  """
   solidityMap(at: Int!, keyType: String!): SolidityMap
+
+  "Steps into the fixed array at this index."
   solidityFixedArray(at: Int!): SolidityFixedArray
+
+  "Steps into the dynamic array at this index."
   solidityDynamicArray(at: Int!): SolidityDynamicArray
 }
 
 """
-A solidity dynamic array type.
+A dynamic solidity array.
 """
 type SolidityDynamicArray {
+  "Gets value at this index."
   value(at: Int!): String
+
+  """
+  Steps into the map at this index.
+  keyType can be "address", "string", or "number".
+  """
   solidityMap(at: Int!, keyType: String!): SolidityMap
+
+  "Steps into the fixed array at this index."
   solidityFixedArray(at: Int!): SolidityFixedArray
+  
+  "Steps into the dynamic array at this index."
   solidityDynamicArray(at: Int!): SolidityDynamicArray
 }
 
