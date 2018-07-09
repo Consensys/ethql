@@ -13,42 +13,45 @@ interface JsonRpcResponse {
 }
 
 export class Provider {
-  send(payload: JsonRpcRequest, callback: (e: Error, val: JsonRpcResponse) => void): any;
+  public send(
+    payload: JsonRpcRequest | JsonRpcRequest[],
+    callback: (e: Error, val: JsonRpcResponse | JsonRpcResponse[]) => void,
+  ): any;
 }
 
 export class WebsocketProvider extends Provider {
-  responseCallbacks: object;
-  notificationCallbacks: [() => any];
-  connection: {
+  public responseCallbacks: object;
+  public notificationCallbacks: [() => any];
+  public connection: {
     onclose(e: any): void;
     onmessage(e: any): void;
     onerror(e?: any): void;
   };
-  addDefaultEvents: () => void;
-  on(type: string, callback: () => any): void;
-  removeListener(type: string, callback: () => any): void;
-  removeAllListeners(type: string): void;
-  reset(): void;
+  public addDefaultEvents: () => void;
+  public on(type: string, callback: () => any): void;
+  public removeListener(type: string, callback: () => any): void;
+  public removeAllListeners(type: string): void;
+  public reset(): void;
 }
 export class HttpProvider extends Provider {
-  responseCallbacks: undefined;
-  notificationCallbacks: undefined;
-  connection: undefined;
-  addDefaultEvents: undefined;
-  on(type: string, callback: () => any): undefined;
-  removeListener(type: string, callback: () => any): undefined;
-  removeAllListeners(type: string): undefined;
-  reset(): undefined;
+  public responseCallbacks: undefined;
+  public notificationCallbacks: undefined;
+  public connection: undefined;
+  public addDefaultEvents: undefined;
+  public on(type: string, callback: () => any): undefined;
+  public removeListener(type: string, callback: () => any): undefined;
+  public removeAllListeners(type: string): undefined;
+  public reset(): undefined;
 }
 export class IpcProvider extends Provider {
-  responseCallbacks: undefined;
-  notificationCallbacks: undefined;
-  connection: undefined;
-  addDefaultEvents: undefined;
-  on(type: string, callback: () => any): undefined;
-  removeListener(type: string, callback: () => any): undefined;
-  removeAllListeners(type: string): undefined;
-  reset(): undefined;
+  public responseCallbacks: undefined;
+  public notificationCallbacks: undefined;
+  public connection: undefined;
+  public addDefaultEvents: undefined;
+  public on(type: string, callback: () => any): undefined;
+  public removeListener(type: string, callback: () => any): undefined;
+  public removeAllListeners(type: string): undefined;
+  public reset(): undefined;
 }
 
 export default interface Providers {

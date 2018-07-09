@@ -1,2 +1,3 @@
 src/abi/*.json
+src/__tests__/data
 dist/
