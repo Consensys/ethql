@@ -1,21 +1,12 @@
-# import Account, DecodedTransaction from "core.graphql"
-
-type TokenContract {
-  account: Account
-  symbol: String
-  totalSupply: Long
-}
+# import Account, DecodedTransaction, Entity from "core.graphql"
+# import * from "token.graphql"
 
 interface ERC20Transaction {
   tokenContract: TokenContract
 }
 
-type TokenHolder {
-  account: Account!
-  tokenBalance: Long
-}
-
 type ERC20Transfer implements DecodedTransaction & ERC20Transaction {
+  entity: Entity
   standard: String
   operation: String
   from: TokenHolder
@@ -25,6 +16,7 @@ type ERC20Transfer implements DecodedTransaction & ERC20Transaction {
 }
 
 type ERC20TransferFrom implements DecodedTransaction & ERC20Transaction {
+  entity: Entity
   standard: String
   operation: String
   from: TokenHolder
@@ -35,6 +27,7 @@ type ERC20TransferFrom implements DecodedTransaction & ERC20Transaction {
 }
 
 type ERC20Approve implements DecodedTransaction {
+  entity: Entity
   standard: String
   operation: String
   from: TokenHolder

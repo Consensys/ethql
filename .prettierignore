@@ -1,2 +1,2 @@
-src/abi/
+src/abi/*.json
 dist/

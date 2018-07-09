@@ -1,6 +1,10 @@
 import EthqlTransaction from '../model/core/EthqlTransaction';
 import { EthqlContext } from '../model/EthqlContext';
 
+// Defines the entity to which the standard belongs.
+// As we support new standards, this union type will expand.
+type Entity = 'token' | undefined;
+
 /**
  * A definition for a transaction decoder, where TBindings is a dictionary of ABI
  * function names mapped to their decoded types, and transformers is a dictionary of
@@ -8,6 +12,7 @@ import { EthqlContext } from '../model/EthqlContext';
  * in the ABI.
  */
 export interface TxDecoderDefinition<TBindings> {
+  readonly entity: Entity;
   readonly standard: string;
   readonly decoder: any;
   readonly transformers: {
@@ -19,6 +24,7 @@ export interface TxDecoderDefinition<TBindings> {
  * A decoded transaction.
  */
 export type DecodedTx = {
+  entity: Entity;
   standard: string;
   operation: string;
   __typename: string;
@@ -28,5 +34,5 @@ export type DecodedTx = {
  * A decoding engine.
  */
 export type TxDecodingEngine = {
-  decodeTransaction<T extends DecodedTx>(tx: EthqlTransaction, context: EthqlContext): T;
+  decodeTransaction(tx: EthqlTransaction, context: EthqlContext): DecodedTx;
 };
