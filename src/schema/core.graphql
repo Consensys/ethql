@@ -125,9 +125,9 @@ type Storage {
 
   """
   Steps into a map at this storage slot.
-  keyType refers to the key's type and can be "address", "string", or "number".
+  keyType can be address, number, or string.
   """
-  solidityMap(at: Int!, keyType: String!): SolidityMap
+  solidityMap(at: Int!, keyType: KeyType!): SolidityMap
 
   "Steps into a fixed array at this storage slot."
   solidityFixedArray(at: Int!): SolidityFixedArray
@@ -145,9 +145,9 @@ type SolidityMap {
 
   """
   Steps into the map returned by this key.
-  keyType can be "address", "string", or "number".
+  keyType can be address, number, or string.
   """
-  solidityMap(at: String!, keyType: String!): SolidityMap
+  solidityMap(at: String!, keyType: KeyType!): SolidityMap
 
   "Steps into the fixed array returned by this key."
   solidityFixedArray(at: String!): SolidityFixedArray
@@ -165,9 +165,9 @@ type SolidityFixedArray {
 
   """
   Steps into the map at this index.
-  keyType can be "address", "string", or "number".
+  keyType can be address, number, or string.
   """
-  solidityMap(at: Int!, keyType: String!): SolidityMap
+  solidityMap(at: Int!, keyType: KeyType!): SolidityMap
 
   "Steps into the fixed array at this index."
   solidityFixedArray(at: Int!): SolidityFixedArray
@@ -185,9 +185,9 @@ type SolidityDynamicArray {
 
   """
   Steps into the map at this index.
-  keyType can be "address", "string", or "number".
+  keyType can be address, string, or number.
   """
-  solidityMap(at: Int!, keyType: String!): SolidityMap
+  solidityMap(at: Int!, keyType: KeyType!): SolidityMap
 
   "Steps into the fixed array at this index."
   solidityFixedArray(at: Int!): SolidityFixedArray
@@ -271,6 +271,12 @@ enum TransactionStatus {
 
   "Transaction was successful"
   SUCCESS
+}
+
+enum KeyType {
+  address,
+  number,
+  string
 }
 
 input TransactionFilter {

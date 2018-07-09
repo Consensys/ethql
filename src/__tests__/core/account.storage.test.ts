@@ -90,7 +90,7 @@ test('account->storage: retrieve map storage with string key', async () => {
     {
       account(address: "0x171AEEfFa86Fbfd8c9d25A235f1dDBB03A635742") {
         storage {
-          solidityMap(at: 7, keyType: "string") {
+          solidityMap(at: 7, keyType: string) {
             value(at: "hello")
           }
         }
@@ -119,7 +119,7 @@ test('account->storage: retrieve map storage with numerical key', async () => {
     {
       account(address: "0x171AEEfFa86Fbfd8c9d25A235f1dDBB03A635742") {
         storage {
-          solidityMap(at: 8, keyType: "number") {
+          solidityMap(at: 8, keyType: number) {
             value(at: "1234")
           }
         }
@@ -149,7 +149,7 @@ test('account->storage: retrieve nested map storage inside a fixed list', async 
       account(address: "0x171AEEfFa86Fbfd8c9d25A235f1dDBB03A635742") {
         storage {
           solidityFixedArray(at: 9) {
-            solidityMap(at: 11, keyType: "string") {
+            solidityMap(at: 11, keyType: string) {
               value(at: "marco")
             }
           }
@@ -181,7 +181,7 @@ test('account->storage: retrieve nested dynamic list storage inside a map', asyn
     {
       account(address: "0x171AEEfFa86Fbfd8c9d25A235f1dDBB03A635742") {
         storage {
-          solidityMap(at: 29, keyType: "address") {
+          solidityMap(at: 29, keyType: address) {
             solidityDynamicArray(at: "0x874B54A8bD152966d63F706BAE1FfeB0411921E5") {
               value(at: 10)
             }
