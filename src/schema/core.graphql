@@ -285,7 +285,12 @@ input TransactionFilter {
   contractCreation: Boolean
 }
 
+enum Entity {
+  token
+}
+
 interface DecodedTransaction {
+  entity: Entity
   standard: String
   operation: String
 }

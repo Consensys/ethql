@@ -48,7 +48,7 @@ export default function initResolvers({ web3 }: EthqlContext): IResolvers {
       description: 'A Keccak hash, used to identify blocks and transactions',
       serialize: String,
       parseValue: input => {
-        return !web3.utils.isHexStrict(input) || web3.utils.hexToBytes(input).length !== 32 ? input : undefined;
+        return !web3.utils.isHexStrict(input) || web3.utils.hexToBytes(input).length !== 32 ? undefined : input;
       },
       parseLiteral: ast => {
         if (

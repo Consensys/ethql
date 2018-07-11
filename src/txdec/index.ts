@@ -1,4 +1,4 @@
-import Erc20 from './decoders/Erc20';
+import Erc20Token from './decoders/Erc20Token';
 import { SimpleTxDecodingEngine } from './engines/SimpleTxDecodingEngine';
 import { TxDecodingEngine } from './types';
 
@@ -6,7 +6,7 @@ import { TxDecodingEngine } from './types';
 const engine = new SimpleTxDecodingEngine();
 
 // Register all decoders.
-engine.register(new Erc20());
+engine.register(new Erc20Token());
 
 // Export the engine, making only the decodeTransaction method visible.
 export default engine as Pick<TxDecodingEngine, 'decodeTransaction'>;
