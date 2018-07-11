@@ -17,7 +17,7 @@ class SimpleTxDecodingEngine implements TxDecodingEngine {
    * Decodes the transaction as a known type, or returns undefined if unable to.
    * @param tx The transaction to decode.
    */
-  public decodeTransaction<T extends DecodedTx>(tx: EthqlTransaction, context: EthqlContext): T | undefined {
+  public decodeTransaction(tx: EthqlTransaction, context: EthqlContext): DecodedTx | undefined {
     const { inputData } = tx;
     if (!inputData || inputData === '0x') {
       return;
@@ -29,6 +29,7 @@ class SimpleTxDecodingEngine implements TxDecodingEngine {
         return {
           standard: txType.standard,
           operation: decoded.name,
+          entity: txType.entity,
           __typename: `${txType.standard}${_.upperFirst(decoded.name)}`,
           ...txType.transformers[decoded.name](decoded, tx, context),
         };

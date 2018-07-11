@@ -73,9 +73,10 @@ type Erc20Bindings = {
 };
 
 /**
- * ERC20 transaction decoder.
+ * ERC20 token transaction decoder.
  */
-class Erc20 implements TxDecoderDefinition<Erc20Bindings> {
+class Erc20Token implements TxDecoderDefinition<Erc20Bindings> {
+  public readonly entity = 'token';
   public readonly standard = 'ERC20';
   public readonly decoder = createAbiDecoder(__dirname + '../../../abi/erc20.json');
 
@@ -118,4 +119,4 @@ class Erc20 implements TxDecoderDefinition<Erc20Bindings> {
   };
 }
 
-export default Erc20;
+export default Erc20Token;
