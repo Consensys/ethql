@@ -17,6 +17,22 @@ test('transaction: select transaction by specific hash', async () => {
   expect(result).toEqual(expected);
 });
 
+test('transaction: select block for transaction', async () => {
+  const query = `
+    {
+      transaction(hash: "0xdccbeb289f6630fd76fa2681837422fda9f76449653aa750d4e6b2822cf300fd") {
+        block {
+          number
+        }
+      }
+    }
+  `;
+  const expected = { data: { transaction: { block: { number: 5473309 } } } };
+
+  const result = await execQuery(query);
+  expect(result).toEqual(expected);
+});
+
 test('transaction: select non-existent transaction', async () => {
   const query = `
       {
