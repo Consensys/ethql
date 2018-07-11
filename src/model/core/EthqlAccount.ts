@@ -1,5 +1,6 @@
 import { EthqlContext } from '../EthqlContext';
 import EthQlBlock from './EthqlBlock';
+import EthqlStorage from './EthqlStorage';
 
 class EthqlAccount {
   constructor(public address: string) {}
@@ -18,6 +19,10 @@ class EthqlAccount {
 
   public async transactionCount(_, { web3 }: EthqlContext) {
     return this.address && web3.eth.getTransactionCount(this.address);
+  }
+
+  public async storage(_) {
+    return new EthqlStorage(this.address);
   }
 
   public equals(addressOrAccount: string | EthqlAccount) {

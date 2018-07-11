@@ -117,7 +117,87 @@ input BlockOffset {
 }
 
 """
+The storage of this contract.
+"""
+type Storage {
+  "Gets the value at this storage slot."
+  value(at: Int!): String
 
+  """
+  Steps into a map at this storage slot.
+  keyType can be address, number, or string.
+  """
+  solidityMap(at: Int!, keyType: KeyType!): SolidityMap
+
+  "Steps into a fixed array at this storage slot."
+  solidityFixedArray(at: Int!): SolidityFixedArray
+
+  "Steps into a dynamic array at this storage slot."
+  solidityDynamicArray(at: Int!): SolidityDynamicArray
+}
+
+"""
+A solidity map.
+"""
+type SolidityMap {
+  "Gets the value returned by this key."
+  value(at: String!): String
+
+  """
+  Steps into the map returned by this key.
+  keyType can be address, number, or string.
+  """
+  solidityMap(at: String!, keyType: KeyType!): SolidityMap
+
+  "Steps into the fixed array returned by this key."
+  solidityFixedArray(at: String!): SolidityFixedArray
+
+  "Steps into the dynamic array returned by this key."
+  solidityDynamicArray(at: String!): SolidityDynamicArray
+}
+
+"""
+A fixed solidity array.
+"""
+type SolidityFixedArray {
+  "Gets value at this index."
+  value(at: Int!): String
+
+  """
+  Steps into the map at this index.
+  keyType can be address, number, or string.
+  """
+  solidityMap(at: Int!, keyType: KeyType!): SolidityMap
+
+  "Steps into the fixed array at this index."
+  solidityFixedArray(at: Int!): SolidityFixedArray
+
+  "Steps into the dynamic array at this index."
+  solidityDynamicArray(at: Int!): SolidityDynamicArray
+}
+
+"""
+A dynamic solidity array.
+"""
+type SolidityDynamicArray {
+  "Gets value at this index."
+  value(at: Int!): String
+
+  """
+  Steps into the map at this index.
+  keyType can be address, string, or number.
+  """
+  solidityMap(at: Int!, keyType: KeyType!): SolidityMap
+
+  "Steps into the fixed array at this index."
+  solidityFixedArray(at: Int!): SolidityFixedArray
+  
+  "Steps into the dynamic array at this index."
+  solidityDynamicArray(at: Int!): SolidityDynamicArray
+}
+
+"""
+An Ethereum account.
 """
 type Account {
   "The address of this account"
@@ -134,6 +214,9 @@ type Account {
 
   "The number of transactions this account has sent"
   transactionCount: Int
+
+  "The storage of this account"
+  storage: Storage!
 }
 
 """
@@ -188,6 +271,12 @@ enum TransactionStatus {
 
   "Transaction was successful"
   SUCCESS
+}
+
+enum KeyType {
+  address,
+  number,
+  string
 }
 
 input TransactionFilter {
