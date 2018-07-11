@@ -7,15 +7,9 @@ interface PathObject {
 }
 
 /**
- * As the query is parsed, the resolvers are called if their type of storage is requested.
- * When called, they pass their storage type and the query attribtue (args.at) to addToPath and return this.
- * If base is null, addToPath will set base to the attribute.
- * If base is not null, the attribute and previous storage type (because attribute is always referencing the previous storage) are added to path
- * Then addToPath will update previousType to the storage type that was passed.
- * When a value call comes through, the value function runs through the path and compiles the required base using the newBase function.
- * newBase figures out the storage location of one step using the previous base and the query attribute.
- * It then tacks on the final attribute (from value) and calculates the final base.
- * This final base and the address of the contract is then given to web3 which returns the data at that location.
+ * Provides fluent accessors for solidity contract storage. Four data types are supported:
+ * Dynamic arrays, fixed arrays, maps with string keys, and maps with numeric keys.
+ * The algorithm to calculate the storage key varies for each data type.
  */
 class EthqlStorage {
   private address: string;
@@ -30,11 +24,13 @@ class EthqlStorage {
     this.previousType = null;
   }
 
-  //Resolvers relay the storage type of the query and its attributes to the addToPath function.
-  //addToPath pushes the query attribute and the type storage it is referencing to the path instance
-
-  //Checks which keyType has been passed and then sends that to addToPath, if none match then TypeError is thrown
-  //keyTypes supported: 'address', 'string', 'number'
+  /**
+   * Adds the previous type of storage and the current query to path.
+   * The previous type of storage is used as the query always refers to a storage location in the storage above it.
+   * At a value call, the cumulative query is calculated using a different algorithm for each storage type:
+   * For a number or address map, the algorithm is: sha3('0x' + pad(query) + pad(base)).
+   * For a string map, the algorithm is: sha3(toHex(query) + pad(base)).
+   */
   public solidityMap(args) {
     if (args.keyType.toLowerCase() === 'address') {
       this.addToPath(args.at, 'addressMap');
@@ -49,16 +45,27 @@ class EthqlStorage {
     return this;
   }
 
+  /**
+   * Adds the previous type of storage and the current query to path.
+   * The algorithm for finding the new base is: toHex(base added (not concatenated) to query).
+   */
   public solidityFixedArray(args) {
     this.addToPath(args.at.toString(), 'fixedArray');
     return this;
   }
 
+  /**
+   * Adds the previous type of storage and the current query to path.
+   * The algorithm for finding the new base is: toHex(sha3('0x' + pad(base))) added (not concatenated) to query).
+   */
   public solidityDynamicArray(args) {
     this.addToPath(args.at.toString(), 'dynamicArray');
     return this;
   }
 
+  /**
+   * Compiles the cumulative query from the path and value query and returns the contract's storage at that location.
+   */
   public async value(args, { web3 }: EthqlContext): Promise<string> {
     let tempBase = this.base;
     for (let step of this.path) {
@@ -87,8 +94,6 @@ class EthqlStorage {
     this.previousType = type;
   }
 
-  //Depending on the storage type, solidity stores it in different locations
-  //These are the methods for the supported types
   private newBase(step: PathObject, tempBase: string, web3: Web3) {
     if (step.storageType === 'numberMap' || step.storageType === 'addressMap') {
       return web3.utils.sha3('0x' + this.pad(step.query, web3) + this.pad(tempBase, web3));
