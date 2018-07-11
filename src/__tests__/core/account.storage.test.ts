@@ -1,7 +1,6 @@
 import { testGraphql } from '../utils';
 
-const { execQuery } = testGraphql({ jsonrpc: 'https://ropsten.infura.io' });
-
+const { execQuery } = testGraphql({ configOverride: { jsonrpc: 'https://ropsten.infura.io' } });
 const contractAddress = '"0x9c72Eda6de2F67F3B3DbcA3788Aa307AEF1e0Cef"';
 
 /*
