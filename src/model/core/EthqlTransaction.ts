@@ -1,7 +1,9 @@
+import { GraphQLResolveInfo } from 'graphql';
 import { Transaction } from 'web3/eth/types';
 import engine from '../../txdec';
 import { EthqlContext } from '../EthqlContext';
 import EthqlAccount from './EthqlAccount';
+import EthqlBlock from './EthqlBlock';
 
 type Overwrite<T1, T2> = { [P in Exclude<keyof T1, keyof T2>]: T1[P] } & T2;
 
@@ -52,6 +54,10 @@ class EthqlTransaction {
     }
 
     return engine.decodeTransaction(this, context);
+  }
+
+  public async block(_, context: EthqlContext, info: GraphQLResolveInfo) {
+    return this.blockNumber ? EthqlBlock.load(this.blockNumber, context, info) : null;
   }
 }
 
