@@ -1,5 +1,6 @@
 import { GraphQLResolveInfo } from 'graphql';
 import * as _ from 'lodash';
+import Eth from 'web3/eth';
 import EthqlAccount from './core/EthqlAccount';
 import EthqlBlock from './core/EthqlBlock';
 import EthqlTransaction from './core/EthqlTransaction';
@@ -10,6 +11,17 @@ interface BlockArgs {
   number?: number;
   hash?: string;
   tag?: string;
+}
+
+// Select a single block with an offset.
+interface BlockOffset {
+  number?: number;
+  hash?: string;
+  offset?: number;
+}
+
+interface WithBlockOffset {
+  offset?: BlockOffset;
 }
 
 // Select multiple blocks.
@@ -46,6 +58,26 @@ class EthqlQuery {
     }
 
     return EthqlBlock.load(params[0], context, info);
+  }
+
+  public async blockOffset(
+    { offset }: WithBlockOffset,
+    context: EthqlContext,
+    info: GraphQLResolveInfo,
+  ): Promise<EthqlBlock> {
+    if ((!offset.number && !offset.hash) || (!offset.offset && offset.offset !== 0)) {
+      throw new Error('Expected either number or hash argument and offset argument.');
+    }
+    if (offset.number && offset.hash) {
+      throw new Error('Only one of number or hash argument should be provided.');
+    }
+
+    if (offset.hash) {
+      const block = await context.web3.eth.getBlock(offset.hash);
+      return EthqlBlock.load(block.number + offset.offset, context, info);
+    }
+
+    return EthqlBlock.load(offset.number + offset.offset, context, info);
   }
 
   public async blocks(
