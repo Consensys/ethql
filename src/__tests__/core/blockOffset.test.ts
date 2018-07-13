@@ -5,7 +5,7 @@ const { execQuery } = testGraphql();
 test('block: select single block by number with positive offset', async () => {
   const query = `
     {
-      blockOffset(offset: {number: 12345, offset: 13212}) {
+      blockOffset(number: 12345, offset: 13212) {
         number
         hash
       }
@@ -24,7 +24,7 @@ test('block: select single block by number with positive offset', async () => {
 test('block: select single block by number with zero offset', async () => {
   const query = `
     {
-      blockOffset(offset: {number: 12345, offset: 0}) {
+      blockOffset(number: 12345, offset: 0) {
         number
         hash
       }
@@ -43,7 +43,7 @@ test('block: select single block by number with zero offset', async () => {
 test('block: select single block by number with negative offset', async () => {
   const query = `
       {
-        blockOffset(offset: {number: 12345, offset: -5323}) {
+        blockOffset(number: 12345, offset: -5323) {
             number
             hash
         }
@@ -60,7 +60,7 @@ test('block: select single block by number with negative offset', async () => {
 test('block: select single block by hash with positive offset', async () => {
   const query = `
       {
-        blockOffset(offset: {hash: "0x767c2bfb3bdee3f78676c1285cd757bcd5d8c272cef2eb30d9733800a78c0b6d", offset: 12312}) {
+        blockOffset(hash: "0x767c2bfb3bdee3f78676c1285cd757bcd5d8c272cef2eb30d9733800a78c0b6d", offset: 12312) {
           number
           hash
         }
@@ -79,7 +79,7 @@ test('block: select single block by hash with positive offset', async () => {
 test('block: select single block by hash with zero offset', async () => {
   const query = `
       {
-        blockOffset(offset: {hash: "0xec2d531b7f47f16aff1c995e0a4905093cdc8dcae40d1271d63fbbdb5009c214", offset: 0}) {
+        blockOffset(hash: "0xec2d531b7f47f16aff1c995e0a4905093cdc8dcae40d1271d63fbbdb5009c214", offset: 0) {
             number
           hash
         }
@@ -98,7 +98,7 @@ test('block: select single block by hash with zero offset', async () => {
 test('block: select single block by hash with negative offset', async () => {
   const query = `
       {
-        blockOffset(offset: {hash: "0x767c2bfb3bdee3f78676c1285cd757bcd5d8c272cef2eb30d9733800a78c0b6d", offset: -1232}) {
+        blockOffset(hash: "0x767c2bfb3bdee3f78676c1285cd757bcd5d8c272cef2eb30d9733800a78c0b6d", offset: -1232) {
             number
           hash
         }
@@ -117,7 +117,7 @@ test('block: select single block by hash with negative offset', async () => {
 test('block: error when hash and number provided', async () => {
   const query = `
         {
-            blockOffset(offset: {hash: "0x767c2bfb3bdee3f78676c1285cd757bcd5d8c272cef2eb30d9733800a78c0b6d", number: 12345, offset: 12312}) {
+            blockOffset(hash: "0x767c2bfb3bdee3f78676c1285cd757bcd5d8c272cef2eb30d9733800a78c0b6d", number: 12345, offset: 12312) {
                 number
             hash
           }
@@ -132,7 +132,7 @@ test('block: error when hash and number provided', async () => {
 test('block: error when neither hash nor number provided', async () => {
   const query = `
         {
-            blockOffset(offset: {offset: 1}) {
+            blockOffset(offset: 1) {
                 number
             hash
           }
@@ -147,7 +147,7 @@ test('block: error when neither hash nor number provided', async () => {
 test('block: error when offset not provided', async () => {
   const query = `
           {
-            blockOffset(offset: { hash: "0x767c2bfb3bdee3f78676c1285cd757bcd5d8c272cef2eb30d9733800a78c0b6d" }) {
+            blockOffset(hash: "0x767c2bfb3bdee3f78676c1285cd757bcd5d8c272cef2eb30d9733800a78c0b6d") {
               number
               hash
             }
@@ -162,7 +162,7 @@ test('block: error when offset not provided', async () => {
 test('block: error when block provided does not exist', async () => {
   const query = `
         {
-          blockOffset(offset: { hash: "0x1234", offset: 2 }) {
+          blockOffset(hash: "0x1234", offset: 2) {
             number
             hash
           }
