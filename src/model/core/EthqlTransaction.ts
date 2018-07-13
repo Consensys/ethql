@@ -59,6 +59,17 @@ class EthqlTransaction {
   public async block(_, context: EthqlContext, info: GraphQLResolveInfo) {
     return this.blockNumber ? EthqlBlock.load(this.blockNumber, context, info) : null;
   }
+
+  public async status(_, context: EthqlContext) {
+    const receipt = await context.web3.eth.getTransactionReceipt(this.hash);
+    if (receipt.status === undefined) {
+      return null;
+    } else if (receipt.status) {
+      return 'SUCCESS';
+    } else {
+      return 'FAILED';
+    }
+  }
 }
 
 export default EthqlTransaction;
