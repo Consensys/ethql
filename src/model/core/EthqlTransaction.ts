@@ -61,14 +61,8 @@ class EthqlTransaction {
   }
 
   public async status(_, context: EthqlContext) {
-    const receipt = await context.web3.eth.getTransactionReceipt(this.hash);
-    if (receipt.status === undefined) {
-      return null;
-    } else if (receipt.status) {
-      return 'SUCCESS';
-    } else {
-      return 'FAILED';
-    }
+    const { status } = await context.web3.eth.getTransactionReceipt(this.hash);
+    return status === undefined ? null : status ? 'SUCCESS' : 'FAILED';
   }
 }
 
