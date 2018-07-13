@@ -174,5 +174,9 @@ export function testGraphql(testOptions: TestOptions = defaultTestOptions) {
     return graphql(schema, query, new EthqlQuery(), context || prepareContext());
   };
 
-  return { schema, prepareContext, execQuery, ctxFactory };
+  const execQueryWithVars = (query: string, context?: EthqlContext, variables?: any) => {
+    return graphql(schema, query, new EthqlQuery(), context || prepareContext(), variables);
+  };
+
+  return { schema, prepareContext, execQuery, execQueryWithVars, ctxFactory };
 }

@@ -1,6 +1,5 @@
 import { GraphQLResolveInfo } from 'graphql';
 import * as _ from 'lodash';
-import Eth from 'web3/eth';
 import EthqlAccount from './core/EthqlAccount';
 import EthqlBlock from './core/EthqlBlock';
 import EthqlTransaction from './core/EthqlTransaction';
