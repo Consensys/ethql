@@ -1,3 +1,5 @@
+import { AbiDecoder } from './types';
+
 /**
  *
  * @param params
@@ -10,8 +12,8 @@ export function extractParamValue(params: [any], name: string) {
   }
 }
 
-export function createAbiDecoder(path: string) {
+export function createAbiDecoder(path: string): AbiDecoder {
   const decoder = require('abi-decoder');
   decoder.addABI(require(path));
-  return decoder.decodeMethod;
+  return decoder;
 }

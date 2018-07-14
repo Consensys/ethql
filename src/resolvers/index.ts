@@ -43,9 +43,10 @@ export default function initResolvers({ web3 }: EthqlContext): IResolvers {
       },
     }),
 
-    Hash: new GraphQLScalarType({
-      name: 'Hash',
-      description: 'A Keccak hash, used to identify blocks and transactions',
+    Bytes32: new GraphQLScalarType({
+      name: 'Bytes32',
+      description:
+        'A 32-byte value in hex format, e.g. Keccak hashes (used to identify blocks and transactions), log topics, etc.',
       serialize: String,
       parseValue: input => {
         return !web3.utils.isHexStrict(input) || web3.utils.hexToBytes(input).length !== 32 ? undefined : input;

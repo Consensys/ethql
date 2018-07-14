@@ -59,5 +59,5 @@ test('transaction: error when malformed hash provided', async () => {
 
   const result = await execQuery(query);
   expect(result.errors).toHaveLength(1);
-  expect(result.errors[0].message).toMatch(/^Expected type Hash/);
+  expect(result.errors[0].message).toMatch(/^Expected type Bytes32/);
 });

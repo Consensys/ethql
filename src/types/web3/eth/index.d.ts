@@ -22,7 +22,7 @@ import {
 type GetPastLogsOpts = {
   fromBlock?: BlockType;
   toBlock?: BlockType;
-  address: string;
+  address?: string;
   topics?: Array<string | string[]>;
 };
 
