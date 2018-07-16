@@ -355,6 +355,27 @@ describe('transactionFilter on Block->transactions', async () => {
     const result = await execQuery(query);
     expect(result).toEqual(expected);
   });
+
+  test('withLogs: true/false values', async () => {
+    const query = `
+      {
+        block(number: 5000000) {
+          transactionCount
+          noLogs: transactions(filter: { withLogs: false }) {
+            index
+          }
+          withLogs: transactions(filter: { withLogs: true }) {
+            index
+          }
+        }
+      }
+    `;
+
+    const result = await execQuery(query);
+    expect(result.errors).toBeUndefined();
+    const logSum = result.data.block.noLogs.length + result.data.block.withLogs.length;
+    expect(logSum).toBe(result.data.block.transactionCount);
+  });
 });
 
 describe('transactionFilter on Block->transactionsInvolving', async () => {

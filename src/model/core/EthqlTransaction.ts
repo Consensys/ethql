@@ -53,6 +53,10 @@ class EthqlTransaction {
     return this.transactionIndex;
   }
 
+  public getLogs() {
+    return this._logs;
+  }
+
   public async logs(_, { web3 }: EthqlContext): Promise<EthqlLog[]> {
     if (this._logs) {
       return this._logs;

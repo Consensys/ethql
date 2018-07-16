@@ -5,7 +5,6 @@ import { Log } from 'web3/types';
 import { Overwrite } from '../../utils';
 import { EthqlContext } from '../EthqlContext';
 import EthqlAccount from './EthqlAccount';
-import EthqlLog from './EthqlLog';
 import EthqlTransaction from './EthqlTransaction';
 
 function flatMap<T, U>(array: T[], callbackfn: (value: T, index: number, array: T[]) => U[]): U[] {
@@ -70,7 +69,9 @@ class EthqlBlock implements EthqlBlock {
       s => s.kind === 'Field' && EthqlBlock.TX_REQUIRING_FIELDS.indexOf(s.name.value) >= 0,
     );
 
-    const logsFields = txFields.filter(f => f.kind === 'Field' && f.name.value === 'logs');
+    const logsFields = txFields.filter(
+      f => f.kind === 'Field' && f.selectionSet.selections.some(f => f.kind === 'Field' && f.name.value === 'logs'),
+    );
 
     const filters = flatMap(txFields, f => (f as FieldNode).arguments as ArgumentNode[]) //
       .filter(a => a.name.value === 'filter');
@@ -100,7 +101,11 @@ class EthqlBlock implements EthqlBlock {
 
     // Binary filter for transactions with/without logs.
     const withLogs =
-      filter.withLogs === undefined ? _ => true : filter.withLogs ? tx => !!tx.logs.length : tx => !tx.logs.length;
+      filter.withLogs === undefined
+        ? _ => true
+        : filter.withLogs
+          ? tx => !!tx.getLogs().length
+          : tx => !tx.getLogs().length;
 
     // Binary filter for contract creations.
     const contractCreation =
@@ -129,10 +134,10 @@ class EthqlBlock implements EthqlBlock {
         logs.push(l);
         logsByTxIdx[l.transactionIndex] = logs;
       });
-      this._transactions = _.zip(transactions, logsByTxIdx).map(([tx, logs]) => new EthqlTransaction(tx, logs));
+      this._transactions = _.zip(transactions, logsByTxIdx).map(([tx, logs]) => new EthqlTransaction(tx, logs || []));
+    } else {
+      this._transactions = transactions.map(tx => new EthqlTransaction(tx));
     }
-
-    this._transactions = transactions.map(tx => new EthqlTransaction(tx));
   }
 
   /**
