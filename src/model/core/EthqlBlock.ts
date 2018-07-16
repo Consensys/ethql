@@ -128,13 +128,8 @@ class EthqlBlock implements EthqlBlock {
     this.miner = new EthqlAccount(block.miner);
 
     if (logs) {
-      const logsByTxIdx = new Array<Log[]>(transactions.length);
-      logs.forEach(l => {
-        const logs = logsByTxIdx[l.transactionIndex] || [];
-        logs.push(l);
-        logsByTxIdx[l.transactionIndex] = logs;
-      });
-      this._transactions = _.zip(transactions, logsByTxIdx).map(([tx, logs]) => new EthqlTransaction(tx, logs || []));
+      const logsByTxIdx = _.groupBy(logs, l => l.transactionIndex);
+      this._transactions = transactions.map(tx => new EthqlTransaction(tx, logsByTxIdx[tx.transactionIndex] || []));
     } else {
       this._transactions = transactions.map(tx => new EthqlTransaction(tx));
     }
