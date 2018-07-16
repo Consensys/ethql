@@ -39,8 +39,18 @@ const ensureDataDir = () => {
  *
  * @param rq The JSON RPC Request being dispatched by the Web3 provider.
  */
-const computeFilename = (rq: JsonRpcRequest) =>
-  `${rq.method}_${rq.method === 'eth_call' ? sha3(JSON.stringify(rq.params[0])) : rq.params.join('__')}.json`;
+const computeFilename = (rq: JsonRpcRequest) => {
+  let params;
+
+  //tslint:disable-next-line
+  if (rq.method === 'eth_call') {
+    params = sha3(JSON.stringify(rq.params[0]));
+  } else {
+    params = rq.params.map(a => (typeof a === 'object' ? sha3(JSON.stringify(a)) : a)).join('__');
+  }
+
+  return `${rq.method}_${params}.json`;
+};
 
 /**
  * A Web3 provider that delegates onto another one, recording all traffic into files, whose filenames are
