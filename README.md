@@ -6,11 +6,11 @@
 
 [Example queries](#example-queries).
 
-ethql is a server that exposes a GraphQL endpoint to the public Ethereum ledger. It works against the standard JSON-RPC
+EthQL is a server that exposes a GraphQL endpoint to the public Ethereum ledger. It works against the standard JSON-RPC
 APIs offered by all Ethereum clients. It is built in TypeScript, and thus leverages the vast ecosystem of GraphQL
 tooling while preserving compile-time type safety.
 
-ethql regards blockchain data as a graph, and leverages the extensibility of GraphQL to introduce additional
+EthQL regards blockchain data as a graph, and leverages the extensibility of GraphQL to introduce additional
 functionality, amongst which are:
 
 - Decoding of standard transactions (e.g. ERC20, ENS, ERC223, etc.) out of the box.
@@ -38,7 +38,7 @@ JSON-RPC (web3): Using HTTP(S) provider with endpoint: https://mainnet.infura.io
 Running a GraphQL API server at http://0.0.0.0:4000/graphql (browse here: http://localhost:4000/graphql)
 ```
 
-This ethql server uses [Infura](https://infura.io/) as a backend in anonymous mode. If you have an Infura ID (and if you
+This EthQL server uses [Infura](https://infura.io/) as a backend in anonymous mode. If you have an Infura ID (and if you
 don't, you should sign up for one!) you can set it like this:
 
 ```
