@@ -6,11 +6,11 @@ import { promisify } from 'util';
 import Web3 = require('web3');
 import { JsonRpcRequest, JsonRpcResponse, Provider } from 'web3/providers';
 import { Options } from '../config';
+import decodingEngine from '../dec';
 import { EthqlContext, EthqlContextFactory } from '../model/EthqlContext';
 import EthqlQuery from '../model/EthqlQuery';
 import { initWeb3 } from '../providers/web3';
 import { initSchema } from '../schema';
-import txDecodingEngine from '../txdec';
 
 const { sha3 } = new Web3().utils;
 
@@ -39,8 +39,18 @@ const ensureDataDir = () => {
  *
  * @param rq The JSON RPC Request being dispatched by the Web3 provider.
  */
-const computeFilename = (rq: JsonRpcRequest) =>
-  `${rq.method}_${rq.method === 'eth_call' ? sha3(JSON.stringify(rq.params[0])) : rq.params.join('__')}.json`;
+const computeFilename = (rq: JsonRpcRequest) => {
+  let params;
+
+  //tslint:disable-next-line
+  if (rq.method === 'eth_call') {
+    params = sha3(JSON.stringify(rq.params[0]));
+  } else {
+    params = rq.params.map(a => (typeof a === 'object' ? sha3(JSON.stringify(a)) : a)).join('__');
+  }
+
+  return `${rq.method}_${params}.json`;
+};
 
 /**
  * A Web3 provider that delegates onto another one, recording all traffic into files, whose filenames are
@@ -156,7 +166,7 @@ export function testGraphql(testOptions: TestOptions = defaultTestOptions) {
     return w3;
   };
 
-  const ctxFactory = new EthqlContextFactory(web3Factory, config, txDecodingEngine);
+  const ctxFactory = new EthqlContextFactory(web3Factory, config, decodingEngine);
   const schema = initSchema(ctxFactory);
   const prepareContext = () => ctxFactory.create();
 

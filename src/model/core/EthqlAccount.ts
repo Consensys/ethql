@@ -1,5 +1,4 @@
 import { EthqlContext } from '../EthqlContext';
-import EthQlBlock from './EthqlBlock';
 import EthqlStorage from './EthqlStorage';
 
 class EthqlAccount {

@@ -7,7 +7,7 @@
     "rootDir": "src",
     "outDir": "dist",
     "baseUrl": ".",
-    "lib": ["esnext", "dom"],
+    "lib": ["esnext"],
     "paths": {
       "web3": ["src/types/web3/index.d.ts"],
       "*": ["node_modules/*", "src/types/*"]

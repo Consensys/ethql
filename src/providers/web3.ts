@@ -157,11 +157,14 @@ function batchingProxy(web3: Web3, config: Options): Web3 {
         // pass-through if the property doesn't exist, or if the method is not batchable.
         return !isBatchable(obj[prop])
           ? obj[prop]
-          : (...args: any[]) =>
-              dataloader.load({
-                cacheKey: `${prop.toString()}/${args.join(':')}`,
+          : (...args: any[]) => {
+              // For all arguments that are objects, transform to JSON and run the sha3; else use its value.
+              const argsKey = args.map(a => (typeof a === 'object' ? web3.utils.sha3(JSON.stringify(a)) : a)).join(':');
+              return dataloader.load({
+                cacheKey: `${prop.toString()}/${argsKey}`,
                 requestFunc: cb => obj[prop].request(...args, cb),
               });
+            };
       },
     });
 

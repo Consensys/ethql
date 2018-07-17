@@ -375,3 +375,129 @@ test('erc20: fetch token balance of recipient (account 0x0)', async () => {
   expect(tx.decoded.to.account.address).toEqual('0x0000000000000000000000000000000000000000');
   expect(tx.decoded.to.tokenBalance).toBeGreaterThan(0);
 });
+
+test('erc20: decode transfer log', async () => {
+  const query = `
+  {
+    block(number: 5000000) {
+      hash
+      transactionAt(index: 1) {
+        logs {
+          decoded {
+            entity
+            standard
+            event
+            ... on ERC20TransferEvent {
+              from {
+                account {
+                  address
+                }
+              }
+              to {
+                account {
+                  address
+                }
+              }
+              value
+            }
+          }
+        }
+      }
+    }
+  }`;
+
+  const result = await execQuery(query);
+  expect(result.errors).toBeUndefined();
+  expect(result.data).not.toBeUndefined();
+  expect(result.data).toEqual({
+    block: {
+      hash: '0x7d5a4369273c723454ac137f48a4f142b097aa2779464e6505f1b1c5e37b5382',
+      transactionAt: {
+        logs: [
+          {
+            decoded: {
+              entity: 'token',
+              standard: 'ERC20',
+              event: 'Transfer',
+              from: {
+                account: {
+                  address: '0x0681d8db095565fe8a346fa0277bffde9c0edbbf',
+                },
+              },
+              to: {
+                account: {
+                  address: '0xf53354a8dc35416d28ab2523589d1b44843e025c',
+                },
+              },
+              value: '2845545516000000000000',
+            },
+          },
+        ],
+      },
+    },
+  });
+});
+
+test('erc20: decode approval log', async () => {
+  const query = `
+    {
+      block(number: 5000000) {
+        hash
+        transactionAt(index: 14) {
+          index
+          logs {
+            decoded {
+              entity
+              standard
+              event
+              ... on ERC20ApprovalEvent {
+                owner {
+                  account {
+                    address
+                  }
+                }
+                spender {
+                  account {
+                    address
+                  }
+                }
+                value
+              }
+            }
+          }
+        }
+      }
+    }`;
+
+  const result = await execQuery(query);
+  expect(result.errors).toBeUndefined();
+  expect(result.data).not.toBeUndefined();
+  expect(result.data).toEqual({
+    block: {
+      hash: '0x7d5a4369273c723454ac137f48a4f142b097aa2779464e6505f1b1c5e37b5382',
+      transactionAt: {
+        index: 14,
+        logs: [
+          {
+            decoded: {
+              entity: 'token',
+              standard: 'ERC20',
+              event: 'Approval',
+              owner: {
+                account: {
+                  address: '0x088b9099eae5f372405a29a7077faf3a82f94e05',
+                },
+              },
+              spender: {
+                account: {
+                  address: '0x4bf50be697f1b2c23b44005feaa5c98f13e6b6d6',
+                },
+              },
+              value: '1800000000000000000000000',
+            },
+          },
+        ],
+      },
+    },
+  });
+});

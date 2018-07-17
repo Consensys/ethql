@@ -3,19 +3,19 @@ type Query {
   account(address: Address!): Account
 
   "Selects a block based on either a number, hash or a tag."
-  block(number: BlockNumber, hash: Hash, tag: BlockTag): Block
+  block(number: BlockNumber, hash: Bytes32, tag: BlockTag): Block
 
   "Selects a block based on a reference block and an offset from it."
   blockOffset(offset: BlockOffset!): Block
 
   "Selects an arbitrary set of blocks based on their numbers or hashes."
-  blocks(numbers: [BlockNumber], hashes: [Hash]): [Block]
+  blocks(numbers: [BlockNumber], hashes: [Bytes32]): [Block]
 
   "Selects a range of blocks."
-  blocksRange(numberRange: [BlockNumber], hashRange: [Hash]): [Block]
+  blocksRange(numberRange: [BlockNumber], hashRange: [Bytes32]): [Block]
 
   "Selects a transaction by hash."
-  transaction(hash: Hash): Transaction
+  transaction(hash: Bytes32): Transaction
 
   "Returns the health of the server."
   health: String!
@@ -29,7 +29,7 @@ type Block {
   number: BlockNumber!
 
   "The block hash."
-  hash: Hash!
+  hash: Bytes32!
 
   "The parent block."
   parent: Block
@@ -38,16 +38,16 @@ type Block {
   nonce: String!
 
   "The block's transactions trie root."
-  transactionsRoot: Hash!
+  transactionsRoot: Bytes32!
 
   "The number of transactions in the block."
   transactionCount: Int!
 
   "The block's state trie root."
-  stateRoot: Hash!
+  stateRoot: Bytes32!
 
   "The receipt trie root."
-  receiptsRoot: Hash!
+  receiptsRoot: Bytes32!
 
   "The miner's account."
   miner: Account!
@@ -68,7 +68,7 @@ type Block {
   logsBloom: String
 
   "The mix hash for this block."
-  mixHash: Hash
+  mixHash: Bytes32
 
   "The difficulty of this block."
   difficulty: Long
@@ -112,7 +112,7 @@ Input object to select a block by offset.
 """
 input BlockOffset {
   number: Long
-  hash: Hash
+  hash: Bytes32
   offset: Int
 }
 
@@ -191,7 +191,7 @@ type SolidityDynamicArray {
 
   "Steps into the fixed array at this index."
   solidityFixedArray(at: Int!): SolidityFixedArray
-  
+
   "Steps into the dynamic array at this index."
   solidityDynamicArray(at: Int!): SolidityDynamicArray
 }
@@ -220,11 +220,26 @@ type Account {
 }
 
 """
+A filter for logs.
+"""
+input LogFilter {
+  """
+  Only selects logs that are published under the given topics.
+
+  Items within an inner list are combined with an AND, and items on the outer list are combined with OR.
+
+  For example: { topics: [["0x1234...", "0xabcd..."], ["0xbcde..."]] } will return all logs published under
+  topics "0x1234..." AND "0xabcd...", as well as those published under topic "0xbcde..."
+  """
+  topics: [[Bytes32]]
+}
+
+"""
 An Ethereum transaction.
 """
 type Transaction {
   "Transaction hash"
-  hash: Hash!
+  hash: Bytes32!
 
   "Transaction nonce"
   nonce: Long!
@@ -256,6 +271,9 @@ type Transaction {
   "The block the transaction is contained in"
   block: Block!
 
+  "The logs emitted by this transaction."
+  logs(filter: LogFilter): [Log]
+
   """
   The decoded transaction.
 
@@ -265,6 +283,40 @@ type Transaction {
   decoded: DecodedTransaction
 }
 
+"""
+An Ethereum log.
+"""
+type Log {
+  "The index of this log in the block's logs array."
+  index: Int!
+
+  "The account that emitted this log."
+  account: Account!
+
+  "The topics under which this log was published."
+  topics: [String]
+
+  "The data within this log statement."
+  data: String
+
+  "The block this log was contained in."
+  block: Block!
+
+  "The transaction that emitted this log."
+  transaction: Transaction!
+
+  """
+  The decoded log.
+
+  This is a best-effort interpretation of the log data.  There may be cases where a log cannot be unambiguously decoded.
+  For example, because some standards share event signatures, a single log may appear to match several different standards.
+  """
+  decoded: DecodedLog
+}
+
+"""
+The status or outcome of the transaction.
+"""
 enum TransactionStatus {
   "Transaction failed"
   FAILED
@@ -274,29 +326,57 @@ enum TransactionStatus {
 }
 
 enum KeyType {
-  address,
-  number,
+  address
+  number
   string
 }
 
+"""
+A filter for transactions. Setting multiple criteria is equivalent to combining them with an AND operator.
+"""
 input TransactionFilter {
+  "Only selects transactions that emit logs."
   withLogs: Boolean
+
+  "Only selects transactions that received input data."
   withInput: Boolean
+
+  "Only selects transactions that created a contract."
   contractCreation: Boolean
 }
 
+"""
+Entities are a way to group related standards into one functional concept, e.g. ERC20, ERC777 refer to the 'token' entity,
+the ENS standard refers to the 'domain' entity.
+"""
 enum Entity {
   token
 }
 
 interface DecodedTransaction {
+  "The entity this transaction refers to. See documentation on the Entity type."
   entity: Entity
+
+  "The ERC standard (or official name) this transaction appears to comply with."
   standard: String
+
+  "The name of the function invoked in this transaction."
   operation: String
 }
 
-"""
+interface DecodedLog {
+  "The entity this log refers to. See documentation on the Entity type."
+  entity: Entity
 
+  "The ERC standard (or official name) this log appears to comply with."
+  standard: String
+
+  "The name of the event associated with this log (i.e. first log topic)."
+  event: String
+}
+
+"""
+Type of account.
 """
 enum AccountType {
   CONTRACT
@@ -354,7 +434,7 @@ enum Unit {
 
 scalar Long
 
-scalar Hash
+scalar Bytes32
 
 scalar BlockNumber
 
