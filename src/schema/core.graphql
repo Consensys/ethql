@@ -220,9 +220,17 @@ type Account {
 }
 
 """
-Input object to select a block by offset.
+A filter for logs.
 """
 input LogFilter {
+  """
+  Only selects logs that are published under the given topics.
+
+  Items within an inner list are combined with an AND, and items on the outer list are combined with OR.
+
+  For example: { topics: [["0x1234...", "0xabcd..."], ["0xbcde..."]] } will return all logs published under
+  topics "0x1234..." AND "0xabcd...", as well as those published under topic "0xbcde..."
+  """
   topics: [[Bytes32]]
 }
 
@@ -306,6 +314,9 @@ type Log {
   decoded: DecodedLog
 }
 
+"""
+The status or outcome of the transaction.
+"""
 enum TransactionStatus {
   "Transaction failed"
   FAILED
@@ -320,30 +331,52 @@ enum KeyType {
   string
 }
 
+"""
+A filter for transactions. Setting multiple criteria is equivalent to combining them with an AND operator.
+"""
 input TransactionFilter {
+  "Only selects transactions that emit logs."
   withLogs: Boolean
+
+  "Only selects transactions that received input data."
   withInput: Boolean
+
+  "Only selects transactions that created a contract."
   contractCreation: Boolean
 }
 
+"""
+Entities are a way to group related standards into one functional concept, e.g. ERC20, ERC777 refer to the 'token' entity,
+the ENS standard refers to the 'domain' entity.
+"""
 enum Entity {
   token
 }
 
 interface DecodedTransaction {
+  "The entity this transaction refers to. See documentation on the Entity type."
   entity: Entity
+
+  "The ERC standard (or official name) this transaction appears to comply with."
   standard: String
+
+  "The name of the function invoked in this transaction."
   operation: String
 }
 
 interface DecodedLog {
+  "The entity this log refers to. See documentation on the Entity type."
   entity: Entity
+
+  "The ERC standard (or official name) this log appears to comply with."
   standard: String
+
+  "The name of the event associated with this log (i.e. first log topic)."
   event: String
 }
 
 """
-
+Type of account.
 """
 enum AccountType {
   CONTRACT
