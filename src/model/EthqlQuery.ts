@@ -58,23 +58,23 @@ class EthqlQuery {
   }
 
   public async blockOffset(
-    { number, hash, offset, tag }: BlockOffsetArgs,
+    { number, hash, tag, offset }: BlockOffsetArgs,
     context: EthqlContext,
     info: GraphQLResolveInfo,
   ): Promise<EthqlBlock> {
-    if ((!number && !hash) || (!offset && offset !== 0)) {
-      throw new Error('Expected either number or hash argument and offset argument.');
-    }
-    if (number && hash) {
-      throw new Error('Only one of number or hash argument should be provided.');
+    const params = _.reject([number, hash, tag], _.isNil);
+
+    // Offset 0 is allowed.
+    if (offset === undefined || params.length === 0) {
+      throw new Error('Expected either number, tag or hash argument and offset argument.');
     }
 
-    if (hash) {
-      const block = await context.web3.eth.getBlock(hash);
-      return EthqlBlock.load(block.number + offset, context, info);
+    if (params.length > 1) {
+      throw new Error('Only one of number, hash or tag argument should be provided.');
     }
 
-    return EthqlBlock.load(number + offset, context, info);
+    const blockNumber = number || (await context.web3.eth.getBlock(hash || tag.toLowerCase())).number;
+    return EthqlBlock.load(blockNumber + offset, context, info);
   }
 
   public async blocks(

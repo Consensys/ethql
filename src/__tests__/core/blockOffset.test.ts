@@ -2,7 +2,7 @@ import { testGraphql } from '../utils';
 
 const { execQuery } = testGraphql();
 
-test('block: select single block by number with positive offset', async () => {
+test('blockOffset: select single block by number with positive offset', async () => {
   const query = `
     {
       blockOffset(number: 12345, offset: 13212) {
@@ -21,7 +21,7 @@ test('block: select single block by number with positive offset', async () => {
   expect(result).toEqual(expected);
 });
 
-test('block: select single block by number with zero offset', async () => {
+test('blockOffset: select single block by number with zero offset', async () => {
   const query = `
     {
       blockOffset(number: 12345, offset: 0) {
@@ -40,15 +40,15 @@ test('block: select single block by number with zero offset', async () => {
   expect(result).toEqual(expected);
 });
 
-test('block: select single block by number with negative offset', async () => {
+test('blockOffset: select single block by number with negative offset', async () => {
   const query = `
-      {
-        blockOffset(number: 12345, offset: -5323) {
-            number
-            hash
-        }
+    {
+      blockOffset(number: 12345, offset: -5323) {
+        number
+        hash
       }
-    `;
+    }
+  `;
 
   const expected = {
     data: { blockOffset: { hash: '0xce3b85647998ea565fd5a51b30052c5fc5b22c47083d4d5cef30a4647503eecc', number: 7022 } },
@@ -57,15 +57,15 @@ test('block: select single block by number with negative offset', async () => {
   expect(result).toEqual(expected);
 });
 
-test('block: select single block by hash with positive offset', async () => {
+test('blockOffset: select single block by hash with positive offset', async () => {
   const query = `
-      {
-        blockOffset(hash: "0x767c2bfb3bdee3f78676c1285cd757bcd5d8c272cef2eb30d9733800a78c0b6d", offset: 12312) {
-          number
-          hash
-        }
+    {
+      blockOffset(hash: "0x767c2bfb3bdee3f78676c1285cd757bcd5d8c272cef2eb30d9733800a78c0b6d", offset: 12312) {
+        number
+        hash
       }
-    `;
+    }
+  `;
 
   const expected = {
     data: {
@@ -76,15 +76,15 @@ test('block: select single block by hash with positive offset', async () => {
   expect(result).toEqual(expected);
 });
 
-test('block: select single block by hash with zero offset', async () => {
+test('blockOffset: select single block by hash with zero offset', async () => {
   const query = `
-      {
-        blockOffset(hash: "0xec2d531b7f47f16aff1c995e0a4905093cdc8dcae40d1271d63fbbdb5009c214", offset: 0) {
-            number
-          hash
-        }
+    {
+      blockOffset(hash: "0xec2d531b7f47f16aff1c995e0a4905093cdc8dcae40d1271d63fbbdb5009c214", offset: 0) {
+        number
+        hash
       }
-    `;
+    }
+  `;
 
   const expected = {
     data: {
@@ -95,15 +95,15 @@ test('block: select single block by hash with zero offset', async () => {
   expect(result).toEqual(expected);
 });
 
-test('block: select single block by hash with negative offset', async () => {
+test('blockOffset: select single block by hash with negative offset', async () => {
   const query = `
-      {
-        blockOffset(hash: "0x767c2bfb3bdee3f78676c1285cd757bcd5d8c272cef2eb30d9733800a78c0b6d", offset: -1232) {
-            number
-          hash
-        }
+    {
+      blockOffset(hash: "0x767c2bfb3bdee3f78676c1285cd757bcd5d8c272cef2eb30d9733800a78c0b6d", offset: -1232) {
+        number
+        hash
       }
-    `;
+    }
+  `;
 
   const expected = {
     data: {
@@ -114,62 +114,96 @@ test('block: select single block by hash with negative offset', async () => {
   expect(result).toEqual(expected);
 });
 
-test('block: error when hash and number provided', async () => {
+test('blockOffset: error when hash and number provided', async () => {
   const query = `
-        {
-            blockOffset(hash: "0x767c2bfb3bdee3f78676c1285cd757bcd5d8c272cef2eb30d9733800a78c0b6d", number: 12345, offset: 12312) {
-                number
-            hash
-          }
-        }
-      `;
+    {
+      blockOffset(hash: "0x767c2bfb3bdee3f78676c1285cd757bcd5d8c272cef2eb30d9733800a78c0b6d", number: 12345, offset: 12312) {
+        number
+        hash
+      }
+    }
+  `;
 
   const result = await execQuery(query);
   expect(result.errors).toHaveLength(1);
-  expect(result.errors[0].message).toMatch('Only one of number or hash argument should be provided.');
+  expect(result.errors[0].message).toMatch('Only one of number, hash or tag argument should be provided.');
 });
 
-test('block: error when neither hash nor number provided', async () => {
+test('blockOffset: error when neither hash, tag, nor number provided', async () => {
   const query = `
-        {
-            blockOffset(offset: 1) {
-                number
-            hash
-          }
-        }
-      `;
+    {
+      blockOffset(offset: 1) {
+        number
+        hash
+      }
+    }
+  `;
 
   const result = await execQuery(query);
   expect(result.errors).toHaveLength(1);
-  expect(result.errors[0].message).toMatch('Expected either number or hash argument and offset argument.');
+  expect(result.errors[0].message).toMatch('Expected either number, tag or hash argument and offset argument.');
 });
 
-test('block: error when offset not provided', async () => {
+test('blockOffset: error when offset not provided', async () => {
   const query = `
-          {
-            blockOffset(hash: "0x767c2bfb3bdee3f78676c1285cd757bcd5d8c272cef2eb30d9733800a78c0b6d") {
-              number
-              hash
-            }
-          }
-        `;
+    {
+      blockOffset(hash: "0x767c2bfb3bdee3f78676c1285cd757bcd5d8c272cef2eb30d9733800a78c0b6d") {
+        number
+        hash
+      }
+    }
+  `;
 
   const result = await execQuery(query);
   expect(result.errors).toHaveLength(1);
-  expect(result.errors[0].message).toMatch('Expected either number or hash argument and offset argument.');
+  expect(result.errors[0].message).toMatch(
+    'Field "blockOffset" argument "offset" of type "Int!" is required but not provided.',
+  );
 });
 
-test('block: error when block provided does not exist', async () => {
+test('blockOffset: error when block provided does not exist', async () => {
   const query = `
-        {
-          blockOffset(hash: "0x1234", offset: 2) {
-            number
-            hash
-          }
-        }
-      `;
+    {
+      blockOffset(hash: "0x1234", offset: 2) {
+        number
+        hash
+      }
+    }
+  `;
 
   const result = await execQuery(query);
   expect(result.errors).toHaveLength(1);
   expect(result.errors[0].message).toMatch(/^Expected type Bytes32/);
+});
+
+test('blockOffset: succeeds with 0 offset', async () => {
+  const query = `
+    {
+      blockOffset(number: 5000000, offset: 0) {
+        number
+        hash
+      }
+    }
+  `;
+
+  const result = await execQuery(query);
+  expect(result.errors).toBeUndefined();
+  expect(result.data.blockOffset.number).toBe(5000000);
+  expect(result.data.blockOffset.has);
+});
+
+test('blockOffset: succeeds with tag', async () => {
+  const query = `
+    {
+      blockOffset(tag: EARLIEST, offset: 10) {
+        number
+        hash
+      }
+    }
+  `;
+
+  const result = await execQuery(query);
+  expect(result.errors).toBeUndefined();
+  expect(result.data.blockOffset.number).toBe(10);
+  expect(result.data.blockOffset.hash).toBe('0x4ff4a38b278ab49f7739d3a4ed4e12714386a9fdf72192f2e8f7da7822f10b4d');
 });
