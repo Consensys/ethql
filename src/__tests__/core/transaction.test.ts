@@ -104,7 +104,7 @@ test('transaction: status returns "FAILED" when transaction was unsuccessful', a
   expect(result).toEqual(expected);
 });
 
-test('transaction: status returns null when transaction status is undefined', async () => {
+test('transaction: status returns "PENDING" when transaction status is undefined', async () => {
   const query = `
   {
     transaction(hash: "0x5c504ed432cb51138bcf09aa5e8a410dd4a1e204ef84bfed1be16dfba1b22060") {
@@ -116,7 +116,7 @@ test('transaction: status returns null when transaction status is undefined', as
   const expected = {
     data: {
       transaction: {
-        status: null,
+        status: 'PENDING',
       },
     },
   };
