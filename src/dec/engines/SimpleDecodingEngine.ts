@@ -3,15 +3,24 @@ import EthqlLog from '../../model/core/EthqlLog';
 import EthqlTransaction from '../../model/core/EthqlTransaction';
 import { EthqlContext } from '../../model/EthqlContext';
 import { DecodedLog, DecodedTx, DecoderDefinition, DecodingEngine } from '../types';
+import EthqlAccount from '../../model/core/EthqlAccount';
 
 /**
  * A transaction decoding engine that matches the incoming transaction against a list of known ABIs.
  */
 class SimpleDecodingEngine implements DecodingEngine {
-  private readonly registry = new Array<DecoderDefinition<any, any>>();
+  private readonly registry = new Array<DecoderDefinition<any, any, any>>();
 
-  public register(decoder: DecoderDefinition<any, any>) {
+  public register(decoder: DecoderDefinition<any, any, any>) {
     this.registry.push(decoder);
+  }
+
+  public decodeContract(account: EthqlAccount, standard: string, context: EthqlContext) {
+    for (const decoder of this.registry) {
+      if (decoder.standard === standard) {
+        return decoder.contract(account, context);
+      }
+    }
   }
 
   /**

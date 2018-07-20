@@ -24,6 +24,10 @@ class EthqlAccount {
     return new EthqlStorage(this.address);
   }
 
+  public async contract({ standard }: { standard: string }, context: EthqlContext) {
+    return context.decodingEngine.decodeContract(this, standard, context);
+  }
+
   public equals(addressOrAccount: string | EthqlAccount) {
     // Fail soon if any of the addresses is null, which could stand for contract creation.
     if (!this.address || !addressOrAccount) {

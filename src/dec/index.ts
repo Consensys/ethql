@@ -8,5 +8,5 @@ const engine = new SimpleDecodingEngine();
 // Register all decoders.
 engine.register(new Erc20TokenDecoder());
 
-// Export the engine, making only the decodeTransaction method visible.
-export default engine as Pick<DecodingEngine, 'decodeTransaction' | 'decodeLog'>;
+// Export the engine, making only the decode methods visible.
+export default engine as Pick<DecodingEngine, 'decodeTransaction' | 'decodeLog' | 'decodeContract'>;

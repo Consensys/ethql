@@ -13,6 +13,10 @@ class Erc20TokenContract {
   private static ABI = require(__dirname + '../../../abi/erc20.json');
   private _contract: Contract;
 
+  public readonly entity = 'token';
+  public readonly standard = 'ERC20';
+  public readonly __typename = 'ERC20Contract';
+
   constructor(public readonly account: EthqlAccount, readonly context: EthqlContext) {
     this._contract = new context.web3.eth.Contract(Erc20TokenContract.ABI, account.address);
   }
@@ -92,10 +96,14 @@ type Erc20LogBindings = {
 /**
  * ERC20 token transaction decoder.
  */
-class Erc20TokenDecoder implements DecoderDefinition<Erc20TxBindings, Erc20LogBindings> {
+class Erc20TokenDecoder implements DecoderDefinition<Erc20TxBindings, Erc20LogBindings, Erc20TokenContract> {
   public readonly entity = 'token';
   public readonly standard = 'ERC20';
   public readonly abiDecoder = createAbiDecoder(__dirname + '../../../abi/erc20.json');
+
+  public contract(account: EthqlAccount, context: EthqlContext) {
+    return new Erc20TokenContract(account, context);
+  }
 
   public readonly txTransformers = {
     transfer: (decoded: any, tx: EthqlTransaction, context: EthqlContext) => {

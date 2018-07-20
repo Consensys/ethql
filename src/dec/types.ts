@@ -1,6 +1,7 @@
 import EthqlLog from '../model/core/EthqlLog';
 import EthqlTransaction from '../model/core/EthqlTransaction';
 import { EthqlContext } from '../model/EthqlContext';
+import EthqlAccount from '../model/core/EthqlAccount';
 
 // Defines the entity to which the standard belongs.
 // As we support new standards, this union type will expand.
@@ -17,7 +18,7 @@ export type AbiDecoder = {
  * functions that transform the raw transaction into a typed transaction, for each function
  * in the ABI.
  */
-export interface DecoderDefinition<TxBindings, LogBindings> {
+export interface DecoderDefinition<TxBindings, LogBindings, ContractBindings> {
   readonly entity: Entity;
   readonly standard: string;
   readonly abiDecoder: AbiDecoder;
@@ -27,6 +28,7 @@ export interface DecoderDefinition<TxBindings, LogBindings> {
   readonly logTransformers: {
     [P in keyof LogBindings]: (decoded: any, tx: EthqlTransaction, context: EthqlContext) => LogBindings[P]
   };
+  contract(acount: EthqlAccount, context: EthqlContext): ContractBindings;
 }
 
 /**
@@ -48,10 +50,18 @@ export type DecodedLog = {
   event: string;
 };
 
+export type DecodedContract = {
+  entity: Entity;
+  standard: string;
+  contract: any;
+  __typename: string;
+};
+
 /**
  * A decoding engine.
  */
 export type DecodingEngine = {
   decodeTransaction(tx: EthqlTransaction, context: EthqlContext): DecodedTx;
   decodeLog(tx: EthqlLog, context: EthqlContext): DecodedLog;
+  decodeContract(account: EthqlAccount, standard: string, context: EthqlContext): DecodedContract;
 };

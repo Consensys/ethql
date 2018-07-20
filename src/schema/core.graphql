@@ -212,6 +212,9 @@ type Account {
   "The type of this account"
   type: AccountType
 
+  "The contract at this address"
+  contract(standard: String): DecodedContract
+
   "The number of transactions this account has sent"
   transactionCount: Int
 
@@ -373,6 +376,14 @@ interface DecodedLog {
 
   "The name of the event associated with this log (i.e. first log topic)."
   event: String
+}
+
+interface DecodedContract {
+  "The entity this contract refers to. See documentation on the Entity type."
+  entity: Entity
+
+  "The ERC standard (or official name) of this contract"
+  standard: String
 }
 
 """
