@@ -236,8 +236,8 @@ test('block->transactionsRoles: both from and to addresses, no matching transact
 test('block->transactionsRoles: both from and to addresses, matching transactions returned', async () => {
   const query = `
     {
-      block(number: 5755715) {
-        transactionsRoles(from: "0xCcF1D27AfE45BA5F8c15265199E5b635AF4cb889", to: "0xA4eA687A2A7F29cF2dc66B39c68e4411C0D00C49") {
+      block(number: 5450945) {
+        transactionsRoles(from: "0x3f5CE5FBFe3E9af3971dD833D26bA9b5C936f0bE", to: "0x4156D3342D5c385a87D264F90653733592000581") {
           hash
           from {
             address
@@ -255,12 +255,12 @@ test('block->transactionsRoles: both from and to addresses, matching transaction
       block: {
         transactionsRoles: [
           {
-            hash: '0xb112efc908b879b72e167261a8456bc658f922c6c5914540675de657cbf106ca',
+            hash: '0x0add29862e9937eccf4298096d7411a36038b3c34c71207f53d143ed6dcfacdc',
             from: {
-              address: '0xCcF1D27AfE45BA5F8c15265199E5b635AF4cb889',
+              address: '0x3f5CE5FBFe3E9af3971dD833D26bA9b5C936f0bE',
             },
             to: {
-              address: '0xA4eA687A2A7F29cF2dc66B39c68e4411C0D00C49',
+              address: '0x4156D3342D5c385a87D264F90653733592000581',
             },
           },
         ],
