@@ -323,6 +323,9 @@ enum TransactionStatus {
 
   "Transaction was successful"
   SUCCESS
+
+  "Transaction has not been mined yet"
+  PENDING
 }
 
 enum KeyType {
