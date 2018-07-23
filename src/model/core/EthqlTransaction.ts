@@ -85,7 +85,7 @@ class EthqlTransaction {
   }
 
   public async createdContract(_, context: EthqlContext) {
-    return this.to.address == null
+    return this.to.address === null
       ? new EthqlAccount((await context.web3.eth.getTransactionReceipt(this.hash)).contractAddress)
       : null;
   }
