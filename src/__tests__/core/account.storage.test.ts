@@ -51,9 +51,7 @@ test('account->storage: returns null when given a null address', async () => {
     data: {
       transaction: {
         to: {
-          storage: {
-            value: null,
-          },
+          storage: null,
         },
       },
     },
