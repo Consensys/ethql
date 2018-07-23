@@ -74,8 +74,11 @@ class EthqlStorage {
 
     const valueCall = { query: args.at.toString(), storageType: this.previousType };
     const rtn = this.newBase(valueCall, tempBase, web3);
-
-    return web3.eth.getStorageAt(this.address, rtn);
+    if (this.address == null) {
+      return null;
+    } else {
+      return web3.eth.getStorageAt(this.address, rtn);
+    }
   }
 
   private pad(val, web3: Web3) {
@@ -105,6 +108,8 @@ class EthqlStorage {
       return web3.utils.toHex(
         web3.utils.toBN(web3.utils.sha3('0x' + this.pad(tempBase, web3))).add(web3.utils.toBN(step.query)),
       );
+    } else {
+      return step.query;
     }
   }
 }
