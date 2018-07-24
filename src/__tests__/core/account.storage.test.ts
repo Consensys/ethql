@@ -34,6 +34,33 @@ contract tests {
 }
 */
 
+test('account->storage: returns null when given a null address', async () => {
+  const query = `
+  {
+    transaction(hash: "0x4ed6c2d00498d9ed88583bfd49469a583bbe33cd47e257756c17b23f2ee7798c"){
+      to{
+        storage{
+          value(at:0)
+        }
+      }
+    }
+  }
+      `;
+
+  const expected = {
+    data: {
+      transaction: {
+        to: {
+          storage: null,
+        },
+      },
+    },
+  };
+
+  const result = await execQuery(query);
+  expect(result).toEqual(expected);
+});
+
 test('account->storage: retrieve basic value from storage', async () => {
   const query = `
   {

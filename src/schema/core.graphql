@@ -6,7 +6,7 @@ type Query {
   block(number: BlockNumber, hash: Bytes32, tag: BlockTag): Block
 
   "Selects a block based on a reference block and an offset from it."
-  blockOffset(offset: BlockOffset!): Block
+  blockOffset(number: BlockNumber, hash: Bytes32, tag: BlockTag, offset: Int!): Block
 
   "Selects an arbitrary set of blocks based on their numbers or hashes."
   blocks(numbers: [BlockNumber], hashes: [Bytes32]): [Block]
@@ -216,7 +216,7 @@ type Account {
   transactionCount: Int
 
   "The storage of this account"
-  storage: Storage!
+  storage: Storage
 }
 
 """
