@@ -216,7 +216,7 @@ type Account {
   transactionCount: Int
 
   "The storage of this account"
-  storage: Storage!
+  storage: Storage
 }
 
 """
