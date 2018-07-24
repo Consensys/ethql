@@ -21,7 +21,7 @@ class EthqlAccount {
   }
 
   public async storage(_) {
-    return new EthqlStorage(this.address);
+    return this.address && new EthqlStorage(this.address);
   }
 
   public equals(addressOrAccount: string | EthqlAccount) {
