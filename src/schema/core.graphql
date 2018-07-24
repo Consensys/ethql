@@ -281,6 +281,9 @@ type Transaction {
   For example, because some standards share function signatures, a single transaction may appear to match several different standards.
   """
   decoded: DecodedTransaction
+
+  "Contract created by this transaction"
+  createdContract: Account
 }
 
 """
