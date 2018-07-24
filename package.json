@@ -48,14 +48,13 @@
   "dependencies": {
     "@types/bluebird": "^3.5.20",
     "abi-decoder": "^1.1.0",
+    "apollo-server": "^2.0.0",
     "axios": "^0.18.0",
     "bluebird": "^3.5.1",
     "bn.js": "^4.11.8",
     "commander": "^2.15.1",
     "cors": "^2.8.4",
     "dataloader": "^1.4.0",
-    "express": "^4.16.3",
-    "express-graphql": "^0.6.12",
     "graphql": "^0.13.2",
     "graphql-import": "^0.6.0",
     "graphql-tools": "^3.0.2",
@@ -65,9 +64,6 @@
     "web3": "1.0.0-beta.34"
   },
   "devDependencies": {
-    "@types/cors": "^2.8.4",
-    "@types/express": "^4.16.0",
-    "@types/express-graphql": "^0.6.1",
     "@types/graphql": "^0.13.1",
     "@types/jest": "^23.1.0",
     "@types/lodash": "^4.14.109",

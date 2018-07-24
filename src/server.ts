@@ -1,12 +1,40 @@
+import { ApolloServer, ServerInfo } from 'apollo-server';
+import { GraphQLSchema } from 'graphql';
+import { EthqlContextFactory } from './model/EthqlContext';
+import EthqlQuery from './model/EthqlQuery';
+import { AddressInfo } from 'net';
+
+let server: ApolloServer;
+let info: AddressInfo
+
+export async function startServer(schema: GraphQLSchema, ctxFactory: EthqlContextFactory) {
+  server = new ApolloServer({
+    schema,
+    rootValue: new EthqlQuery(),
+    context: ctxFactory.create(),
+  });
+
+  server.listen().then(({ url, address, family, port }) => {
+    info = {address: address, family: family, port: Number(port)}
+    console.log(`🚀 Server ready at ${url}, merry querying!`);
+  });
+}
+
+export async function stopServer() {
+  server.stop();
+  info = null;
+}
+
+export function getInfo() {
+  return info;
+}
+/*
 import * as cors from 'cors';
 import * as express from 'express';
 import * as graphqlHTTP from 'express-graphql';
 import { GraphQLSchema } from 'graphql';
 import * as http from 'http';
 import { AddressInfo } from 'net';
-import { EthqlContextFactory } from './model/EthqlContext';
-import EthqlQuery from './model/EthqlQuery';
-
 let app: express.Express;
 let httpServer: http.Server;
 
@@ -54,4 +82,4 @@ export async function stopServer(): Promise<{}> {
 
 export function getAddress() {
   return httpServer && (httpServer.address() as AddressInfo);
-}
+}*/
