@@ -12,6 +12,14 @@ interface BlockArgs {
   tag?: string;
 }
 
+// Select a single block with an offset.
+interface BlockOffsetArgs {
+  number?: number;
+  hash?: string;
+  offset?: number;
+  tag?: string;
+}
+
 // Select multiple blocks.
 interface BlocksArgs {
   numbers?: [number];
@@ -46,6 +54,26 @@ class EthqlQuery {
     }
 
     return EthqlBlock.load(params[0], context, info);
+  }
+
+  public async blockOffset(
+    { number, hash, tag, offset }: BlockOffsetArgs,
+    context: EthqlContext,
+    info: GraphQLResolveInfo,
+  ): Promise<EthqlBlock> {
+    const params = _.reject([number, hash, tag], _.isNil);
+
+    // Offset 0 is allowed.
+    if (offset === undefined || params.length === 0) {
+      throw new Error('Expected either number, tag or hash argument and offset argument.');
+    }
+
+    if (params.length > 1) {
+      throw new Error('Only one of number, hash or tag argument should be provided.');
+    }
+
+    const blockNumber = number || (await context.web3.eth.getBlock(hash || tag.toLowerCase())).number;
+    return EthqlBlock.load(blockNumber + offset, context, info);
   }
 
   public async blocks(

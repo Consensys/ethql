@@ -86,6 +86,12 @@ class EthqlTransaction {
     }
     return receipt.status === undefined ? null : receipt.status ? 'SUCCESS' : 'FAILED';
   }
+
+  public async createdContract(_, context: EthqlContext) {
+    return this.to.address === null
+      ? new EthqlAccount((await context.web3.eth.getTransactionReceipt(this.hash)).contractAddress)
+      : null;
+  }
 }
 
 export default EthqlTransaction;
