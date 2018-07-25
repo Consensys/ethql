@@ -3,8 +3,8 @@ import * as net from 'net';
 import { getInfo, startServer, stopServer } from '../server';
 import { testGraphql, TestMode } from './utils';
 
-afterEach(() => {
-  stopServer();
+afterEach(async () => {
+  await stopServer();
 });
 
 const healthCheckOk = async () => {
@@ -14,7 +14,7 @@ const healthCheckOk = async () => {
 };
 
 const availablePort = async () => {
-  const srv = net.createServer();
+  let srv = net.createServer();
   await srv.listen(0);
   const port = (srv.address() as net.AddressInfo).port;
   await srv.close();
@@ -27,8 +27,7 @@ test('server starts with random port', async () => {
 
   await startServer(schema, ctxFactory);
 
-  const info = getInfo();
-  expect(info.port).toBeGreaterThan(0);
+  expect(getInfo().port).toBeGreaterThan(0);
 });
 
 test('server starts with an available port', async () => {
@@ -37,8 +36,7 @@ test('server starts with an available port', async () => {
 
   await startServer(schema, ctxFactory);
 
-  const info = getInfo();
-  expect(info.port).toBe(ctxFactory.config.port);
+  expect(getInfo().port).toBe(ctxFactory.config.port);
 
   await healthCheckOk();
 });
@@ -62,8 +60,8 @@ test('stop twice does nothing on second attempt', async () => {
   const info = getInfo();
   await healthCheckOk();
 
-  stopServer();
-  stopServer();
+  await stopServer();
+  await stopServer();
 
   try {
     await axios.post(`http://localhost:${info.port}/graphql`, { query: '{ health }' });
@@ -94,12 +92,13 @@ test('JSON RPC endpoint configuration works correctly', async () => {
   });
 
   await startServer(ropsten.schema, ropsten.ctxFactory);
+
   let query = await axios.post(`http://localhost:${getInfo().port}/graphql`, {
     query: '{ block(number: 1) { hash } }',
   });
   const ropstenHash = query.data.data.block.hash;
 
-  stopServer();
+  await stopServer();
 
   const mainnet = testGraphql({
     configOverride: {
