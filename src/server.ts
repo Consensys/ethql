@@ -8,9 +8,7 @@ let server: ApolloServer;
 let info: AddressInfo;
 
 export async function startServer(schema: GraphQLSchema, ctxFactory: EthqlContextFactory) {
-  if (server) {
-    return;
-  } else {
+  if (!server) {
     server = new ApolloServer({
       schema,
       rootValue: new EthqlQuery(),

@@ -14,7 +14,7 @@ const healthCheckOk = async () => {
 };
 
 const availablePort = async () => {
-  let srv = net.createServer();
+  const srv = net.createServer();
   await srv.listen(0);
   const port = (srv.address() as net.AddressInfo).port;
   await srv.close();
