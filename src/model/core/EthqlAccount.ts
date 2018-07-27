@@ -1,3 +1,4 @@
+import BigNumber = require('bn.js');
 import { EthqlContext } from '../EthqlContext';
 import EthqlStorage from './EthqlStorage';
 
@@ -22,6 +23,28 @@ class EthqlAccount {
 
   public async storage(_) {
     return this.address && new EthqlStorage(this.address);
+  }
+
+  public async supportsInterface(args, { web3 }: EthqlContext) {
+    // Calculates interface signature
+    let argsInterface = new BigNumber(0);
+    for (let selector of args.selectors) {
+      argsInterface = argsInterface.xor(new BigNumber(Number(await web3.eth.abi.encodeFunctionSignature(selector))));
+    }
+
+    if (
+      //Checks if contract supports ERC-165 by attempting to call "supportsInterface()"
+      [NaN, 0].includes(Number(await web3.eth.call({ to: this.address, data: '0x01ffc9a701ffc9a7' }))) ||
+      [NaN, 1].includes(Number(await web3.eth.call({ to: this.address, data: '0x01ffc9a7ffffffff' })))
+    ) {
+      return 'NON_INTROSPECTABLE';
+    } else {
+      if (Number(await web3.eth.call({ to: this.address, data: '0x01ffc9a7' + argsInterface.toString(16) }))) {
+        return 'SUPPORTED';
+      } else {
+        return 'NOT_SUPPORTED';
+      }
+    }
   }
 
   public equals(addressOrAccount: string | EthqlAccount) {
