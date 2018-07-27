@@ -48,23 +48,17 @@ $ INFURA_ID=myid npm run dev
 
 ## Query Handbook
 
-For an in-depth guide on how to use EthQL, please start with [Top-Level Queries](https://github.com/ConsenSys/ethql/wiki/Top-Level-Queries).
+We suggest fiddling with some [Example Use Cases](https://github.com/ConsenSys/ethql/wiki/Example-Use-Cases) to see some queries in action.
 
-Then, we suggest fiddling with some [Example Use Cases]().
+For an in-depth guide on how to use EthQL, please start with the document [Top-Level Queries](https://github.com/ConsenSys/ethql/wiki/Top-Level-Queries). This document shows all of the root fields available to query, including information on specific block(s), transaction(s), and account(s).
 
-The following sections go in-depth on the top-level queries and beyond:
+The following sections provide a deep dive into all of the fields available on top-level queries:
+
 * [Block Query Fields](https://github.com/ConsenSys/ethql/wiki/Block-Query-Fields)
 * [Account Query Fields](https://github.com/ConsenSys/ethql/wiki/Account-Query-Fields)
 * [Transaction Query Fields](https://github.com/ConsenSys/ethql/wiki/Transaction-Query-Fields)
 * [Log Query Fields](https://github.com/ConsenSys/ethql/wiki/Log-Query-Fields)
 * [Decoded Transaction Query Fields](https://github.com/ConsenSys/ethql/wiki/Decoded-Transaction-Query-Fields)
-
-## Feedback
-
-* Request a new feature on [GitHub](https://github.com/ConsenSys/ethql/wiki/Submitting-Bugs-and-Suggestions).
-* Vote for [popular feature requests](https://github.com/ConsenSys/ethql/issues?q=is%3Aopen+is%3Aissue+label%3A%22Type%3A+Feature%22).
-* File a bug in [GitHub Issues](https://github.com/ConsenSys/ethql/issues).
-* [Tweet](https://twitter.com/PegasysEng) us with other feedback.
 
 ## Contributing
 
@@ -76,6 +70,13 @@ If you are interested in fixing issues and contributing directly to the code bas
 * [Contributor License Agreement](https://github.com/ConsenSys/ethql/wiki/Contributor-License-Agreement)
 
 Please see also our [Code of Conduct](https://github.com/ConsenSys/ethql/wiki/Contributor-Code-of-Conduct).
+
+## Feedback
+
+* Request a new feature on [GitHub](https://github.com/ConsenSys/ethql/wiki/Submitting-Bugs-and-Suggestions).
+* Vote for [popular feature requests](https://github.com/ConsenSys/ethql/issues?q=is%3Aopen+is%3Aissue+label%3A%22Type%3A+Feature%22).
+* File a bug in [GitHub Issues](https://github.com/ConsenSys/ethql/issues).
+* [Tweet](https://twitter.com/PegasysEng) us with other feedback
 
 ## Development team
 
