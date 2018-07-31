@@ -1,3 +1,4 @@
+import EthqlTransaction from '../../model/core/EthqlTransaction';
 import { testGraphql } from '../utils';
 
 const { execQuery } = testGraphql();
@@ -234,87 +235,43 @@ test('block->transactionsRoles: both from and to addresses, no matching transact
 });
 
 test('block->transactionsRoles: both from and to addresses, matching transactions returned', async () => {
-  const query = `
-    {
-      block(number: 5755715) {
-        transactionsRoles(from: "0xCcF1D27AfE45BA5F8c15265199E5b635AF4cb889", to: "0xA4eA687A2A7F29cF2dc66B39c68e4411C0D00C49") {
-          hash
-          from {
-            address
-          }
-          to {
-            address
-          }
+  const fromAddr = '0x3f5CE5FBFe3E9af3971dD833D26bA9b5C936f0bE';
+  const toAddr = '0x4156D3342D5c385a87D264F90653733592000581';
+
+  const txBySender = await execQuery(`{
+    block(number: 5450945) {
+      transactionsRoles(from: "${fromAddr}") {
+        hash
+        from {
+          address
+        }
+        to {
+          address
         }
       }
     }
-  `;
+  }`);
 
-  const expected = {
-    data: {
-      block: {
-        transactionsRoles: [
-          {
-            hash: '0xb112efc908b879b72e167261a8456bc658f922c6c5914540675de657cbf106ca',
-            from: {
-              address: '0xCcF1D27AfE45BA5F8c15265199E5b635AF4cb889',
-            },
-            to: {
-              address: '0xA4eA687A2A7F29cF2dc66B39c68e4411C0D00C49',
-            },
-          },
-        ],
-      },
-    },
-  };
-  const result = await execQuery(query);
-  expect(result).toEqual(expected);
-});
+  expect(txBySender.errors).toBeUndefined();
+  let txs = txBySender.data.block.transactionsRoles as EthqlTransaction[];
+  expect(txs.every(tx => tx.from.address === fromAddr)).toBeTruthy();
+  expect(txs.filter(tx => tx.from.address === fromAddr && tx.to.address === toAddr)).toHaveLength(1);
 
-test('block->transactionsRoles: both from and to addresses, multiple matching transactions returned, matched on to only', async () => {
-  const query = `
-    {
-      block(number: 5812225) {
-        transactionsRoles(from: "0xCcF1D27AfE45BA5F8c15265199E5b635AF4cb889", to: "0xfa52274dd61e1643d2205169732f29114bc240b3") {
-          hash
-          from {
-            address
-          }
-          to {
-            address
-          }
+  const txIntersect = await execQuery(`{
+    block(number: 5450945) {
+      transactionsRoles(from: "${fromAddr}", to: "${toAddr}") {
+        hash
+        from {
+          address
+        }
+        to {
+          address
         }
       }
     }
-  `;
+  }`);
 
-  const expected = {
-    data: {
-      block: {
-        transactionsRoles: [
-          {
-            hash: '0x63f15d479bca31d321071035e6999d44f9a8244513b262c29ed549b3c3ae77e3',
-            from: {
-              address: '0x7f7bF1f8867F3bC41b2B5C2f3BCc5798bc71b391',
-            },
-            to: {
-              address: '0xFa52274DD61E1643d2205169732f29114BC240b3',
-            },
-          },
-          {
-            hash: '0x281ca150bcc5a49d5028a0860ef57a8b84a285e1080a88d3a74d00126a32b6b9',
-            from: {
-              address: '0xfAEe59A232abc5A86286f089F37615FFE48D0A27',
-            },
-            to: {
-              address: '0xFa52274DD61E1643d2205169732f29114BC240b3',
-            },
-          },
-        ],
-      },
-    },
-  };
-
-  const result = await execQuery(query);
-  expect(result).toEqual(expected);
+  expect(txIntersect.errors).toBeUndefined();
+  txs = txIntersect.data.block.transactionsRoles as EthqlTransaction[];
+  expect(txs).toHaveLength(1);
 });

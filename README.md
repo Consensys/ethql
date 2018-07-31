@@ -5,7 +5,7 @@
 **▶️ Try out the Alpha on Infura:
 [https://ethql-alpha.infura.io/graphql](<https://ethql-alpha.infura.io/graphql?query=%7B%0A%20%20block(number%3A%205000000)%20%7B%0A%20%20%20%20hash%0A%20%20%20%20transactions(filter%3A%20%7B%20withInput%3A%20true%20%7D)%20%7B%0A%20%20%20%20%20%20index%0A%20%20%20%20%20%20hash%0A%20%20%20%20%20%20from%20%7B%0A%20%20%20%20%20%20%20%20address%0A%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20to%20%7B%0A%20%20%20%20%20%20%20%20address%0A%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20decoded%20%7B%0A%20%20%20%20%20%20%20%20entity%0A%20%20%20%20%20%20%20%20operation%0A%20%20%20%20%20%20%20%20standard%0A%20%20%20%20%20%20%20%20...%20on%20ERC20Transfer%20%7B%0A%20%20%20%20%20%20%20%20%20%20tokenContract%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20symbol%0A%20%20%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%20%20%20%20from%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20account%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20address%0A%20%20%20%20%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%20%20%20%20%20%20tokenBalance%0A%20%20%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%20%20%20%20to%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20account%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20address%0A%20%20%20%20%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%20%20%20%20value%0A%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%7D%0A%20%20%20%20%7D%0A%20%20%7D%0A%7D%0A%0A%0A>)**
 
-[Example queries](#example-queries).
+[Example queries.](#query-handbook)
 
 EthQL is a server that exposes a GraphQL endpoint to the public Ethereum ledger. It works against the standard JSON-RPC
 APIs offered by all Ethereum clients. It is built in TypeScript, and thus leverages the vast ecosystem of GraphQL
@@ -46,68 +46,37 @@ don't, you should sign up for one!) you can set it like this:
 $ INFURA_ID=myid npm run dev
 ```
 
-## Example queries
+## Query Handbook
 
-_Fetch all transactions from block 5000000 that have input data, and for those that can be decoded as token transfers,
-return the token symbol, sending and receiving addresses, as well as the token balance of the sending address._
+We suggest fiddling with some [Example Use Cases](https://github.com/ConsenSys/ethql/wiki/Example-Use-Cases) to see some queries in action.
 
-```
-{
-  block(number: 5000000) {
-    hash
-    transactions(filter: { withInput: true }) {
-      index
-      hash
-      from {
-        address
-      }
-      to {
-        address
-      }
-      decoded {
-        ... on ERC20Transfer {
-          tokenContract {
-            symbol
-          }
-          from {
-            account {
-            	address
-            }
-            tokenBalance
-          }
-          to {
-            account {
-              address
-            }
-          }
-          value
-        }
-      }
-    }
-  }
-}
-```
+For an in-depth guide on how to use EthQL, please start with the document [Top-Level Queries](https://github.com/ConsenSys/ethql/wiki/Top-Level-Queries). This document shows all of the root fields available to query, including information on specific block(s), transaction(s), and account(s).
 
-_For all blocks between 5400000 and 5400005 inclusive (6 blocks), get the balance of all addresses that sent a
-transaction._
+The following sections provide a deep dive into all of the fields available on top-level queries:
 
-```
-{
-  blocksRange(numberRange: [5400000, 5400005]) {
-    transactions {
-      hash
-      value
-      from {
-        address
-        balance
-      }
-      to {
-        address
-      }
-    }
-  }
-}
-```
+* [Block Query Fields](https://github.com/ConsenSys/ethql/wiki/Block-Query-Fields)
+* [Account Query Fields](https://github.com/ConsenSys/ethql/wiki/Account-Query-Fields)
+* [Transaction Query Fields](https://github.com/ConsenSys/ethql/wiki/Transaction-Query-Fields)
+* [Log Query Fields](https://github.com/ConsenSys/ethql/wiki/Log-Query-Fields)
+* [Decoded Transaction Query Fields](https://github.com/ConsenSys/ethql/wiki/Decoded-Transaction-Query-Fields)
+
+## Contributing
+
+If you are interested in fixing issues and contributing directly to the code base, please see the document [How to Contribute](https://github.com/ConsenSys/ethql/wiki/How-to-Contribute), which covers the following:
+
+* [Submitting Bugs and Suggestions](https://github.com/ConsenSys/ethql/wiki/Submitting-Bugs-and-Suggestions)
+* [Feedback Channels](https://github.com/ConsenSys/ethql/wiki/Feedback-Channels)
+* [Coding Guidelines](https://github.com/ConsenSys/ethql/wiki/Coding-Guidelines)
+* [Contributor License Agreement](https://github.com/ConsenSys/ethql/wiki/Contributor-License-Agreement)
+
+Please see also our [Code of Conduct](https://github.com/ConsenSys/ethql/wiki/Contributor-Code-of-Conduct).
+
+## Feedback
+
+* Request a new feature on [GitHub](https://github.com/ConsenSys/ethql/wiki/Submitting-Bugs-and-Suggestions).
+* Vote for [popular feature requests](https://github.com/ConsenSys/ethql/issues?q=is%3Aopen+is%3Aissue+label%3A%22Type%3A+Feature%22).
+* File a bug in [GitHub Issues](https://github.com/ConsenSys/ethql/issues).
+* [Tweet](https://twitter.com/PegasysEng) us with other feedback
 
 ## Development team
 

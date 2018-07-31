@@ -190,7 +190,7 @@ class EthqlBlock implements EthqlBlock {
 
     // Note: the EthqlAccount#equals method is lenient to nulls/undefined.
     return this._transactions
-      .filter(tx => tx.from.equals(from) || tx.to.equals(to))
+      .filter(tx => (from === undefined || tx.from.equals(from)) && (to === undefined || tx.to.equals(to)))
       .filter(EthqlBlock.transactionFilter(filter));
   }
 }
