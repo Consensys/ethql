@@ -170,13 +170,9 @@ export function testGraphql(testOptions: TestOptions = defaultTestOptions) {
   const schema = initSchema(ctxFactory);
   const prepareContext = () => ctxFactory.create();
 
-  const execQuery = (query: string, context?: EthqlContext) => {
-    return graphql(schema, query, new EthqlQuery(), context || prepareContext());
-  };
-
-  const execQueryWithVars = (query: string, context?: EthqlContext, variables?: any) => {
+  const execQuery = (query: string, context?: EthqlContext, variables?: { [key: string]: any }) => {
     return graphql(schema, query, new EthqlQuery(), context || prepareContext(), variables);
   };
 
-  return { schema, prepareContext, execQuery, execQueryWithVars, ctxFactory };
+  return { schema, prepareContext, execQuery, ctxFactory };
 }

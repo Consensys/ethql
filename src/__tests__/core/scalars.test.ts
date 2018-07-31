@@ -1,6 +1,6 @@
 import { testGraphql } from '../utils';
 
-const { execQuery, execQueryWithVars, prepareContext } = testGraphql();
+const { execQuery, prepareContext } = testGraphql();
 
 test('Long: parseLiteral', async () => {
   const query = `
@@ -27,7 +27,7 @@ test('Long: parseValue', async () => {
 
   const expected = { data: { blockOffset: { number: 25557 } } };
   const vars = { long: 12345 };
-  const result = await execQueryWithVars(query, prepareContext(), vars);
+  const result = await execQuery(query, prepareContext(), vars);
   expect(result).toEqual(expected);
 });
 
@@ -56,7 +56,7 @@ test('BlockNumber: parseValue', async () => {
 
   const expected = { data: { block: { number: 5958397 } } };
   const vars = { number: 5958397 };
-  const result = await execQueryWithVars(query, prepareContext(), vars);
+  const result = await execQuery(query, prepareContext(), vars);
   expect(result).toEqual(expected);
 });
 
@@ -85,7 +85,7 @@ test('Address: parseValue', async () => {
 
   const expected = { data: { account: { address: '0x0000000000000000000000000000000000000001' } } };
   const vars = { address: '0x0000000000000000000000000000000000000001' };
-  const result = await execQueryWithVars(query, prepareContext(), vars);
+  const result = await execQuery(query, prepareContext(), vars);
   expect(result).toEqual(expected);
 });
 
@@ -114,6 +114,6 @@ test('Bytes32: parseValue', async () => {
 
   const expected = { data: { block: { number: 5958397 } } };
   const vars = { hash: '0x4058f2f11f7399056d64e27e17de83ce564ce8f8dc6190f87473c8d456f45087' };
-  const result = await execQueryWithVars(query, prepareContext(), vars);
+  const result = await execQuery(query, prepareContext(), vars);
   expect(result).toEqual(expected);
 });
