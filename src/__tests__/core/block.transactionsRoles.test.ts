@@ -1,3 +1,4 @@
+import EthqlTransaction from '../../model/core/EthqlTransaction';
 import { testGraphql } from '../utils';
 
 const { execQuery } = testGraphql();
@@ -234,39 +235,43 @@ test('block->transactionsRoles: both from and to addresses, no matching transact
 });
 
 test('block->transactionsRoles: both from and to addresses, matching transactions returned', async () => {
-  const query = `
-    {
-      block(number: 5450945) {
-        transactionsRoles(from: "0x3f5CE5FBFe3E9af3971dD833D26bA9b5C936f0bE", to: "0x4156D3342D5c385a87D264F90653733592000581") {
-          hash
-          from {
-            address
-          }
-          to {
-            address
-          }
+  const fromAddr = '0x3f5CE5FBFe3E9af3971dD833D26bA9b5C936f0bE';
+  const toAddr = '0x4156D3342D5c385a87D264F90653733592000581';
+
+  const txBySender = await execQuery(`{
+    block(number: 5450945) {
+      transactionsRoles(from: "${fromAddr}") {
+        hash
+        from {
+          address
+        }
+        to {
+          address
         }
       }
     }
-  `;
+  }`);
 
-  const expected = {
-    data: {
-      block: {
-        transactionsRoles: [
-          {
-            hash: '0x0add29862e9937eccf4298096d7411a36038b3c34c71207f53d143ed6dcfacdc',
-            from: {
-              address: '0x3f5CE5FBFe3E9af3971dD833D26bA9b5C936f0bE',
-            },
-            to: {
-              address: '0x4156D3342D5c385a87D264F90653733592000581',
-            },
-          },
-        ],
-      },
-    },
-  };
-  const result = await execQuery(query);
-  expect(result).toEqual(expected);
+  expect(txBySender.errors).toBeUndefined();
+  let txs = txBySender.data.block.transactionsRoles as EthqlTransaction[];
+  expect(txs.every(tx => tx.from.address === fromAddr)).toBeTruthy();
+  expect(txs.filter(tx => tx.from.address === fromAddr && tx.to.address === toAddr)).toHaveLength(1);
+
+  const txIntersect = await execQuery(`{
+    block(number: 5450945) {
+      transactionsRoles(from: "${fromAddr}", to: "${toAddr}") {
+        hash
+        from {
+          address
+        }
+        to {
+          address
+        }
+      }
+    }
+  }`);
+
+  expect(txIntersect.errors).toBeUndefined();
+  txs = txIntersect.data.block.transactionsRoles as EthqlTransaction[];
+  expect(txs).toHaveLength(1);
 });
