@@ -8,10 +8,10 @@ import { EthqlServer } from './server';
 console.log(`Effective configuration:\n${JSON.stringify(config, null, 2)}`);
 
 const web3 = initWeb3(config);
-const contextFactory = new EthqlContextFactory(web3, config, decodingEngine);
-const schema = initSchema(contextFactory);
+const ctxFactory = new EthqlContextFactory(web3, config, decodingEngine);
+const schema = initSchema(ctxFactory);
 
-const server = new EthqlServer(schema, contextFactory);
+const server = new EthqlServer({ schema, ctxFactory });
 
 process.on('SIGINT', async () => (await server.stop()) || process.exit(0));
 process.on('SIGTERM', async () => (await server.stop()) || process.exit(0));
