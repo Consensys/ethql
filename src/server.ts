@@ -32,7 +32,7 @@ export type EthqlServerOpts = {
  * In the future, this class could be made abstract or extracted to an interface if polymorphic
  * server support is required.
  */
-class EthqlServer {
+export class EthqlServer {
   private server: ApolloServer;
   private _address: AddressInfo;
   private _status: ServerStatus = 'stopped';
@@ -81,5 +81,3 @@ class EthqlServer {
     return this._status;
   }
 }
-
-export { EthqlServer };
