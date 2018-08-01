@@ -18,7 +18,7 @@ test('block->miner: successfully returns miner account', async () => {
       block: {
         miner: {
           address: '0x829BD824B016326A401d083B33D092293333A830',
-          code: '0x',
+          code: null,
         },
       },
     },

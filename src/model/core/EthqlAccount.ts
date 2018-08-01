@@ -1,6 +1,19 @@
 import { EthqlContext } from '../EthqlContext';
 import EthqlStorage from './EthqlStorage';
 
+/**
+ * Account types.
+ */
+enum EthqlAccountType {
+  CONTRACT = 'CONTRACT',
+  EXTERNALLY_OWNED = 'EXTERNALLY_OWNED',
+}
+
+/**
+ * Turns '0x' code into null.
+ */
+const nullifyIfEmpty = (code: string) => (!code || code === '0x' ? null : code);
+
 class EthqlAccount {
   constructor(public address: string) {}
 
@@ -13,7 +26,7 @@ class EthqlAccount {
   }
 
   public async code(_, { web3 }: EthqlContext) {
-    return this.address && web3.eth.getCode(this.address);
+    return this.address && web3.eth.getCode(this.address).then(nullifyIfEmpty);
   }
 
   public async transactionCount(_, { web3 }: EthqlContext) {
@@ -22,6 +35,14 @@ class EthqlAccount {
 
   public async storage(_) {
     return this.address && new EthqlStorage(this.address);
+  }
+
+  public async type(_, { web3 }: EthqlContext): Promise<EthqlAccountType> {
+    if (!this.address) {
+      return;
+    }
+    const code = await web3.eth.getCode(this.address).then(nullifyIfEmpty);
+    return code ? EthqlAccountType.CONTRACT : EthqlAccountType.EXTERNALLY_OWNED;
   }
 
   public equals(addressOrAccount: string | EthqlAccount) {
