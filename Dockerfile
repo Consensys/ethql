@@ -10,13 +10,14 @@ RUN \
 WORKDIR ${ETHQL_INSTALL}
 
 # Install dependencies. This step is performed separately to leverage Docker layer caching.
-COPY package.json yarn.lock /ethql/
+COPY package.json yarn.lock ${ETHQL_INSTALL}/
+ADD patches ${ETHQL_INSTALL}/patches
 RUN \
   yarn install --production && \
   apk del .build-deps && \
   rm -rf /var/cache/apk/*
 
-ADD dist /ethql
+ADD dist ${ETHQL_INSTALL}
 ENTRYPOINT [ "node", "/ethql/index.js" ]
 EXPOSE 4000
 STOPSIGNAL 9

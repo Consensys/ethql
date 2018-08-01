@@ -18,7 +18,7 @@
     "dev": "$(npm bin)/nodemon -e ts -x ts-node src/index.ts",
     "debug": "$(npm bin)/dotenv -- nodemon -e ts -x ts-node --inspect src/index.ts",
     "build": "npm run build:ts && npm run build:docker",
-    "build:ts": "npm run clean && tsc && $(npm bin)/copyfiles -u 1 src/schema/**/*.graphql src/abi/** dist",
+    "build:ts": "npm run clean && $(npm bin)/patch-package && tsc && $(npm bin)/copyfiles -u 1 src/schema/**/*.graphql src/abi/** dist",
     "build:docker": "docker image build -t ethql .",
     "lint": "$(npm bin)/npm-run-all lint:ts lint:rest",
     "lint:ts": "$(npm bin)/tslint --fix -t stylish -c tslint.json -p tsconfig.json && $(npm bin)/prettier --parser typescript --write 'src/**/*.ts'",
