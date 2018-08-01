@@ -1,30 +1,34 @@
 import axios from 'axios';
 import * as net from 'net';
 import { EthqlServer } from '../server';
-import { testGraphql, TestMode } from './utils';
+import { testGraphql, TestMode, TestOptions } from './utils';
 
 const testServers: EthqlServer[] = [];
 
-afterEach(async () => {
+const newServer = async (options?: TestOptions) => {
+  const { schema, ctxFactory } = options ? testGraphql(options) : testGraphql();
+  const server = new EthqlServer({ schema, ctxFactory });
+  testServers.push(server);
+
+  await server.start();
+
+  // Healthcheck.
+  const resp = await axios.post(`http://localhost:${server.address.port}/graphql`, { query: '{ health }' });
+  expect(resp.data).toEqual({ data: { health: 'ok' } });
+
+  return server;
+};
+
+afterAll(async () => {
   console.log('Shutting down test servers...');
-  await testServers.forEach(async server => {
-    try {
-      await server.stop();
-    } catch (e) {
-      // do nothing
-    }
-  });
+  await Promise.all(
+    testServers.map(s =>
+      s.stop().catch(err => console.log(`Exception while cleaning up servers (may be expected): ${err}`)),
+    ),
+  );
   testServers.length = 0;
   console.log('Test servers shut down.');
 });
-
-const healthCheckOk = async () => {
-  testServers.forEach(async server => {
-    const port = server.address.port;
-    const resp = await axios.post(`http://localhost:${port}/graphql`, { query: '{ health }' });
-    expect(resp.data).toEqual({ data: { health: 'ok' } });
-  });
-};
 
 const availablePort = async () => {
   const srv = net.createServer();
@@ -35,38 +39,18 @@ const availablePort = async () => {
 };
 
 test('server starts with random port', async () => {
-  const { schema, ctxFactory } = testGraphql();
-  ctxFactory.config.port = 0;
-
-  const server = new EthqlServer({ schema, ctxFactory });
-  testServers.push(server);
-  await server.start();
-
+  const server = await newServer();
   expect(server.address.port).toBeGreaterThan(0);
-  await healthCheckOk();
 });
 
 test('server starts with an available port', async () => {
-  const { schema, ctxFactory } = testGraphql();
-  ctxFactory.config.port = await availablePort();
-
-  const server = new EthqlServer({ schema, ctxFactory });
-  testServers.push(server);
-  await server.start();
-
-  expect(server.address.port).toBe(ctxFactory.config.port);
-  await healthCheckOk();
+  const port = await availablePort();
+  const server = await newServer({ configOverride: { port } });
+  expect(server.address.port).toBe(port);
 });
 
 test('start twice throws on second attempt', async () => {
-  const { schema, ctxFactory } = testGraphql();
-  ctxFactory.config.port = 0;
-
-  const server = new EthqlServer({ schema, ctxFactory });
-  testServers.push(server);
-
-  await server.start();
-  await healthCheckOk();
+  const server = await newServer();
 
   try {
     await server.start();
@@ -79,14 +63,7 @@ test('start twice throws on second attempt', async () => {
 });
 
 test('stop twice throws on second attempt', async () => {
-  const { schema, ctxFactory } = testGraphql();
-  ctxFactory.config.port = 0;
-
-  const server = new EthqlServer({ schema, ctxFactory });
-  testServers.push(server);
-
-  await server.start();
-  await healthCheckOk();
+  const server = await newServer();
   await server.stop();
 
   try {
@@ -100,44 +77,15 @@ test('stop twice throws on second attempt', async () => {
 });
 
 test('server starts with random port', async () => {
-  const { schema, ctxFactory } = testGraphql();
-  ctxFactory.config.port = 0;
-
-  const server = new EthqlServer({ schema, ctxFactory });
-  testServers.push(server);
-  await server.start();
-  await healthCheckOk();
-
+  const server = await newServer();
   expect(server.address.port).toBeGreaterThan(0);
 });
 
 test('JSON RPC endpoint configuration works correctly', async () => {
   const servers = {
-    ropsten: new EthqlServer(
-      testGraphql({
-        configOverride: {
-          jsonrpc: 'https://ropsten.infura.io',
-          port: 0,
-        },
-        mode: TestMode.passthrough,
-      }),
-    ),
-    mainnet: new EthqlServer(
-      testGraphql({
-        configOverride: {
-          port: 0,
-        },
-        mode: TestMode.replay,
-      }),
-    ),
+    ropsten: await newServer({ configOverride: { jsonrpc: 'https://ropsten.infura.io' }, mode: TestMode.passthrough }),
+    mainnet: await newServer({ mode: TestMode.replay }),
   };
-
-  Object.values(servers).forEach(async s => {
-    testServers.push(s);
-    await s.start();
-  });
-
-  await healthCheckOk();
 
   const hashes = Object.values(servers).map(async s => {
     const resp = await axios.post(`http://localhost:${s.address.port}/graphql`, {

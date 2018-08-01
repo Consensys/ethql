@@ -131,7 +131,7 @@ export enum TestMode {
 /**
  * Test runner options.
  */
-type TestOptions = {
+export type TestOptions = {
   configOverride?: Options;
   mode?: TestMode;
 };
