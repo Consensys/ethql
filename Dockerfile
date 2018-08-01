@@ -11,7 +11,8 @@ WORKDIR ${ETHQL_INSTALL}
 
 # Install dependencies. This step is performed separately to leverage Docker layer caching.
 COPY package.json yarn.lock ${ETHQL_INSTALL}/
-ADD patches ${ETHQL_INSTALL}/patches
+# Uncomment if patch-package is needed again.
+# ADD patches ${ETHQL_INSTALL}/patches
 RUN \
   yarn install --production && \
   apk del .build-deps && \

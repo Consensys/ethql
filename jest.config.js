@@ -7,4 +7,5 @@ module.exports = {
   moduleFileExtensions: ['ts', 'js', 'json', 'node'],
   verbose: true,
   setupTestFrameworkScriptFile: './jest.setup.js',
+  testEnvironment: 'node'
 };
