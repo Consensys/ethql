@@ -1,57 +1,83 @@
-import * as cors from 'cors';
-import * as express from 'express';
-import * as graphqlHTTP from 'express-graphql';
+import { ApolloServer, PlaygroundConfig } from 'apollo-server';
 import { GraphQLSchema } from 'graphql';
-import * as http from 'http';
 import { AddressInfo } from 'net';
+import { WELCOME_QUERY } from './editor';
 import { EthqlContextFactory } from './model/EthqlContext';
 import EthqlQuery from './model/EthqlQuery';
 
-let app: express.Express;
-let httpServer: http.Server;
+const playground: PlaygroundConfig = {
+  settings: { 'editor.theme': 'light' },
+  tabs: [
+    {
+      endpoint: '/',
+      query: WELCOME_QUERY,
+    },
+  ],
+};
 
-export async function startServer(schema: GraphQLSchema, ctxFactory: EthqlContextFactory): Promise<{}> {
-  if (httpServer && httpServer.listening) {
-    // Server is already started.
-    return Promise.resolve({});
-  }
+type ServerStatus = 'stopped' | 'starting' | 'started' | 'stopping';
 
-  // A function that returns the options for the GraphQL middleware for every incoming request.
-  // Particularly we create a fresh context from the context factory.
-  const optsFunc: graphqlHTTP.Options = (req, res) => ({
-    schema,
-    rootValue: new EthqlQuery(),
-    context: ctxFactory.create(),
-    graphiql: true,
-  });
+/**
+ * Options for EthQL server.
+ */
+export type EthqlServerOpts = {
+  schema: GraphQLSchema;
+  ctxFactory: EthqlContextFactory;
+} & {
+  [prop: string]: any;
+};
 
-  return new Promise((resolve, reject) => {
-    app = express();
-    app.use(cors());
-    app.use('/graphql', graphqlHTTP(optsFunc));
+/**
+ * Represents an EthQL server currently using an Apollo Server as its backing implementation.
+ * In the future, this class could be made abstract or extracted to an interface if polymorphic
+ * server support is required.
+ */
+export class EthqlServer {
+  private server: ApolloServer;
+  private _address: AddressInfo;
+  private _status: ServerStatus = 'stopped';
 
-    const { port } = ctxFactory.config;
-    httpServer = app.listen(port, () => {
-      const { port } = getAddress();
-      console.log(
-        `Running a GraphQL API server at http://0.0.0.0:${port}/graphql (browse here: http://localhost:${port}/graphql)`,
-      );
-      resolve({});
+  constructor(private opts: EthqlServerOpts) {}
+
+  public async start() {
+    if (this._status !== 'stopped') {
+      throw new Error(`Illegal EthQL server state upon start(). Expected status: stopped; actual: ${this._status}`);
+    }
+
+    this._status = 'starting';
+
+    const server = new ApolloServer({
+      schema: this.opts.schema,
+      rootValue: new EthqlQuery(),
+      context: () => this.opts.ctxFactory.create(),
+      playground,
     });
-  });
-}
 
-export async function stopServer(): Promise<{}> {
-  if (!httpServer || !httpServer.listening) {
-    // Server is not started.
-    return Promise.resolve({});
+    const { url, address, family, port } = await server.listen(this.opts.ctxFactory.config.port);
+    this.server = server;
+    this._address = { address, family, port: Number(port) };
+    this._status = 'started';
+
+    console.log(`🚀  Running a GraphQL API server at ${url}\nMerry querying!`);
   }
 
-  return new Promise((resolve, reject) => {
-    httpServer.close(() => resolve({}));
-  });
-}
+  public async stop() {
+    if (this._status !== 'started') {
+      throw new Error(`Illegal EthQL server state upon stop(). Expected status: started; actual: ${this._status}`);
+    }
 
-export function getAddress() {
-  return httpServer && (httpServer.address() as AddressInfo);
+    this._status = 'stopping';
+
+    await this.server.stop();
+    this._address = this._status = this.server = null;
+    this._status = 'stopped';
+  }
+
+  public get address() {
+    return this._address;
+  }
+
+  public get status() {
+    return this._status;
+  }
 }
