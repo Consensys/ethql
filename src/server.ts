@@ -1,9 +1,8 @@
 import { ApolloServer, PlaygroundConfig } from 'apollo-server';
 import { GraphQLSchema } from 'graphql';
 import { AddressInfo } from 'net';
+import { EthqlContextFactory } from './context';
 import { WELCOME_QUERY } from './editor';
-import { EthqlContextFactory } from './model/EthqlContext';
-import EthqlQuery from './model/EthqlQuery';
 
 const playground: PlaygroundConfig = {
   settings: { 'editor.theme': 'light' },
@@ -48,7 +47,7 @@ export class EthqlServer {
 
     const server = new ApolloServer({
       schema: this.opts.schema,
-      rootValue: new EthqlQuery(),
+      rootValue: {},
       context: () => this.opts.ctxFactory.create(),
       playground,
     });

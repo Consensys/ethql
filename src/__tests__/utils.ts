@@ -6,11 +6,10 @@ import { promisify } from 'util';
 import Web3 = require('web3');
 import { JsonRpcRequest, JsonRpcResponse, Provider } from 'web3/providers';
 import { Options } from '../config';
+import { EthqlContext, EthqlContextFactory } from '../context';
+import { initSchema } from '../core';
 import decodingEngine from '../dec';
-import { EthqlContext, EthqlContextFactory } from '../model/EthqlContext';
-import EthqlQuery from '../model/EthqlQuery';
 import { initWeb3 } from '../providers/web3';
-import { initSchema } from '../schema';
 
 const { sha3 } = new Web3().utils;
 
@@ -167,11 +166,11 @@ export function testGraphql(testOptions: TestOptions = defaultTestOptions) {
   };
 
   const ctxFactory = new EthqlContextFactory(web3Factory, config, decodingEngine);
-  const schema = initSchema(ctxFactory);
+  const schema = initSchema();
   const prepareContext = () => ctxFactory.create();
 
   const execQuery = (query: string, context?: EthqlContext, variables?: { [key: string]: any }) => {
-    return graphql(schema, query, new EthqlQuery(), context || prepareContext(), variables);
+    return graphql(schema, query, {}, context || prepareContext(), variables);
   };
 
   return { schema, prepareContext, execQuery, ctxFactory };

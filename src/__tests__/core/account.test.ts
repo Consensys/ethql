@@ -1,6 +1,3 @@
-import BigNumber = require('bn.js');
-import Web3 = require('web3');
-import { Unit } from '../../types/web3/utils';
 import { testGraphql } from '../utils';
 
 const { execQuery, ctxFactory } = testGraphql();

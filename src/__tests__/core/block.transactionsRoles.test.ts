@@ -1,4 +1,4 @@
-import EthqlTransaction from '../../model/core/EthqlTransaction';
+import { EthqlTransaction } from '../../core/model';
 import { testGraphql } from '../utils';
 
 const { execQuery } = testGraphql();

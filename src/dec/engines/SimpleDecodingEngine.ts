@@ -1,8 +1,7 @@
 import * as _ from 'lodash';
-import EthqlLog from '../../model/core/EthqlLog';
-import EthqlTransaction from '../../model/core/EthqlTransaction';
-import { EthqlContext } from '../../model/EthqlContext';
-import { DecodedLog, DecodedTx, DecoderDefinition, DecodingEngine } from '../types';
+import { EthqlContext } from '../../context';
+import { EthqlLog, EthqlTransaction } from '../../core/model';
+import { DecodedLog, DecodedTransaction, DecoderDefinition, DecodingEngine } from '../types';
 
 /**
  * A transaction decoding engine that matches the incoming transaction against a list of known ABIs.
@@ -20,7 +19,7 @@ class SimpleDecodingEngine implements DecodingEngine {
    * @param tx The transaction to decode.
    * @param context ethql context.
    */
-  public decodeTransaction(tx: EthqlTransaction, context: EthqlContext): DecodedTx | undefined {
+  public decodeTransaction(tx: EthqlTransaction, context: EthqlContext): DecodedTransaction | undefined {
     if (!tx.inputData) {
       return;
     }

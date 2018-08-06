@@ -118,6 +118,11 @@ input BlockOffset {
 
 """
 The storage of this contract.
+
+Provides fluent accessors for solidity contract storage. Four data types are supported:
+Dynamic arrays, fixed arrays, maps with string keys, and maps with numeric keys.
+
+The algorithm to calculate the storage key varies for each data type.
 """
 type Storage {
   "Gets the value at this storage slot."

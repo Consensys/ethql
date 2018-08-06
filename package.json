@@ -59,6 +59,7 @@
     "graphql": "^0.13.2",
     "graphql-import": "^0.6.0",
     "graphql-tools": "^3.0.2",
+    "immutable": "^3.8.2",
     "lodash": "^4.17.10",
     "patch-package": "^5.1.1",
     "postinstall-postinstall": "^1.0.0",

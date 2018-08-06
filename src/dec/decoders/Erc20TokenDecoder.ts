@@ -1,7 +1,6 @@
 import Contract from 'web3/eth/contract';
-import EthqlAccount from '../../model/core/EthqlAccount';
-import EthqlTransaction from '../../model/core/EthqlTransaction';
-import { EthqlContext } from '../../model/EthqlContext';
+import { EthqlContext } from '../../context';
+import { EthqlAccount, EthqlTransaction } from '../../core/model';
 import { DecoderDefinition } from '../types';
 import { createAbiDecoder, extractParamValue } from '../utils';
 

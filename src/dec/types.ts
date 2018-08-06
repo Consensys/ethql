@@ -1,6 +1,5 @@
-import EthqlLog from '../model/core/EthqlLog';
-import EthqlTransaction from '../model/core/EthqlTransaction';
-import { EthqlContext } from '../model/EthqlContext';
+import { EthqlContext } from '../context';
+import { EthqlLog, EthqlTransaction } from '../core/model';
 
 // Defines the entity to which the standard belongs.
 // As we support new standards, this union type will expand.
@@ -32,7 +31,7 @@ export interface DecoderDefinition<TxBindings, LogBindings> {
 /**
  * A decoded transaction.
  */
-export type DecodedTx = {
+export type DecodedTransaction = {
   entity: Entity;
   standard: string;
   operation: string;
@@ -52,6 +51,6 @@ export type DecodedLog = {
  * A decoding engine.
  */
 export type DecodingEngine = {
-  decodeTransaction(tx: EthqlTransaction, context: EthqlContext): DecodedTx;
+  decodeTransaction(tx: EthqlTransaction, context: EthqlContext): DecodedTransaction;
   decodeLog(tx: EthqlLog, context: EthqlContext): DecodedLog;
 };

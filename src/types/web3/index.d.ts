@@ -26,6 +26,8 @@ import Eth from './eth/index';
 declare class Web3 {
   static providers: Providers;
   static givenProvider: Provider;
+  static utils: Utils;
+  static version: string;
   static modules: {
     Eth: new (provider: Provider) => Eth;
     Net: new (provider: Provider) => Net;
