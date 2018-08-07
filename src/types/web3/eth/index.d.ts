@@ -114,8 +114,8 @@ export default interface Eth {
   };
 
   getStorageAt: {
-    (address: string, defaultBlock?: BlockType, cb?: Callback<string>): Promise<string>;
-    request(address: string, defaultBlock?: BlockType, cb?: Callback<string>): object;
+    (address: string, position: number, defaultBlock?: BlockType, cb?: Callback<string>): Promise<string>;
+    request(address: string, position: number, defaultBlock?: BlockType, cb?: Callback<string>): object;
   };
 
   getTransactionReceipt: {
