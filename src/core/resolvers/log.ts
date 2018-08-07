@@ -1,6 +1,6 @@
 import { GraphQLResolveInfo } from 'graphql';
-import { EthqlContext } from '../context';
-import { EthqlBlock, EthqlLog } from '../core/model';
+import { EthqlContext } from '../../context';
+import { EthqlBlock, EthqlLog } from '../model';
 
 /**
  * Attempts to decode the log.
