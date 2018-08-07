@@ -1,45 +1,22 @@
 import { ArgumentNode, FieldNode, GraphQLResolveInfo, ObjectFieldNode, ObjectValueNode } from 'graphql';
 import * as _ from 'lodash';
-import Web3 = require('web3');
-import { EthqlBlock, EthqlTransaction } from '../model';
+import { EthqlAccount, EthqlBlock, EthqlLog, EthqlTransaction, TransactionStatus } from '../model';
 
 const TX_REQUIRING_FIELDS = ['transactions', 'transactionsInvolving', 'transactionsRoles'];
 
-type FetchHints = { transactions?: boolean; logs?: boolean };
+export type FetchHints = { transactions?: boolean; logs?: boolean };
 
-export default class EthService {
-  constructor(private web3: Web3) {}
-
-  public async fetchBlock(id: number | string, infoOrHints: GraphQLResolveInfo | FetchHints): Promise<EthqlBlock> {
-    const hints = (infoOrHints as any).fieldName
-      ? fetchHints(infoOrHints as GraphQLResolveInfo)
-      : (infoOrHints as FetchHints);
-
-    if (hints.logs) {
-      // getPastLogs does not convert number => hex block numbers, so we have to do it manually.
-      const idHex = typeof id === 'number' ? this.web3.utils.toHex(id) : id;
-
-      const [block, logs] = await Promise.all([
-        this.web3.eth.getBlock(id, hints.transactions),
-        this.web3.eth.getPastLogs({ fromBlock: idHex, toBlock: idHex }),
-      ]);
-
-      return block && new EthqlBlock(block, logs);
-    }
-
-    const block = await this.web3.eth.getBlock(id, hints.transactions);
-    return block && new EthqlBlock(block);
-  }
-
-  public async fetchTxFromBlock(blockHash: string, txIndex: number): Promise<EthqlTransaction> {
-    const tx = await this.web3.eth.getTransactionFromBlock(blockHash, txIndex);
-    return tx && new EthqlTransaction(tx);
-  }
-
-  public async fetchStandaloneTx(txHash: string): Promise<EthqlTransaction> {
-    const tx = await this.web3.eth.getTransaction(txHash);
-    return tx && new EthqlTransaction(tx);
-  }
+export interface EthService {
+  fetchBlock(id: number | string, infoOrHints: GraphQLResolveInfo | FetchHints): Promise<EthqlBlock>;
+  fetchTxFromBlock(blockHash: string, txIndex: number): Promise<EthqlTransaction>;
+  fetchStandaloneTx(txHash: string): Promise<EthqlTransaction>;
+  fetchBalance(account: EthqlAccount): Promise<number>;
+  fetchCode(account: EthqlAccount): Promise<string | undefined>;
+  fetchStorage(account: EthqlAccount, position: number): Promise<string>;
+  fetchTransactionCount(account: EthqlAccount): Promise<number>;
+  fetchTransactionLogs(tx: EthqlTransaction): Promise<EthqlLog[]>;
+  fetchCreatedContract(tx: EthqlTransaction): Promise<EthqlAccount>;
+  fetchTransactionStatus(tx: EthqlTransaction): Promise<TransactionStatus>;
 }
 
 /**
@@ -47,7 +24,7 @@ export default class EthService {
  *
  * @param info The GraphQL resolution info.
  */
-function fetchHints(info: GraphQLResolveInfo): FetchHints {
+export function fetchHints(info: GraphQLResolveInfo): FetchHints {
   const txFields = info.fieldNodes[0].selectionSet.selections.filter(
     s => s.kind === 'Field' && TX_REQUIRING_FIELDS.indexOf(s.name.value) >= 0,
   );

@@ -1,8 +1,8 @@
 import config from './config';
 import { EthqlContextFactory } from './context';
 import { initSchema } from './core';
+import { initWeb3 } from './core/services/web3';
 import decodingEngine from './dec';
-import { initWeb3 } from './providers/web3';
 import { EthqlServer } from './server';
 
 console.log(`Effective configuration:\n${JSON.stringify(config, null, 2)}`);

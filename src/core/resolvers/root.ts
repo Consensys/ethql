@@ -132,11 +132,11 @@ async function blocksRange(
   return Promise.all(blocksRange.map(blockNumber => ethService.fetchBlock(blockNumber, info)));
 }
 
-function account(obj: never, { address }): EthqlAccount {
+function account(obj, { address }): EthqlAccount {
   return new EthqlAccount(address);
 }
 
-function transaction(obj: never, { hash }, { ethService }: EthqlContext): Promise<EthqlTransaction> {
+function transaction(obj, { hash }, { ethService }: EthqlContext): Promise<EthqlTransaction> {
   return ethService.fetchStandaloneTx(hash);
 }
 

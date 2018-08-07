@@ -4,7 +4,7 @@ import net = require('net');
 import * as url from 'url';
 import Web3 = require('web3');
 import { Provider } from 'web3/providers';
-import { Options } from '../config';
+import { Options } from '../../config';
 
 interface Matchers {
   [name: string]: {

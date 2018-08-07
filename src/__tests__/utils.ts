@@ -8,8 +8,8 @@ import { JsonRpcRequest, JsonRpcResponse, Provider } from 'web3/providers';
 import { Options } from '../config';
 import { EthqlContext, EthqlContextFactory } from '../context';
 import { initSchema } from '../core';
+import { initWeb3 } from '../core/services/web3';
 import decodingEngine from '../dec';
-import { initWeb3 } from '../providers/web3';
 
 const { sha3 } = new Web3().utils;
 
