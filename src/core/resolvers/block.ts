@@ -51,7 +51,12 @@ async function miner(
 /**
  * Gets the parent block.
  */
-async function parent(obj: EthqlBlock, _, { ethService }: EthqlContext, info: GraphQLResolveInfo): Promise<EthqlBlock> {
+async function parent(
+  obj: EthqlBlock,
+  args,
+  { ethService }: EthqlContext,
+  info: GraphQLResolveInfo,
+): Promise<EthqlBlock> {
   return ethService.fetchBlock(obj.parentHash, info);
 }
 
@@ -65,7 +70,11 @@ function transactions(obj: EthqlBlock, args: TransactionFilter) {
 /**
  * Gets the transaction at the specified index.
  */
-async function transactionAt(obj: EthqlBlock, { index }, { ethService }: EthqlContext): Promise<EthqlTransaction> {
+async function transactionAt(
+  obj: EthqlBlock,
+  { index } /* args */,
+  { ethService }: EthqlContext,
+): Promise<EthqlTransaction> {
   return index < 0 ? null : ethService.fetchTxFromBlock(obj.hash, index);
 }
 

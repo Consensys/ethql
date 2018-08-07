@@ -1,4 +1,4 @@
-import { initWeb3 } from '../../providers/web3';
+import { initWeb3 } from '../../core/services/web3';
 
 function skipIfUndefined(prop: any) {
   return prop ? test : test.skip;
