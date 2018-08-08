@@ -1,6 +1,6 @@
 import { GraphQLResolveInfo } from 'graphql';
 import { EthqlContext } from '../../context';
-import { EthqlBlock, EthqlTransaction } from '../model';
+import { EthqlAccount, EthqlBlock, EthqlTransaction } from '../model';
 
 type TransactionFilter = { filter: { withInput?: boolean; withLogs?: boolean; contractCreation?: boolean } };
 type TransactionsInvolvingArgs = { participants: string[] } & TransactionFilter;
@@ -34,6 +34,18 @@ function transactionFilter({ filter }: TransactionFilter): (tx: EthqlTransaction
 
   // Compose the filters.
   return tx => withInput(tx) && contractCreation(tx) && withLogs(tx);
+}
+
+/**
+ * Gets the miner account.
+ */
+async function miner(
+  obj: EthqlBlock,
+  _,
+  { ethService }: EthqlContext,
+  info: GraphQLResolveInfo,
+): Promise<EthqlAccount> {
+  return new EthqlAccount(obj.miner.address);
 }
 
 /**
@@ -89,6 +101,7 @@ function transactionsRoles(obj: EthqlBlock, args: TransactionsRolesArgs): EthqlT
 
 export default {
   Block: {
+    miner,
     parent,
     transactions,
     transactionAt,

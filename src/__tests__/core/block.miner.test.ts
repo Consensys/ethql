@@ -8,7 +8,12 @@ test('block->miner: successfully returns miner account', async () => {
       block(number: 5771878) {
         miner {
           address
-          code
+          balance
+        }
+        parent {
+          miner {
+            address
+          }
         }
       }
     }`;
@@ -18,7 +23,12 @@ test('block->miner: successfully returns miner account', async () => {
       block: {
         miner: {
           address: '0x829BD824B016326A401d083B33D092293333A830',
-          code: null,
+          balance: 5.112102994617621e21,
+        },
+        parent: {
+          miner: {
+            address: '0xb2930B35844a230f00E51431aCAe96Fe543a0347',
+          },
         },
       },
     },
