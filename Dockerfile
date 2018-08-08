@@ -1,34 +1,42 @@
+##########################################################################
+#
+# Builder image: 
+# Runs module install and compiles TypeScript.
+#
+##########################################################################
+
 FROM node:10 as builder
 
-ENV ETHQL_INSTALL /ethql
+RUN mkdir -p /ethql
+WORKDIR /ethql
 
-RUN mkdir -p ${ETHQL_INSTALL}
-WORKDIR ${ETHQL_INSTALL}
+# Uncomment if patch-package is needed again.
+# ADD patches /ethql/patches
 
 # Install dependencies. This step is performed separately to leverage Docker layer caching.
-COPY package.json yarn.lock ${ETHQL_INSTALL}/
-# Uncomment if patch-package is needed again.
-# ADD patches ${ETHQL_INSTALL}/patches
-RUN yarn install --production
-RUN cp -r node_modules node_modules_production
+COPY package.json yarn.lock /ethql/
+RUN yarn install --production && \
+  cp -R node_modules node_modules_production && \
+  yarn install
 
-RUN yarn install
-
-COPY . ${ETHQL_INSTALL}
+COPY . /ethql
 
 RUN yarn build:ts
 
-
+##########################################################################
+#
+# Production image: 
+# Contains only production dependencies and compiled JS.
+#
+##########################################################################
 
 FROM node:10-alpine
 
-ENV ETHQL_INSTALL /ethql
+RUN mkdir -p /ethql
+WORKDIR /ethql
 
-RUN mkdir -p ${ETHQL_INSTALL}
-WORKDIR ${ETHQL_INSTALL}
-
-COPY --from=builder ${ETHQL_INSTALL}/node_modules_production ${ETHQL_INSTALL}/node_modules
-COPY --from=builder ${ETHQL_INSTALL}/dist ${ETHQL_INSTALL}/dist
+COPY --from=builder /ethql/node_modules_production /ethql/node_modules
+COPY --from=builder /ethql/dist /ethql/dist
 
 ENTRYPOINT [ "node", "/ethql/dist/index.js" ]
 EXPOSE 4000
