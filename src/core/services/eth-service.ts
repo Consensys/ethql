@@ -1,7 +1,7 @@
 import { ArgumentNode, FieldNode, GraphQLResolveInfo, ObjectFieldNode, ObjectValueNode } from 'graphql';
 import * as _ from 'lodash';
 import Web3 = require('web3');
-import { EthqlBlock, EthqlTransaction } from '../model';
+import { EthqlBlock, EthqlOmmerBlock, EthqlTransaction } from '../model';
 
 const TX_REQUIRING_FIELDS = ['transactions', 'transactionsInvolving', 'transactionsRoles'];
 
@@ -29,6 +29,11 @@ export default class EthService {
 
     const block = await this.web3.eth.getBlock(id, hints.transactions);
     return block && new EthqlBlock(block);
+  }
+
+  public async fetchOmmerBlock(id: string, index: number): Promise<EthqlOmmerBlock> {
+    const ommer = await this.web3.eth.getUncle(id, index);
+    return ommer && new EthqlOmmerBlock(ommer);
   }
 
   public async fetchTxFromBlock(blockHash: string, txIndex: number): Promise<EthqlTransaction> {

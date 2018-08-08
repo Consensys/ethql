@@ -1,6 +1,7 @@
 import { GraphQLResolveInfo } from 'graphql';
 import { EthqlContext } from '../../context';
-import { EthqlBlock, EthqlTransaction } from '../model';
+import { EthqlBlock, EthqlOmmerBlock, EthqlTransaction } from '../model';
+import EthService from '../services/eth-service';
 
 type TransactionFilter = { filter: { withInput?: boolean; withLogs?: boolean; contractCreation?: boolean } };
 type TransactionsInvolvingArgs = { participants: string[] } & TransactionFilter;
@@ -34,6 +35,22 @@ function transactionFilter({ filter }: TransactionFilter): (tx: EthqlTransaction
 
   // Compose the filters.
   return tx => withInput(tx) && contractCreation(tx) && withLogs(tx);
+}
+
+/**
+ * Gets the ommer block.
+ */
+async function ommers(
+  obj: EthqlBlock,
+  _,
+  { ethService }: EthqlContext,
+  info: GraphQLResolveInfo,
+): Promise<EthqlOmmerBlock[]> {
+  let ommers: EthqlOmmerBlock[] = [];
+  for (const index of obj.uncles.keys()) {
+    ommers.push(await ethService.fetchOmmerBlock(obj.hash, index));
+  }
+  return ommers;
 }
 
 /**
@@ -89,6 +106,7 @@ function transactionsRoles(obj: EthqlBlock, args: TransactionsRolesArgs): EthqlT
 
 export default {
   Block: {
+    ommers,
     parent,
     transactions,
     transactionAt,

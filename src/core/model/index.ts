@@ -117,6 +117,23 @@ export class EthqlBlock implements EthqlBlock {
   }
 }
 
+export interface EthqlOmmerBlock
+  extends Overwrite<
+      Block,
+      {
+        miner: EthqlAccount;
+      }
+    > {}
+
+export class EthqlOmmerBlock implements EthqlOmmerBlock {
+  constructor(block: Block, logs?: Log[]) {
+    const { miner, ...rest } = block;
+    Object.assign(this, rest);
+
+    this.miner = new EthqlAccount(block.miner);
+  }
+}
+
 export enum StorageObjectType {
   MAP_ADDRESS_KEY,
   MAP_NUMBER_KEY,
