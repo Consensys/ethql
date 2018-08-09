@@ -31,8 +31,8 @@ export default class EthService {
     return block && new EthqlBlock(block);
   }
 
-  public async fetchOmmerBlock(id: string, index: number): Promise<EthqlOmmerBlock> {
-    const ommer = await this.web3.eth.getUncle(id, index);
+  public async fetchOmmerBlock(blockHashOrNumber: string | number, index: number): Promise<EthqlOmmerBlock> {
+    const ommer = await this.web3.eth.getUncle(blockHashOrNumber, index);
     return ommer && new EthqlOmmerBlock(ommer);
   }
 

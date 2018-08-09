@@ -46,11 +46,7 @@ async function ommers(
   { ethService }: EthqlContext,
   info: GraphQLResolveInfo,
 ): Promise<EthqlOmmerBlock[]> {
-  let ommers: EthqlOmmerBlock[] = [];
-  for (const index of obj.uncles.keys()) {
-    ommers.push(await ethService.fetchOmmerBlock(obj.hash, index));
-  }
-  return ommers;
+  return Promise.all(obj.uncles.map((elem, index) => ethService.fetchOmmerBlock(obj.hash, index)));
 }
 
 /**
