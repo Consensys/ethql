@@ -1,24 +1,43 @@
-FROM node:10-alpine
+##########################################################################
+#
+# Builder image: 
+# Runs module install and compiles TypeScript.
+#
+##########################################################################
 
-ENV ETHQL_INSTALL /ethql
-RUN \
-  mkdir ${ETHQL_INSTALL} && \
-  apk update && apk upgrade && \
-  apk add --no-cache bash && \
-  apk add --no-cache --virtual .build-deps git openssh python build-base
+FROM node:10 as builder
 
-WORKDIR ${ETHQL_INSTALL}
+RUN mkdir -p /ethql
+WORKDIR /ethql
+
+# Uncomment if patch-package is needed again.
+# ADD patches /ethql/patches
 
 # Install dependencies. This step is performed separately to leverage Docker layer caching.
-COPY package.json yarn.lock ${ETHQL_INSTALL}/
-# Uncomment if patch-package is needed again.
-# ADD patches ${ETHQL_INSTALL}/patches
-RUN \
-  yarn install --production && \
-  apk del .build-deps && \
-  rm -rf /var/cache/apk/*
+COPY package.json yarn.lock /ethql/
+RUN yarn install --production && \
+  cp -R node_modules node_modules_production && \
+  yarn install
 
-ADD dist ${ETHQL_INSTALL}
-ENTRYPOINT [ "node", "/ethql/index.js" ]
+COPY . /ethql
+
+RUN yarn build:ts
+
+##########################################################################
+#
+# Production image: 
+# Contains only production dependencies and compiled JS.
+#
+##########################################################################
+
+FROM node:10-alpine
+
+RUN mkdir -p /ethql
+WORKDIR /ethql
+
+COPY --from=builder /ethql/node_modules_production /ethql/node_modules
+COPY --from=builder /ethql/dist /ethql/dist
+
+ENTRYPOINT [ "node", "/ethql/dist/index.js" ]
 EXPOSE 4000
 STOPSIGNAL 9
