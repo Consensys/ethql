@@ -1,6 +1,7 @@
 import { GraphQLResolveInfo } from 'graphql';
 import { EthqlContext } from '../../context';
-import { EthqlAccount, EthqlBlock, EthqlTransaction } from '../model';
+import { EthqlAccount, EthqlBlock, EthqlOmmerBlock, EthqlTransaction } from '../model';
+import EthService from '../services/eth-service';
 
 type TransactionFilter = { filter: { withInput?: boolean; withLogs?: boolean; contractCreation?: boolean } };
 type TransactionsInvolvingArgs = { participants: string[] } & TransactionFilter;
@@ -43,9 +44,21 @@ async function miner(
   obj: EthqlBlock,
   _,
   { ethService }: EthqlContext,
-  info: GraphQLResolveInfo,
+  info: GraphQLResolveInfo
 ): Promise<EthqlAccount> {
   return new EthqlAccount(obj.miner.address);
+}
+
+/**
+ * Gets the ommer block.
+ */
+async function ommers(
+  obj: EthqlBlock,
+  _,
+  { ethService }: EthqlContext,
+  info: GraphQLResolveInfo
+): Promise<EthqlOmmerBlock[]> {
+  return Promise.all(obj.uncles.map((elem, index) => ethService.fetchOmmerBlock(obj.hash, index)));
 }
 
 /**
@@ -102,6 +115,7 @@ function transactionsRoles(obj: EthqlBlock, args: TransactionsRolesArgs): EthqlT
 export default {
   Block: {
     miner,
+    ommers,
     parent,
     transactions,
     transactionAt,
