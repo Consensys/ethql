@@ -1,12 +1,10 @@
 import config from './config';
 import core from './core';
-import { initWeb3 } from './core/services/web3';
 import erc20 from './erc20';
 import { EthqlServer } from './server';
 
 console.log(`Effective configuration:\n${JSON.stringify(config, null, 2)}`);
 
-const web3 = initWeb3(config);
 const server = new EthqlServer({
   config,
   plugins: [core, erc20]
