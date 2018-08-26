@@ -1,6 +1,16 @@
 import { ArgumentNode, FieldNode, GraphQLResolveInfo, ObjectFieldNode, ObjectValueNode } from 'graphql';
 import * as _ from 'lodash';
-import { EthqlAccount, EthqlBlock, EthqlLog, EthqlTransaction, TransactionStatus } from '../model';
+import { EthqlAccount, EthqlBlock, EthqlLog, EthqlTransaction, TransactionStatus } from '../../model';
+
+declare module '../../../services' {
+  interface EthqlServices {
+    ethService: EthService;
+  }
+
+  interface EthqlServiceDefinitions {
+    ethService: EthqlServiceDefinition<{}, EthService>;
+  }
+}
 
 const TX_REQUIRING_FIELDS = ['transactions', 'transactionsInvolving', 'transactionsRoles'];
 

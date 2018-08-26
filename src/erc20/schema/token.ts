@@ -1,3 +1,4 @@
+export default `
 type TokenHolder {
   account: Account!
   tokenBalance: Long
@@ -8,3 +9,4 @@ type TokenContract {
   symbol: String
   totalSupply: Long
 }
+`;

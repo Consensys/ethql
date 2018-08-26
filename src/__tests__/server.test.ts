@@ -1,13 +1,15 @@
 import axios from 'axios';
-import * as net from 'net';
-import { EthqlServer } from '../server';
-import { testGraphql, TestMode, TestOptions } from './utils';
+import * as _ from 'lodash';
+import { EthqlServer, EthqlServerOpts } from '../server';
+import { defaultTestServerOpts } from './utils';
+
+import availablePort = require('get-port');
 
 const testServers: EthqlServer[] = [];
 
-const newServer = async (options?: TestOptions) => {
-  const { schema, ctxFactory } = options ? testGraphql(options) : testGraphql();
-  const server = new EthqlServer({ schema, ctxFactory });
+const newServer = async (options: EthqlServerOpts = {}) => {
+  // _.merge mutates the initial object; hence we use a fresh empty obj.
+  const server = new EthqlServer(_.merge({}, defaultTestServerOpts, options));
   testServers.push(server);
 
   await server.start();
@@ -30,14 +32,6 @@ afterAll(async () => {
   console.log('Test servers shut down.');
 });
 
-const availablePort = async () => {
-  const srv = net.createServer();
-  await srv.listen(0);
-  const port = (srv.address() as net.AddressInfo).port;
-  await srv.close();
-  return port;
-};
-
 test('server starts with random port', async () => {
   const server = await newServer();
   expect(server.address.port).toBeGreaterThan(0);
@@ -45,7 +39,7 @@ test('server starts with random port', async () => {
 
 test('server starts with an available port', async () => {
   const port = await availablePort();
-  const server = await newServer({ configOverride: { port } });
+  const server = await newServer({ config: { port } });
   expect(server.address.port).toBe(port);
 });
 
@@ -76,15 +70,10 @@ test('stop twice throws on second attempt', async () => {
   fail('Expected when starting server twice exception');
 });
 
-test('server starts with random port', async () => {
-  const server = await newServer();
-  expect(server.address.port).toBeGreaterThan(0);
-});
-
 test('JSON RPC endpoint configuration works correctly', async () => {
   const servers = {
-    ropsten: await newServer({ configOverride: { jsonrpc: 'https://ropsten.infura.io' }, mode: TestMode.passthrough }),
-    mainnet: await newServer({ mode: TestMode.replay }),
+    ropsten: await newServer({ config: { jsonrpc: 'https://ropsten.infura.io' } }),
+    mainnet: await newServer(),
   };
 
   const hashes = Object.values(servers).map(async s => {

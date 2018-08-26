@@ -10,6 +10,6 @@ import storage from './storage';
 import transaction from './transaction';
 
 export default [root, block, transaction, account, log, storage, scalars, health].reduce(
-  (prev, curr) => _.merge(curr, prev),
+  (prev, curr) => _.merge({}, curr, prev),
   {},
 );

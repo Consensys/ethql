@@ -1,6 +1,8 @@
+import core from '../../core';
+import erc20 from '../../erc20';
 import { testGraphql } from '../utils';
 
-const { execQuery } = testGraphql();
+const { execQuery } = testGraphql({ optsOverride: { plugins: [core, erc20] } });
 
 test('erc20: not decodable', async () => {
   const query = `

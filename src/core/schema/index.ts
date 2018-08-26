@@ -1,4 +1,5 @@
-type Query {
+export default `
+extend type Query {
   "Selects an account."
   account(address: Address!): Account
 
@@ -450,3 +451,4 @@ scalar Bytes32
 scalar BlockNumber
 
 scalar Address
+`;

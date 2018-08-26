@@ -7,7 +7,7 @@ let spy: jest.SpyInstance;
 
 beforeEach(() => {
   context = prepareContext();
-  spy = jest.spyOn(context.web3.eth, 'getBlock');
+  spy = jest.spyOn(context.services.web3.eth, 'getBlock');
 });
 
 afterEach(() => {

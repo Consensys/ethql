@@ -5,22 +5,25 @@ import * as path from 'path';
 import { promisify } from 'util';
 import Web3 = require('web3');
 import { JsonRpcRequest, JsonRpcResponse, Provider } from 'web3/providers';
-import { Options } from '../config';
-import { EthqlContext, EthqlContextFactory } from '../context';
-import { initSchema } from '../core';
-import { initWeb3 } from '../core/services/web3';
-import decodingEngine from '../dec';
+import { bootstrap } from '../bootstrap';
+import { EthqlContext } from '../context';
+import core from '../core';
+import { EthqlServerOpts } from '../server';
 
 const { sha3 } = new Web3().utils;
 
 /**
  * Default ethql options.
  */
-const options: Options = {
-  jsonrpc: 'https://mainnet.infura.io',
-  queryMaxSize: 10,
-  batching: true,
-  caching: true,
+export const defaultTestServerOpts: EthqlServerOpts = {
+  config: {
+    jsonrpc: 'https://mainnet.infura.io',
+    queryMaxSize: 10,
+    batching: true,
+    caching: true,
+    port: 0
+  },
+  plugins: [core]
 };
 
 /**
@@ -56,7 +59,7 @@ const computeFilename = (rq: JsonRpcRequest) => {
  * determined by the `computeFilename` function.
  */
 class RecordingProvider implements Provider {
-  constructor(private delegate: Provider) {}
+  constructor(private delegate: Provider) { }
 
   public send(
     payload: JsonRpcRequest | JsonRpcRequest[],
@@ -89,7 +92,7 @@ class RecordingProvider implements Provider {
 class ReplayingProvider implements Provider {
   private static readFile = promisify(fs.readFile);
 
-  constructor(private delegate: Provider) {}
+  constructor(private delegate: Provider) { }
 
   public send(
     payload: JsonRpcRequest | JsonRpcRequest[],
@@ -131,12 +134,11 @@ export enum TestMode {
  * Test runner options.
  */
 export type TestOptions = {
-  configOverride?: Options;
+  optsOverride?: EthqlServerOpts;
   mode?: TestMode;
 };
 
 const defaultTestOptions: TestOptions = {
-  configOverride: {},
   mode: testMode in TestMode ? TestMode[testMode] : TestMode.replay,
 };
 
@@ -146,32 +148,30 @@ const defaultTestOptions: TestOptions = {
  * @param testOptions Options for the test runner.
  */
 export function testGraphql(testOptions: TestOptions = defaultTestOptions) {
-  const { configOverride, mode } = testOptions;
+  const { mode, optsOverride } = testOptions;
   if (mode === TestMode.record || mode === TestMode.replay) {
     ensureDataDir();
   }
 
-  const config = _.merge({}, options, configOverride || {});
-  const _factory = initWeb3(config);
+  const serverOpts = _.merge({}, defaultTestServerOpts, optsOverride || {});
 
-  const web3Factory = () => {
-    const w3 = _factory();
-    w3.currentProvider =
+  const { schema, serviceFactories } = bootstrap(serverOpts);
+
+  const prepareContext = () => {
+    const ctx = new EthqlContext(serverOpts.config, serviceFactories);
+    const { web3 } = ctx.services;
+    web3.currentProvider =
       mode === TestMode.record
-        ? new RecordingProvider(w3.currentProvider)
+        ? new RecordingProvider(web3.currentProvider)
         : mode === TestMode.replay
-          ? new ReplayingProvider(w3.currentProvider)
-          : w3.currentProvider;
-    return w3;
+          ? new ReplayingProvider(web3.currentProvider)
+          : web3.currentProvider;
+    return ctx;
   };
-
-  const ctxFactory = new EthqlContextFactory(web3Factory, config, decodingEngine);
-  const schema = initSchema();
-  const prepareContext = () => ctxFactory.create();
 
   const execQuery = (query: string, context?: EthqlContext, variables?: { [key: string]: any }) => {
     return graphql(schema, query, {}, context || prepareContext(), variables);
   };
 
-  return { schema, prepareContext, execQuery, ctxFactory };
+  return { schema, prepareContext, execQuery };
 }
