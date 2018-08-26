@@ -41,8 +41,8 @@ function transactionFilter({ filter }: TransactionFilter): (tx: EthqlTransaction
  */
 async function miner(
   obj: EthqlBlock,
-  _,
-  { ethService }: EthqlContext,
+  { },
+  { }: EthqlContext,
   info: GraphQLResolveInfo,
 ): Promise<EthqlAccount> {
   return new EthqlAccount(obj.miner.address);

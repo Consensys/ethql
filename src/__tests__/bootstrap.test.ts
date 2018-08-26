@@ -6,6 +6,7 @@ declare module '../services' {
     testService: EthqlServiceDefinition<string[], {}>;
   }
 }
+
 test('bootstrap: error when core plugin not loaded', () => {
   const plugin1: EthqlPluginFactory = () => ({
     name: 'plugin1',
