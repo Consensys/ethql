@@ -49,4 +49,4 @@ const env: Options = {
   caching: process.env.ETHQL_CACHING === undefined ? undefined : process.env.ETHQL_CACHING === 'true',
 };
 
-export default _.merge(options, env);
+export default _.merge({}, options, env);

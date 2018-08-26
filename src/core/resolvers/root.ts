@@ -15,12 +15,7 @@ type BlocksArgs = { numbers?: number[]; hashes?: string[] };
 // Select multiple blocks.
 type BlocksRangeArgs = { numberRange?: [number, number]; hashRange?: [string, string] };
 
-async function block(
-  obj,
-  args: BlockArgs,
-  { ethService }: EthqlContext,
-  info: GraphQLResolveInfo,
-): Promise<EthqlBlock> {
+async function block(obj, args: BlockArgs, { services }: EthqlContext, info: GraphQLResolveInfo): Promise<EthqlBlock> {
   let { number: blockNumber, hash, tag } = args;
   hash = hash ? hash.trim() : hash;
   tag = tag ? tag.trim().toLowerCase() : tag;
@@ -34,13 +29,13 @@ async function block(
     throw new Error('Only one of number, hash or tag argument should be provided.');
   }
 
-  return ethService.fetchBlock(params[0], info);
+  return services.ethService.fetchBlock(params[0], info);
 }
 
 async function blockOffset(
   obj: never,
   args: BlockOffsetArgs,
-  { ethService }: EthqlContext,
+  { services }: EthqlContext,
   info: GraphQLResolveInfo,
 ): Promise<EthqlBlock> {
   const { number, hash, tag, offset } = args;
@@ -55,14 +50,14 @@ async function blockOffset(
     throw new Error('Only one of number, hash or tag argument should be provided.');
   }
 
-  const blockNumber = number || (await ethService.fetchBlock(hash || tag.toLowerCase(), {})).number;
-  return ethService.fetchBlock(blockNumber + offset, info);
+  const blockNumber = number || (await services.ethService.fetchBlock(hash || tag.toLowerCase(), {})).number;
+  return services.ethService.fetchBlock(blockNumber + offset, info);
 }
 
 async function blocks(
   obj: never,
   { numbers, hashes }: BlocksArgs,
-  { ethService, config }: EthqlContext,
+  { services, config }: EthqlContext,
   info: GraphQLResolveInfo,
 ): Promise<EthqlBlock[]> {
   const { queryMaxSize } = config;
@@ -80,8 +75,8 @@ async function blocks(
   }
 
   let input = numbers
-    ? numbers.map(n => ethService.fetchBlock(n, info))
-    : hashes.map(h => ethService.fetchBlock(h, info));
+    ? numbers.map(n => services.ethService.fetchBlock(n, info))
+    : hashes.map(h => services.ethService.fetchBlock(h, info));
 
   return Promise.all(input);
 }
@@ -89,7 +84,7 @@ async function blocks(
 async function blocksRange(
   obj: never,
   { numberRange, hashRange }: BlocksRangeArgs,
-  { ethService, config }: EthqlContext,
+  { services, config }: EthqlContext,
   info: GraphQLResolveInfo,
 ): Promise<EthqlBlock[]> {
   if (numberRange && hashRange) {
@@ -111,7 +106,7 @@ async function blocksRange(
     }
   } else if (hashRange && hashRange.length === 2) {
     // We've received start and end hashes, so we need to resolve them to block numbers first to delimit the range.
-    const blocks = await Promise.all(hashRange.map(b => ethService.fetchBlock(b as any, {})));
+    const blocks = await Promise.all(hashRange.map(b => services.ethService.fetchBlock(b as any, {})));
     if (blocks.indexOf(null) >= 0) {
       throw new Error('Could not resolve the block associated with one or all hashes.');
     }
@@ -129,15 +124,15 @@ async function blocksRange(
   }
 
   const blocksRange = Array.from({ length: end - start + 1 }, (_, k) => k + start);
-  return Promise.all(blocksRange.map(blockNumber => ethService.fetchBlock(blockNumber, info)));
+  return Promise.all(blocksRange.map(blockNumber => services.ethService.fetchBlock(blockNumber, info)));
 }
 
 function account(obj, { address }): EthqlAccount {
   return new EthqlAccount(address);
 }
 
-function transaction(obj, { hash }, { ethService }: EthqlContext): Promise<EthqlTransaction> {
-  return ethService.fetchStandaloneTx(hash);
+function transaction(obj, { hash }, { services }: EthqlContext): Promise<EthqlTransaction> {
+  return services.ethService.fetchStandaloneTx(hash);
 }
 
 export default {

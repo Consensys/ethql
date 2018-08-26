@@ -1,6 +1,7 @@
+import Web3 = require('web3');
 import { testGraphql } from '../utils';
 
-const { execQuery, ctxFactory } = testGraphql();
+const { execQuery } = testGraphql();
 
 test('account: select by address', async () => {
   const query = `
@@ -48,8 +49,7 @@ test('account: select account balance', async () => {
 
 test('account: select account balance with unit conversion', async () => {
   let cmpr; // variable for baseline of comparison, in wei, for conversion
-  const { web3 } = ctxFactory.create();
-  for (const unit of Object.keys(web3.utils.unitMap)) {
+  for (const unit of Object.keys(Web3.utils.unitMap)) {
     if (unit === 'noether') {
       continue;
     }
@@ -66,7 +66,7 @@ test('account: select account balance with unit conversion', async () => {
     if (!cmpr) {
       cmpr = result;
     } // set baseline of comparison in wei
-    expect(result).toEqual((cmpr / web3.utils.unitMap[unit]).toFixed(5)); // compare conversion in wei to baseline
+    expect(result).toEqual((cmpr / Web3.utils.unitMap[unit]).toFixed(5)); // compare conversion in wei to baseline
   }
 });
 

@@ -1,31 +1,31 @@
 import { GraphQLResolveInfo } from 'graphql';
 import { EthqlContext } from '../../context';
-import { DecodedTransaction } from '../../dec/types';
 import { EthqlAccount, EthqlBlock, EthqlLog, EthqlTransaction, TransactionStatus } from '../model';
+import { DecodedTransaction } from '../services/decoder';
 
-async function logs(obj: EthqlTransaction, args, { ethService }: EthqlContext): Promise<EthqlLog[]> {
-  return obj.logs || ethService.fetchTransactionLogs(obj);
+async function logs(obj: EthqlTransaction, args, { services }: EthqlContext): Promise<EthqlLog[]> {
+  return obj.logs || services.ethService.fetchTransactionLogs(obj);
 }
 
 function decoded(obj: EthqlTransaction, args, context: EthqlContext): DecodedTransaction {
-  return obj.inputData && obj.inputData !== '0x' ? context.decodingEngine.decodeTransaction(obj, context) : null;
+  return obj.inputData && obj.inputData !== '0x' ? context.services.decoder.decodeTransaction(obj, context) : null;
 }
 
 async function block(
   obj: EthqlTransaction,
   args,
-  { ethService }: EthqlContext,
+  { services }: EthqlContext,
   info: GraphQLResolveInfo,
 ): Promise<EthqlBlock> {
-  return obj.blockNumber ? ethService.fetchBlock(obj.blockNumber, info) : null;
+  return obj.blockNumber ? services.ethService.fetchBlock(obj.blockNumber, info) : null;
 }
 
-async function status(obj: EthqlTransaction, args, { ethService }: EthqlContext): Promise<TransactionStatus> {
-  return ethService.fetchTransactionStatus(obj);
+async function status(obj: EthqlTransaction, args, { services }: EthqlContext): Promise<TransactionStatus> {
+  return services.ethService.fetchTransactionStatus(obj);
 }
 
-async function createdContract(obj: EthqlTransaction, args, { ethService }: EthqlContext): Promise<EthqlAccount> {
-  return ethService.fetchCreatedContract(obj);
+async function createdContract(obj: EthqlTransaction, args, { services }: EthqlContext): Promise<EthqlAccount> {
+  return services.ethService.fetchCreatedContract(obj);
 }
 
 export default {

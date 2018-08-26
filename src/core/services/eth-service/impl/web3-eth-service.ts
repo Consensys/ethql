@@ -1,7 +1,7 @@
 import { GraphQLResolveInfo } from 'graphql';
 import Web3 = require('web3');
-import { EthqlAccount, EthqlBlock, EthqlLog, EthqlTransaction, TransactionStatus } from '../model';
-import { EthService, fetchHints, FetchHints } from './eth-service';
+import { EthService, fetchHints, FetchHints } from '..';
+import { EthqlAccount, EthqlBlock, EthqlLog, EthqlTransaction, TransactionStatus } from '../../../model';
 
 export class Web3EthService implements EthService {
   constructor(private web3: Web3) {}

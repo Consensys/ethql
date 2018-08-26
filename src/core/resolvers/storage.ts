@@ -63,14 +63,18 @@ function solidityMap(
 /**
  * Compiles the cumulative query from the path and value query and returns the contract's storage at that location.
  */
-async function value({ address, path }: StorageAccessor, { at: selector }, { web3 }: EthqlContext): Promise<string> {
+async function value(
+  { address, path }: StorageAccessor,
+  { at: selector },
+  { services }: EthqlContext,
+): Promise<string> {
   if (!address) {
     return;
   }
   const accessor = path.push({ selector, type: null });
   const reducer = (acc, curr) => ({ base: computeSlot(curr, acc.base, acc.prevType), prevType: curr.type });
   const { base: loc } = accessor.reduce(reducer, { base: null, prevType: null });
-  return web3.eth.getStorageAt(address, loc);
+  return services.web3.eth.getStorageAt(address, loc);
 }
 
 const resolvers = {

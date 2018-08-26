@@ -1,5 +1,20 @@
-import { EthqlContext } from '../context';
-import { EthqlLog, EthqlTransaction } from '../core/model';
+import { EthqlContext } from '../../../context';
+import { EthqlLog, EthqlTransaction } from '../../model';
+
+declare module '../../../services' {
+  interface EthqlServices {
+    decoder: DecodingEngine;
+  }
+
+  interface EthqlServiceDefinitions {
+    decoder: EthqlServiceDefinition<
+      {
+        decoders: Array<DecoderDefinition<any, any>>;
+      },
+      DecodingEngine
+    >;
+  }
+}
 
 // Defines the entity to which the standard belongs.
 // As we support new standards, this union type will expand.
@@ -51,6 +66,25 @@ export type DecodedLog = {
  * A decoding engine.
  */
 export type DecodingEngine = {
+  register: (decoder: DecoderDefinition<any, any>) => void;
   decodeTransaction(tx: EthqlTransaction, context: EthqlContext): DecodedTransaction;
   decodeLog(tx: EthqlLog, context: EthqlContext): DecodedLog;
 };
+
+/**
+ *
+ * @param params
+ * @param name
+ */
+export function extractParamValue(params: [any], name: string) {
+  if (Array.isArray(params) && params.length >= 0) {
+    const param = params.find(p => name === p.name);
+    return param && param.value;
+  }
+}
+
+export function createAbiDecoder(path: string): AbiDecoder {
+  const decoder = require('abi-decoder');
+  decoder.addABI(require(path));
+  return decoder;
+}

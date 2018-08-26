@@ -1,7 +1,7 @@
 import * as _ from 'lodash';
-import { EthqlContext } from '../../context';
-import { EthqlLog, EthqlTransaction } from '../../core/model';
-import { DecodedLog, DecodedTransaction, DecoderDefinition, DecodingEngine } from '../types';
+import { DecodedLog, DecodedTransaction, DecoderDefinition, DecodingEngine } from '..';
+import { EthqlContext } from '../../../../context';
+import { EthqlLog, EthqlTransaction } from '../../../model';
 
 /**
  * A transaction decoding engine that matches the incoming transaction against a list of known ABIs.

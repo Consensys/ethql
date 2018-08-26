@@ -1,7 +1,9 @@
 import * as _ from 'lodash';
+import core from '../../core';
+import erc20 from '../../erc20';
 import { testGraphql } from '../utils';
 
-const { execQuery } = testGraphql();
+const { execQuery } = testGraphql({ optsOverride: { plugins: [core, erc20] } });
 
 test('logs: fetch logs from all transactions', async () => {
   const query = `

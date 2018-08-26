@@ -1,91 +1,25 @@
-import Contract from 'web3/eth/contract';
 import { EthqlContext } from '../../context';
 import { EthqlAccount, EthqlTransaction } from '../../core/model';
-import { DecoderDefinition } from '../types';
-import { createAbiDecoder, extractParamValue } from '../utils';
+import { createAbiDecoder, DecoderDefinition, extractParamValue } from '../../core/services/decoder';
+import {
+  ERC20ApprovalEvent,
+  Erc20Approve,
+  Erc20TokenContract,
+  Erc20TokenHolder,
+  Erc20Transfer,
+  ERC20TransferEvent,
+  Erc20TransferFrom,
+} from '../model';
 
-interface Erc20Transaction {
-  tokenContract: Erc20TokenContract;
-}
-
-class Erc20TokenContract {
-  private static ABI = require(__dirname + '../../../abi/erc20.json');
-  private _contract: Contract;
-
-  constructor(public readonly account: EthqlAccount, readonly context: EthqlContext) {
-    this._contract = new context.web3.eth.Contract(Erc20TokenContract.ABI, account.address);
-  }
-
-  public async symbol() {
-    return this._contract.methods
-      .symbol()
-      .call()
-      .catch(() => undefined);
-  }
-
-  public async totalSupply() {
-    return this._contract.methods
-      .totalSupply()
-      .call()
-      .catch(() => undefined);
-  }
-
-  public async balanceOf({ address }: { address: string }) {
-    return this._contract.methods
-      .balanceOf(address)
-      .call()
-      .catch(() => undefined);
-  }
-}
-
-class Erc20TokenHolder {
-  constructor(public readonly account: EthqlAccount, private readonly contract: Erc20TokenContract) {}
-
-  public async tokenBalance() {
-    return this.contract.balanceOf({ ...this.account });
-  }
-}
-
-interface Erc20Transfer extends Erc20Transaction {
-  from: Erc20TokenHolder;
-  to: Erc20TokenHolder;
-  value: string;
-}
-
-interface Erc20Approve extends Erc20Transaction {
-  from: Erc20TokenHolder;
-  spender: Erc20TokenHolder;
-  value: string;
-}
-
-interface Erc20TransferFrom extends Erc20Transaction {
-  from: Erc20TokenHolder;
-  to: Erc20TokenHolder;
-  spender: Erc20TokenHolder;
-  value: string;
-}
+type Erc20LogBindings = {
+  Transfer: ERC20TransferEvent;
+  Approval: ERC20ApprovalEvent;
+};
 
 type Erc20TxBindings = {
   transfer: Erc20Transfer;
   approve: Erc20Approve;
   transferFrom: Erc20TransferFrom;
-};
-
-type ERC20TransferEvent = {
-  from: Erc20TokenHolder;
-  to: Erc20TokenHolder;
-  value: string;
-};
-
-type ERC20ApprovalEvent = {
-  owner: Erc20TokenHolder;
-  spender: Erc20TokenHolder;
-  value: string;
-};
-
-type Erc20LogBindings = {
-  Transfer: ERC20TransferEvent;
-  Approval: ERC20ApprovalEvent;
 };
 
 /**
@@ -161,4 +95,4 @@ class Erc20TokenDecoder implements DecoderDefinition<Erc20TxBindings, Erc20LogBi
   };
 }
 
-export default Erc20TokenDecoder;
+export { Erc20TokenDecoder };

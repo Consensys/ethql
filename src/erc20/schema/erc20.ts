@@ -1,6 +1,4 @@
-# import Account, DecodedTransaction, Entity, DecodedLog from "core.graphql"
-# import * from "token.graphql"
-
+export default `
 interface ERC20Transaction {
   tokenContract: TokenContract
 }
@@ -53,3 +51,4 @@ type ERC20ApprovalEvent implements DecodedLog {
   spender: TokenHolder
   value: String
 }
+`;

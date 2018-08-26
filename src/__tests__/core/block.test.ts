@@ -1,4 +1,5 @@
-import { testGraphql } from '../utils';
+import { PassThrough } from 'stream';
+import { testGraphql, TestMode } from '../utils';
 
 const { execQuery } = testGraphql();
 
@@ -17,6 +18,7 @@ test('block: select single block by number', async () => {
 });
 
 test('block: select single block by tag', async () => {
+  const { execQuery } = testGraphql({ mode: TestMode.passthrough });
   const query = `
     {
       block(tag: LATEST) {
