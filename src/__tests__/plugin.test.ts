@@ -6,14 +6,16 @@ test('plugins: plugin resolvers are used', async () => {
   const testPlugin: EthqlPluginFactory = () => ({
     name: 'test-plugin',
     priority: 1000,
-    schema: [`extend type Query {
+    schema: [
+      `extend type Query {
       test: String
-    }`],
+    }`,
+    ],
     resolvers: {
       Query: {
-        test: () => 'testReply'
-      }
-    }
+        test: () => 'testReply',
+      },
+    },
   });
 
   const { execQuery } = testGraphql({ optsOverride: { plugins: [core, testPlugin] } });
@@ -23,5 +25,4 @@ test('plugins: plugin resolvers are used', async () => {
   }`);
 
   expect(resp.data.test).toEqual('testReply');
-
 });

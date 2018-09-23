@@ -10,11 +10,11 @@ export type EthqlServiceDefinition<Config, Service> = {
 
 export type EthqlServiceFactories = {
   [P in keyof EthqlServiceDefinitions]: EthqlServiceDefinitions[P] extends EthqlServiceDefinition<
-  infer Config,
-  infer Service
+    infer Config,
+    infer Service
   >
-  ? (context: EthqlContext) => Service
-  : never
+    ? (context: EthqlContext) => Service
+    : never
 };
 
 /**

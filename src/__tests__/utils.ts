@@ -21,9 +21,9 @@ export const defaultTestServerOpts: EthqlServerOpts = {
     queryMaxSize: 10,
     batching: true,
     caching: true,
-    port: 0
+    port: 0,
   },
-  plugins: [core]
+  plugins: [core],
 };
 
 /**
@@ -59,7 +59,7 @@ const computeFilename = (rq: JsonRpcRequest) => {
  * determined by the `computeFilename` function.
  */
 class RecordingProvider implements Provider {
-  constructor(private delegate: Provider) { }
+  constructor(private delegate: Provider) {}
 
   public send(
     payload: JsonRpcRequest | JsonRpcRequest[],
@@ -92,7 +92,7 @@ class RecordingProvider implements Provider {
 class ReplayingProvider implements Provider {
   private static readFile = promisify(fs.readFile);
 
-  constructor(private delegate: Provider) { }
+  constructor(private delegate: Provider) {}
 
   public send(
     payload: JsonRpcRequest | JsonRpcRequest[],

@@ -36,7 +36,7 @@ export class EthqlServer {
   private _address: AddressInfo;
   private _status: ServerStatus = 'stopped';
 
-  constructor(private opts: EthqlServerOpts) { }
+  constructor(private opts: EthqlServerOpts) {}
 
   public async start() {
     if (this._status !== 'stopped') {

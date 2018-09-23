@@ -7,7 +7,7 @@ console.log(`Effective configuration:\n${JSON.stringify(config, null, 2)}`);
 
 const server = new EthqlServer({
   config,
-  plugins: [core, erc20]
+  plugins: [core, erc20],
 });
 
 process.on('SIGINT', async () => (await server.stop()) || process.exit(0));
