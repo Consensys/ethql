@@ -1,3 +1,4 @@
+import { graphql } from 'graphql';
 import { bootstrap } from '../bootstrap';
 import { EthqlPluginFactory } from '../plugin';
 
@@ -168,4 +169,35 @@ test('bootstrap: service configuration merged', () => {
   });
 
   expect(config).toEqual(['value1', 'value2']);
+});
+
+test('bootstrap with wrapping resolver', async () => {
+  const core: EthqlPluginFactory = () => ({
+    name: 'core',
+    priority: 10,
+    schema: ['extend type Query { one: String }'],
+    resolvers: {
+      Query: {
+        one: () => 'one original',
+      },
+    },
+  });
+
+  const wrapper: EthqlPluginFactory = () => ({
+    name: 'wrapper',
+    priority: 20,
+    resolvers: prev => ({
+      Query: {
+        one: () => `wrapped_${((prev.Query as any).one as Function)()}`,
+      },
+    }),
+  });
+
+  const result = bootstrap({
+    config: {},
+    plugins: [core, wrapper],
+  });
+
+  const resp = await graphql(result.schema, '{ one }');
+  expect(resp.data.one).toBe('wrapped_one original');
 });

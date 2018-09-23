@@ -4,7 +4,6 @@ import { EthqlServerOpts } from './server';
 import { EthqlServiceDefinitions, EthqlServices } from './services';
 
 export interface EthqlPlugin {
-
   /**
    * A unique identifier for this plugin.
    */
@@ -25,7 +24,7 @@ export interface EthqlPlugin {
    * The resolver tree this plugin adds. It will be deeply merged via reduction with other plugins,
    * where the sequence is determined by the priority and the order.
    */
-  resolvers?: IResolvers<any, any>;
+  resolvers?: IResolvers<any, any> | ((prev: IResolvers<any, any>) => IResolvers<any, any>);
 
   /**
    * The services this plugin adds or modifies. Plugins can replace implementations of services,

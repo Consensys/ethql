@@ -12,7 +12,7 @@ import { EthqlServiceDefinitions, EthqlServiceFactories } from './services';
 type MergeResult = {
   config: Options;
   schema: string[];
-  resolvers: IResolvers[];
+  resolvers: IResolvers<any, any>;
   serviceDefinitions: Partial<EthqlServiceDefinitions>;
 };
 
@@ -23,13 +23,14 @@ export type EthqlBootstrapResult = {
   serviceFactories: EthqlServiceFactories;
 };
 
-const ERR_MSG_NO_PLUGINS = 'Cannot start EthQL without plugins; ' +
+const ERR_MSG_NO_PLUGINS =
+  'Cannot start EthQL without plugins; ' +
   "this is likely an internal error as at least the 'core' plugin should be present.";
 const ERR_MSG_CORE_REQUIRED = "'core' plugin is required.";
 const ERR_MSG_NO_ROOT = 'Plugin graph contains no root, or contains cycles.';
-const ERR_MSG_MISSING_SERVICES = (missingServices) =>
+const ERR_MSG_MISSING_SERVICES = missingServices =>
   `Missing services: ${missingServices.map(({ name, missing }) => `${missing}, required by: ${name}`).join(';')}`;
-const ERR_MSG_MANY_ROOTS = (sources) => `Expected plugin graph to be a tree, but there are ${sources.length} roots.`;
+const ERR_MSG_MANY_ROOTS = sources => `Expected plugin graph to be a tree, but there are ${sources.length} roots.`;
 
 /**
  *
@@ -82,10 +83,13 @@ export function bootstrap(opts: EthqlServerOpts): EthqlBootstrapResult {
   }
 
   // Merge schemas, resolvers, serviceDefinitions from all plugins.
-  let merged: MergeResult = { config, schema: [], resolvers: [], serviceDefinitions: {} };
-  merged = orderedPlugins
-    .map(plugin => _.pick(plugin, 'schema', 'resolvers', 'serviceDefinitions'))
-    .reduce((prev, curr) => deepmerge(prev, curr), merged);
+  let merged: MergeResult = { config, schema: [], resolvers: {}, serviceDefinitions: {} };
+  for (let plugin of orderedPlugins) {
+    if (typeof plugin.resolvers === 'function') {
+      plugin.resolvers = plugin.resolvers(merged.resolvers);
+    }
+    merged = deepmerge(merged, plugin);
+  }
 
   const { schema, resolvers, serviceDefinitions } = merged;
 
@@ -118,7 +122,7 @@ export function bootstrap(opts: EthqlServerOpts): EthqlBootstrapResult {
       typeDefs: ''.concat(...[rootSchema, ...schema].map(s => `${s}\n`)),
       resolvers,
       inheritResolversFromInterfaces: true,
-      resolverValidationOptions: { requireResolversForResolveType: false }
+      resolverValidationOptions: { requireResolversForResolveType: false },
     }),
     config,
     serviceDefinitions: serviceDefinitions as EthqlServiceDefinitions,
