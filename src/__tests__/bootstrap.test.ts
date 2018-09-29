@@ -1,5 +1,6 @@
 import { graphql } from 'graphql';
 import { bootstrap } from '../bootstrap';
+import { initWeb3 } from '../core/services/web3';
 import { EthqlPluginFactory } from '../plugin';
 
 declare module '../services' {
@@ -42,6 +43,38 @@ test('bootstrap: error when required service not present', () => {
       plugins: [plugin1, plugin2],
     }),
   ).toThrow('Missing services: decoder');
+});
+
+test('bootstrap: no error when required service is present', () => {
+  const core: EthqlPluginFactory = () => ({
+    name: 'core',
+    priority: 10,
+    serviceDefinitions: {
+      web3: {
+        implementation: {
+          factory: () => initWeb3({
+            jsonrpc: 'http://127.0.0.1:8545',
+            batching: false
+          }),
+        },
+      }
+    }
+  });
+
+  const plugin1: EthqlPluginFactory = () => ({
+    name: 'plugin1',
+    priority: 11,
+    dependsOn: {
+      services: ['web3'],
+    },
+  });
+
+  expect(() =>
+    bootstrap({
+      config: {},
+      plugins: [core, plugin1],
+    }),
+  ).not.toThrow();
 });
 
 test('bootstrap: services reorganised and init in right order (after)', () => {
