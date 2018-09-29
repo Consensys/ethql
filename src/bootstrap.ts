@@ -94,7 +94,7 @@ export function bootstrap(opts: EthqlServerOpts): EthqlBootstrapResult {
   const { schema, resolvers, serviceDefinitions } = merged;
 
   // Ensure that all service requirements are satisfied.
-  const serviceImplNames = Object.keys(_.filter(serviceDefinitions, 'implementation'));
+  const serviceImplNames = Object.keys(_.pickBy(serviceDefinitions, 'implementation'));
 
   const missingServices = plugins
     .filter(plugin => plugin.dependsOn && plugin.dependsOn.services)
@@ -102,7 +102,7 @@ export function bootstrap(opts: EthqlServerOpts): EthqlBootstrapResult {
       name,
       missing: dependsOn.services.filter(s => !serviceImplNames.includes(s)),
     }))
-    .filter(({ missing }) => missing);
+    .filter(({ missing }) => missing.length);
 
   if (missingServices.length) {
     throw new Error(ERR_MSG_MISSING_SERVICES(missingServices));
