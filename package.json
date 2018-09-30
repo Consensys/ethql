@@ -15,8 +15,8 @@
   "scripts": {
     "clean": "$(npm bin)/rimraf dist",
     "start": "$(npm bin)/dotenv -- node dist/index.js",
-    "dev": "$(npm bin)/nodemon -e ts -x ts-node src/index.ts",
-    "debug": "$(npm bin)/dotenv -- nodemon -e ts -x ts-node --inspect src/index.ts",
+    "dev": "$(npm bin)/nodemon -e ts -x ts-node --files src/index.ts",
+    "debug": "$(npm bin)/dotenv -- nodemon -e ts -x ts-node --inspect --files src/index.ts",
     "build": "npm run build:docker",
     "build:ts": "npm run clean && $(npm bin)/patch-package && tsc && $(npm bin)/copyfiles -u 1 src/schema/**/*.graphql src/abi/** dist",
     "build:docker": "docker image build -t ethql .",
