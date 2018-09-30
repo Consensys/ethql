@@ -82,6 +82,8 @@ export function bootstrap(opts: EthqlServerOpts): EthqlBootstrapResult {
     throw new Error(ERR_MSG_MANY_ROOTS(sources));
   }
 
+  console.log(`⚒   Bootstrapping with plugins: ${orderedPlugins.map(p => p.name).join(', ')}.`);
+
   // Merge schemas, resolvers, serviceDefinitions from all plugins.
   let merged: MergeResult = { config, schema: [], resolvers: {}, serviceDefinitions: {} };
   for (let plugin of orderedPlugins) {
