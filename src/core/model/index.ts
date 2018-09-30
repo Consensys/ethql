@@ -1,7 +1,7 @@
 import { List } from 'immutable';
 import * as _ from 'lodash';
-import { Transaction } from 'web3/eth/types';
-import { Block, Log } from 'web3/types';
+import { Block, Transaction } from 'web3/eth/types';
+import { Log } from 'web3/types';
 import { Overwrite } from '../../utils';
 
 /**
