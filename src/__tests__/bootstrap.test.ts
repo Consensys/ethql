@@ -52,13 +52,14 @@ test('bootstrap: no error when required service is present', () => {
     serviceDefinitions: {
       web3: {
         implementation: {
-          factory: () => initWeb3({
-            jsonrpc: 'http://127.0.0.1:8545',
-            batching: false
-          }),
+          factory: () =>
+            initWeb3({
+              jsonrpc: 'http://127.0.0.1:8545',
+              batching: false,
+            }),
         },
-      }
-    }
+      },
+    },
   });
 
   const plugin1: EthqlPluginFactory = () => ({
