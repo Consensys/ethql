@@ -1,4 +1,4 @@
-import { Contract } from 'web3/types';
+import Contract from 'web3/eth/contract';
 import { EthqlContext } from '../../context';
 import { EthqlAccount } from '../../core/model';
 
