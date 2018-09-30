@@ -14,6 +14,12 @@ const plugin: EthqlPluginFactory = config => ({
       },
     },
   },
+  dependsOn: {
+    services: ['web3', 'ethService', 'decoder'],
+  },
+  order: {
+    after: ['core'],
+  },
 });
 
 export default plugin;
