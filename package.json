@@ -60,6 +60,7 @@
     "dataloader": "^1.4.0",
     "deepmerge": "^2.1.1",
     "express": "^4.16.3",
+    "ez-ens": "^1.0.4",
     "get-port": "^4.0.0",
     "graphlib": "^2.1.5",
     "graphql": "^0.13.2",
