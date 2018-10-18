@@ -16,6 +16,10 @@
     "Akhila Raju <akhila.raju@consensys.net>",
     "Jonathan Buhler"
   ],
+  "keywords": [
+    "ethereum",
+    "graphql"
+  ],
   "main": "index.js",
   "engines": {
     "node": ">=8.0.0"
