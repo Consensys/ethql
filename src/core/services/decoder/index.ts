@@ -18,7 +18,7 @@ declare module '../../../services' {
 
 // Defines the entity to which the standard belongs.
 // As we support new standards, this union type will expand.
-type Entity = 'token' | undefined;
+type Entity = 'token' | 'interface' | undefined;
 
 export type AbiDecoder = {
   decodeMethod: Function;

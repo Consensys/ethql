@@ -10,10 +10,11 @@ We classify supported ABIs in two types:
 
 ## Supported ABIs
 
-| Standard | Type      | Entity | Specification | Comments                                                        |
-| -------- | --------- | ------ | ------------- | --------------------------------------------------------------- |
-| ERC20    | Entity    |  Token | [link][1]     |                                                                 |
-| ERC223   | Extension |  Token | [link][2]     | Private ERC20 implementation change. No action needed in ethql. |
+| Standard | Type      | Entity    | Specification | Comments                                                        |
+| -------- | --------- | --------- | ------------- | --------------------------------------------------------------- |
+| ERC20    | Entity    |  Token    | [link][1]     |                                                                 |
+| ERC223   | Extension |  Token    | [link][2]     | Private ERC20 implementation change. No action needed in ethql. |
+| ERC165   | Entity    | Interface | [link][3]     |                                                                 |
 
 ## ethql naming scheme
 
@@ -28,3 +29,4 @@ logs pertaining to several standards that relate to the same entity.
 
 [1]: https://github.com/ethereum/EIPs/blob/master/EIPS/eip-20.md
 [2]: https://github.com/ethereum/EIPs/issues/223
+[3]: https://github.com/ethereum/EIPs/blob/master/EIPS/eip-165.md

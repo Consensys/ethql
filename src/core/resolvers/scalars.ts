@@ -55,6 +55,26 @@ const Bytes32 = new GraphQLScalarType({
   },
 });
 
+// tslint:disable-next-line
+const Bytes4 = new GraphQLScalarType({
+  name: 'Bytes4',
+  description: 'A 4-byte value in hex format.',
+  serialize: String,
+  parseValue: input => {
+    return !Web3.utils.isHexStrict(input) || Web3.utils.hexToBytes(input).length !== 4 ? undefined : input;
+  },
+  parseLiteral: ast => {
+    if (
+      ast.kind !== Kind.STRING ||
+      !Web3.utils.isHexStrict(ast.value) ||
+      Web3.utils.hexToBytes(ast.value).length !== 4
+    ) {
+      return undefined;
+    }
+    return String(ast.value);
+  },
+});
+
 //tslint:disable-next-line
 const Long = new GraphQLScalarType({
   name: 'Long',
@@ -69,4 +89,5 @@ export default {
   BlockNumber,
   Address,
   Bytes32,
+  Bytes4,
 };

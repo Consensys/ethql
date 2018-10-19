@@ -451,4 +451,6 @@ scalar Bytes32
 scalar BlockNumber
 
 scalar Address
+
+scalar Bytes4
 `;
