@@ -23,11 +23,11 @@ class SimpleDecodingEngine implements DecodingEngine {
     if (!tx.inputData) {
       return;
     }
-
     // Iterate through the registry until we find a decoder that's capable of decoding the function call.
     for (const decoder of this.registry) {
       const decoded = decoder.abiDecoder.decodeMethod(tx.inputData);
-
+      console.log('decoded:');
+      console.log(decoded);
       // If the ABI decoder recognised the function call, apply the transformer if available.
       if (decoded && decoded.name in decoder.txTransformers) {
         return {
@@ -49,7 +49,9 @@ class SimpleDecodingEngine implements DecodingEngine {
    */
   public decodeLog(log: EthqlLog, context: EthqlContext): DecodedLog | undefined {
     // Find a decoder that can process this log.
+
     for (const decoder of this.registry) {
+      // console.log(log);
       const logs: any[] = decoder.abiDecoder.decodeLogs([log]);
       if (!logs || logs[0] === undefined) {
         continue;
@@ -57,13 +59,18 @@ class SimpleDecodingEngine implements DecodingEngine {
 
       // Transform the returned log.
       const dlog = logs[0];
-      return {
-        standard: decoder.standard,
-        event: dlog.name,
-        entity: decoder.entity,
-        __typename: `${decoder.standard}${_.upperFirst(dlog.name)}Event`,
-        ...decoder.logTransformers[dlog.name](dlog, log.transaction, context),
-      };
+
+      console.log(dlog.name);
+      console.log(decoder.logTransformers[dlog.name]);
+      if (decoder.logTransformers[dlog.name]) {
+        return {
+          standard: decoder.standard,
+          event: dlog.name,
+          entity: decoder.entity,
+          __typename: `${decoder.standard}${_.upperFirst(dlog.name)}Event`,
+          ...decoder.logTransformers[dlog.name](dlog, log.transaction, context),
+        };
+      }
     }
   }
 }

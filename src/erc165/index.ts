@@ -9,11 +9,16 @@ const plugin: EthqlPluginFactory = config => ({
   schema: [erc165Schema],
   resolvers,
   // serviceDefinitions: {
-  //   decoder: {
-  //     config: {
-  //       decoders: [new Erc165InterfaceDecoder()],
-  //     },
+  //   ethService2: {
+  //     implementation: {
+  //       factory: () => context => new Web3EthService(context.services.web3),
+  //     }
+  //   }
+  // decoder: {
+  //   config: {
+  //     decoders: [new Erc165InterfaceDecoder()],
   //   },
+  // },
   // },
   dependsOn: {
     services: ['web3', 'ethService', 'decoder'],

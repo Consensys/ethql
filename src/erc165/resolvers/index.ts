@@ -8,7 +8,7 @@ async function supportsInterface(account: EthqlAccount, { interfaceID }, context
   return contract.methods
     .supportsInterface(interfaceID)
     .call()
-    .catch(console.error);
+    .catch(() => false);
 }
 
 export default {

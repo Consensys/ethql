@@ -7,7 +7,6 @@ export class Erc165InterfaceContract {
   }
 
   public async supportsInterface({ interfaceID }: { String }): Boolean {
-    console.log('hello');
     return contract.methods
       .supportsInterface(interfaceID)
       .call()
