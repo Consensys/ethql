@@ -1,11 +1,12 @@
 import { EthqlPluginFactory } from '../plugin';
 import { Erc721TokenDecoder } from './decoders';
 import erc721Schema from './schema/erc721';
+import erc721TokenSchema from './schema/token';
 
 const plugin: EthqlPluginFactory = config => ({
   name: 'erc721',
   priority: 9,
-  schema: [erc721Schema],
+  schema: [erc721TokenSchema, erc721Schema],
   serviceDefinitions: {
     decoder: {
       config: {

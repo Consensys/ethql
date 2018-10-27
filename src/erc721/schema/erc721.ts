@@ -1,16 +1,26 @@
 export default `
 interface ERC721Transaction {
-  tokenContract: TokenContract
+  tokenContract: ERC721TokenContract
 }
 
-type ERC721Transfer implements DecodedTransaction & ERC721Transaction {
+type ERC721SafeTransferFrom implements DecodedTransaction & ERC721Transaction {
   entity: Entity
   standard: String
   operation: String
   from: TokenHolder
   to: TokenHolder
   tokenId: Long
-  tokenContract: TokenContract
+  tokenContract: ERC721TokenContract
+}
+
+type ERC721TransferFrom implements DecodedTransaction & ERC721Transaction {
+  entity: Entity
+  standard: String
+  operation: String
+  from: TokenHolder
+  to: TokenHolder
+  tokenId: Long
+  tokenContract: ERC721TokenContract
 }
 
 type ERC721TransferEvent implements DecodedLog {

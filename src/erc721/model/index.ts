@@ -6,7 +6,13 @@ export interface Erc721Transaction {
   tokenContract: Erc721TokenContract;
 }
 
-export interface Erc721Transfer extends Erc721Transaction {
+export interface Erc721SafeTransferFrom extends Erc721Transaction {
+  from: Erc721TokenHolder;
+  to: Erc721TokenHolder;
+  tokenId: Long;
+}
+
+export interface Erc721TransferFrom extends Erc721Transaction {
   from: Erc721TokenHolder;
   to: Erc721TokenHolder;
   tokenId: Long;
@@ -38,9 +44,30 @@ export class Erc721TokenContract {
     this._contract = new context.services.web3.eth.Contract(Erc721TokenContract.ABI, account.address);
   }
 
+  public async symbol() {
+    return this._contract.methods
+      .symbol()
+      .call()
+      .catch(() => undefined);
+  }
+
+  public async totalSupply() {
+    return this._contract.methods
+      .totalSupply()
+      .call()
+      .catch(() => undefined);
+  }
+
   public async balanceOf({ address }: { address: string }) {
     return this._contract.methods
       .balanceOf(address)
+      .call()
+      .catch(() => undefined);
+  }
+
+  public async ownerOf({ tokenId }: { tokenId: string }) {
+    return this._contract.methods
+      .ownerOf(tokenId)
       .call()
       .catch(() => undefined);
   }

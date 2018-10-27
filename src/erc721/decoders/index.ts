@@ -4,18 +4,33 @@ import { createAbiDecoder, DecoderDefinition, extractParamValue } from '../../co
 import {
   ERC721ApprovalEvent,
   ERC721ApprovalForAllEvent,
+  Erc721SafeTransferFrom,
   Erc721TokenContract,
   Erc721TokenHolder,
-  Erc721Transfer,
   ERC721TransferEvent,
+  Erc721TransferFrom,
 } from '../model';
 
 type Erc721LogBindings = {
+  Approval: ERC721ApprovalEvent;
+  ApprovalForAll: ERC721ApprovalForAllEvent;
   Transfer: ERC721TransferEvent;
 };
 
 type Erc721TxBindings = {
-  transfer: Erc721Transfer;
+  transferFrom: Erc721TransferFrom;
+  safeTransferFrom: Erc721SafeTransferFrom;
+};
+
+const transfer = (decoded: any, tx: EthqlTransaction, context: EthqlContext) => {
+  const tokenContract = new Erc721TokenContract(tx.to, context);
+  const to = new EthqlAccount(extractParamValue(decoded.params, 'to'));
+  return {
+    tokenContract,
+    from: new Erc721TokenHolder(tx.from, tokenContract),
+    tokenId: extractParamValue(decoded.params, 'tokenId'),
+    to: new Erc721TokenHolder(to, tokenContract),
+  };
 };
 
 /**
@@ -27,16 +42,9 @@ class Erc721TokenDecoder implements DecoderDefinition<Erc721TxBindings, Erc721Lo
   public readonly abiDecoder = createAbiDecoder(__dirname + '../../../abi/erc721.json');
 
   public readonly txTransformers = {
-    transfer: (decoded: any, tx: EthqlTransaction, context: EthqlContext) => {
-      const tokenContract = new Erc721TokenContract(tx.to, context);
-      const to = new EthqlAccount(extractParamValue(decoded.params, 'to'));
-      return {
-        tokenContract,
-        from: new Erc721TokenHolder(tx.from, tokenContract),
-        tokenId: extractParamValue(decoded.params, 'tokenId'),
-        to: new Erc721TokenHolder(to, tokenContract),
-      };
-    },
+    transferFrom: transfer,
+
+    safeTransferFrom: transfer,
   };
 
   public readonly logTransformers = {
@@ -63,6 +71,7 @@ class Erc721TokenDecoder implements DecoderDefinition<Erc721TxBindings, Erc721Lo
         approved: extractParamValue(decoded.events, 'approved'),
       };
     },
+
     Transfer: (decoded: any, tx: EthqlTransaction, context: EthqlContext): ERC721TransferEvent => {
       const tokenContract = new Erc721TokenContract(tx.to, context);
       const from = new EthqlAccount(extractParamValue(decoded.events, 'from'));
