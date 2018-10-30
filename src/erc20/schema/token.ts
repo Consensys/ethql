@@ -8,5 +8,6 @@ type TokenContract {
   account: Account
   symbol: String
   totalSupply: Long
+  decimals: Int
 }
 `;
