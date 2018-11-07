@@ -1,13 +1,25 @@
 {
-  "name": "ethql",
+  "name": "@ethql/distro",
   "version": "0.0.1",
   "description": "A GraphQL interface to Ethereum",
-  "author": "PegaSys – ConsenSys",
+  "author": "ConsenSys",
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
     "url": "https://github.com/ConsenSys/ethql"
   },
+  "bugs": {
+    "url": "https://github.com/ConsenSys/ethql/issues"
+  },
+  "contributors": [
+    "Raúl Kripalani <raul.kripalani@gmail.com>",
+    "Akhila Raju <akhila.raju@consensys.net>",
+    "Jonathan Buhler"
+  ],
+  "keywords": [
+    "ethereum",
+    "graphql"
+  ],
   "main": "index.js",
   "engines": {
     "node": ">=8.0.0"
