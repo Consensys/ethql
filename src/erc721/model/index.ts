@@ -44,30 +44,30 @@ export class Erc721TokenContract {
     this._contract = new context.services.web3.eth.Contract(Erc721TokenContract.ABI, account.address);
   }
 
-  public async symbol() {
+  public async balanceOf({ owner }: { owner: string }) {
     return this._contract.methods
-      .symbol()
+      .balanceOf(owner)
       .call()
       .catch(() => undefined);
   }
 
-  public async totalSupply() {
-    return this._contract.methods
-      .totalSupply()
-      .call()
-      .catch(() => undefined);
-  }
-
-  public async balanceOf({ address }: { address: string }) {
-    return this._contract.methods
-      .balanceOf(address)
-      .call()
-      .catch(() => undefined);
-  }
-
-  public async ownerOf({ tokenId }: { tokenId: string }) {
+  public async ownerOf({ tokenId }: { tokenId: Long }) {
     return this._contract.methods
       .ownerOf(tokenId)
+      .call()
+      .catch(() => undefined);
+  }
+
+  public async getApproved({ tokenId }: { tokenId: Long }) {
+    return this._contract.methods
+      .getApproved(tokenId)
+      .call()
+      .catch(() => undefined);
+  }
+
+  public async isApprovedForAll({ owner, operator }: { owner: String; operator: String }) {
+    return this._contract.methods
+      .isApprovedForAll(owner, operator)
       .call()
       .catch(() => undefined);
   }
@@ -77,6 +77,6 @@ export class Erc721TokenHolder {
   constructor(public readonly account: EthqlAccount, private readonly contract: Erc721TokenContract) {}
 
   public async tokenBalance() {
-    return this.contract.balanceOf({ ...this.account });
+    return this.contract.balanceOf({ owner: this.account.address });
   }
 }
