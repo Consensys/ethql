@@ -10,7 +10,7 @@ ENS names can be used in queries in place of an address:
   }
 ```
 
-### TransactionRoles:
+### Transaction roles:
 
 ```
   {
@@ -22,7 +22,7 @@ ENS names can be used in queries in place of an address:
   }
 ```
 
-### TransactionsInvolving
+### Transactions involving
 
 ```
   {
