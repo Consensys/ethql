@@ -213,7 +213,7 @@ test('erc20: transferFrom transaction', async () => {
   expect(tx.decoded).toEqual(decoded);
 });
 
-test('erc20: fetch symbol and totalSupply', async () => {
+test('erc20: fetch symbol, totalSupply and decimals', async () => {
   const query = `
     {
       block(number: 5600000) {
@@ -226,6 +226,7 @@ test('erc20: fetch symbol and totalSupply', async () => {
               tokenContract {
                 symbol
                 totalSupply
+                decimals
               }
               from {
                 account {
@@ -254,6 +255,7 @@ test('erc20: fetch symbol and totalSupply', async () => {
     tokenContract: {
       symbol: 'NULS',
       totalSupply: 4e25,
+      decimals: 18,
     },
     from: {
       account: {
@@ -285,6 +287,7 @@ test('erc20: fetch null symbol', async () => {
               tokenContract {
                 symbol
                 totalSupply
+                decimals
               }
               from {
                 account {
@@ -313,6 +316,7 @@ test('erc20: fetch null symbol', async () => {
     tokenContract: {
       symbol: null,
       totalSupply: 1e27,
+      decimals: 18,
     },
     from: {
       account: {
@@ -347,6 +351,7 @@ test('erc20: fetch token balance of recipient (account 0x0)', async () => {
                 }
                 symbol
                 totalSupply
+                decimals
               }
               from {
                 account {
