@@ -4,7 +4,7 @@ import resolvers from './resolvers';
 
 const plugin: EthqlPluginFactory = config => ({
   name: 'ens',
-  priority: 10,
+  priority: 20,
   resolvers,
   dependsOn: {
     services: ['web3'],

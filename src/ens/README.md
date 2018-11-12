@@ -1,6 +1,11 @@
-ENS names can be used in queries in place of an address:
+# ENS plugin
 
-### Address:
+This plugin adds support for resolving addresses from the [Ethereum Name Service](https://ens.domains/).
+
+ENS names can be used in queries in place of an address. Here are a few examples.
+
+### Address
+
 ```
   {
     account(address: "ethereum.eth") {
@@ -10,7 +15,7 @@ ENS names can be used in queries in place of an address:
   }
 ```
 
-### Transaction roles:
+### Transaction roles
 
 ```
   {
