@@ -1,7 +1,11 @@
-import { EthqlPluginFactory } from '../plugin';
+import { EthqlPluginFactory } from '@ethql/base/dist/plugin';
 import { Erc20TokenDecoder } from './decoders';
 import erc20Schema from './schema/erc20';
 import tokenSchema from './schema/token';
+
+import {} from '@ethql/base/dist/core/services/web3';
+import {} from '@ethql/base/dist/core/services/eth-service';
+import {} from '@ethql/base/dist/core/services/decoder';
 
 const plugin: EthqlPluginFactory = config => ({
   name: 'erc20',

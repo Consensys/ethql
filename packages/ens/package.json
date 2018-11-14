@@ -1,0 +1,13 @@
+{
+  "name": "@ethql/ens",
+  "version": "0.0.0",
+  "main": "dist/index.js",
+  "license": "Apache-2.0",
+  "scripts": {
+    "clean": "rimraf dist",
+    "build:ts": "npm run clean && patch-package && tsc && copyfiles -u 1 src/schema/**/*.graphql src/abi/** dist"
+  },
+  "dependencies": {
+    "@ethql/base": "^0.0.0"
+  }
+}

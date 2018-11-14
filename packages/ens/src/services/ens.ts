@@ -1,6 +1,6 @@
 import ENS = require('ez-ens');
 
-declare module '../../services' {
+declare module '@ethql/base/dist/services' {
   interface EthqlServices {
     ens: ENS;
   }
