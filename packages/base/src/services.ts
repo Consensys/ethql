@@ -8,8 +8,7 @@ export type EthqlServiceDefinition<Config, Service> = {
   };
 };
 
-export interface EthqlServiceDefinitions {
-}
+export interface EthqlServiceDefinitions {}
 
 export type EthqlServiceFactories = {
   [P in keyof EthqlServiceDefinitions]: EthqlServiceDefinitions[P] extends EthqlServiceDefinition<

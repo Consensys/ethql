@@ -1,6 +1,6 @@
-import { EthqlContext } from '@ethql/base/dist/context';
-import { EthqlAccount, EthqlTransaction } from '@ethql/base/dist/core/model';
-import { createAbiDecoder, DecoderDefinition, extractParamValue } from '@ethql/base/dist/core/services/decoder';
+import { EthqlContext } from '@ethql/base/src/context';
+import { EthqlAccount, EthqlTransaction } from '@ethql/base/src/core/model';
+import { createAbiDecoder, DecoderDefinition, extractParamValue } from '@ethql/base/src/core/services/decoder';
 import {
   ERC20ApprovalEvent,
   Erc20Approve,

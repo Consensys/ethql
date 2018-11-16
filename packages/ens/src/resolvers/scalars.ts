@@ -1,6 +1,6 @@
+import { EthqlContext } from '@ethql/base/src/context';
 import { GraphQLScalarType, Kind } from 'graphql';
 import Web3 = require('web3');
-import { EthqlContext } from '@ethql/base/dist/context';
 
 function isEnsDomain(input: string) {
   return input.includes('.eth');

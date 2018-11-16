@@ -1,8 +1,8 @@
+import { EthqlPluginFactory } from '@ethql/base/src/plugin';
 import ENS = require('ez-ens');
-import { EthqlPluginFactory } from '@ethql/base/dist/plugin';
 import resolvers from './resolvers';
 
-import {} from '@ethql/base/dist/core/services/web3';
+import {} from '@ethql/base/src/core/services/web3';
 
 const plugin: EthqlPluginFactory = config => ({
   name: 'ens',

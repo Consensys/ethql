@@ -12,5 +12,6 @@
     "paths": {
       "*": ["packages/base/src/types/*"]
     }
-  }
+  },
+  "include": ["packages/*/src/**/*"]
 }

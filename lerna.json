@@ -2,5 +2,6 @@
   "packages": ["packages/*"],
   "npmClient": "yarn",
   "npmClientArgs": ["--no-lockfile"],
+  "useWorkspaces": true,
   "version": "0.0.0"
 }
