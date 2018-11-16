@@ -86,7 +86,6 @@ class Erc20TokenDecoder implements DecoderDefinition<Erc20TxBindings, Erc20LogBi
       const from = new EthqlAccount(extractParamValue(decoded.events, 'from'));
       const to = new EthqlAccount(extractParamValue(decoded.events, 'to'));
 
-      console.log(decoded.events);
       return {
         from: new Erc20TokenHolder(from, tokenContract),
         to: new Erc20TokenHolder(to, tokenContract),

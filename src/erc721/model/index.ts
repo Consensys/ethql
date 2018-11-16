@@ -18,6 +18,16 @@ export interface Erc721TransferFrom extends Erc721Transaction {
   tokenId: Long;
 }
 
+export interface ERC721Approve extends Erc721Transaction {
+  approved: Erc721TokenHolder;
+  tokenId: Long;
+}
+
+export interface ERC721SetApprovalForAll extends Erc721Transaction {
+  operator: Erc721TokenHolder;
+  approved: Boolean;
+}
+
 export type ERC721TransferEvent = {
   from: Erc721TokenHolder;
   to: Erc721TokenHolder;
