@@ -1,6 +1,6 @@
-import config from '@ethql/base/src/config';
-import core from '@ethql/base/src/core';
-import { EthqlServer } from '@ethql/base/src/server';
+import config from '@ethql/base/dist/config';
+import core from '@ethql/base/dist/core';
+import { EthqlServer } from '@ethql/base/dist/server';
 import ens from '@ethql/ens';
 import erc20 from '@ethql/erc20';
 

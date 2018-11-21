@@ -1,17 +1,16 @@
 {
+  "extends": "./tsconfig-base.json",
   "compilerOptions": {
-    "target": "es6",
-    "moduleResolution": "node",
-    "esModuleInterop": true,
-    "module": "commonjs",
-    "sourceMap": true,
-    "declaration": true,
-    "lib": ["esnext"],
-    "baseUrl": ".",
-    "allowSyntheticDefaultImports": true,
     "paths": {
+      "@ethql/base/dist/*": ["packages/base/src/*"],
+      "@ethql/*": ["packages/*/src/"],
       "*": ["packages/base/src/types/*"]
     }
   },
-  "include": ["packages/*/src/**/*"]
+  "references": [
+    { "path": "./packages/base" },
+    { "path": "./packages/ens" },
+    { "path": "./packages/erc20" },
+    { "path": "./packages/ethql" }
+  ]
 }

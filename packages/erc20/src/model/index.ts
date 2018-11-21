@@ -1,5 +1,5 @@
-import { EthqlContext } from '@ethql/base/src/context';
-import { EthqlAccount } from '@ethql/base/src/core/model';
+import { EthqlContext } from '@ethql/base/dist/context';
+import { EthqlAccount } from '@ethql/base/dist/core/model';
 import Contract from 'web3/eth/contract';
 
 export interface Erc20Transaction {
@@ -38,7 +38,7 @@ export type ERC20ApprovalEvent = {
 };
 
 export class Erc20TokenContract {
-  private static ABI = require(__dirname + '/../abi/erc20.json');
+  private static ABI = require(__dirname + '/../../abi/erc20.json');
   private _contract: Contract;
 
   constructor(public readonly account: EthqlAccount, readonly context: EthqlContext) {

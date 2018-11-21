@@ -9,6 +9,7 @@
   "dependencies": {
     "@ethql/base": "^0.0.0",
     "web3": "^1.0.0-beta.35",
+    "lodash": "^4.17.10",
     "@ethql/erc20": "^0.0.0",
     "@ethql/ens": "^0.0.0"
   }

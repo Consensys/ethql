@@ -1,5 +1,5 @@
-import { testGraphql } from '@ethql/base/src/__tests__/utils';
-import core from '@ethql/base/src/core';
+import { testGraphql } from '@ethql/base/dist/__tests__/utils';
+import core from '@ethql/base/dist/core';
 import ens from '../';
 
 const { execQuery } = testGraphql({

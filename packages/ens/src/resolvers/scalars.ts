@@ -1,4 +1,4 @@
-import { EthqlContext } from '@ethql/base/src/context';
+import { EthqlContext } from '@ethql/base/dist/context';
 import { GraphQLScalarType, Kind } from 'graphql';
 import Web3 = require('web3');
 

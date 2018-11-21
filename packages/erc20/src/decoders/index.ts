@@ -1,6 +1,6 @@
-import { EthqlContext } from '@ethql/base/src/context';
-import { EthqlAccount, EthqlTransaction } from '@ethql/base/src/core/model';
-import { createAbiDecoder, DecoderDefinition, extractParamValue } from '@ethql/base/src/core/services/decoder';
+import { EthqlContext } from '@ethql/base/dist/context';
+import { EthqlAccount, EthqlTransaction } from '@ethql/base/dist/core/model';
+import { createAbiDecoder, DecoderDefinition, extractParamValue } from '@ethql/base/dist/core/services/decoder';
 import {
   ERC20ApprovalEvent,
   Erc20Approve,
@@ -28,7 +28,7 @@ type Erc20TxBindings = {
 class Erc20TokenDecoder implements DecoderDefinition<Erc20TxBindings, Erc20LogBindings> {
   public readonly entity = 'token';
   public readonly standard = 'ERC20';
-  public readonly abiDecoder = createAbiDecoder(__dirname + '/../abi/erc20.json');
+  public readonly abiDecoder = createAbiDecoder(__dirname + '/../../abi/erc20.json');
 
   public readonly txTransformers = {
     transfer: (decoded: any, tx: EthqlTransaction, context: EthqlContext) => {

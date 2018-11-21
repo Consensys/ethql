@@ -1,5 +1,5 @@
-import { EthqlContext } from '@ethql/base/src/context';
-import { EthqlBlock } from '@ethql/base/src/core/model';
+import { EthqlContext } from '@ethql/base/dist/context';
+import { EthqlBlock } from '@ethql/base/dist/core/model';
 import * as _ from 'lodash';
 import { Address, addressFn } from './scalars';
 
