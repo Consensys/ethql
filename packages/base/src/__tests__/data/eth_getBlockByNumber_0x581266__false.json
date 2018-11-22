@@ -160,6 +160,8 @@
       "0x27e00072c619e480985512c9d5dbe7a8930c74e485cbe0554bb4d3dffdc60674"
     ],
     "transactionsRoot": "0x0e70a39b6978ec448c3cb4474162d6efacd40f64f00e78714110fa2b525d4a94",
-    "uncles": ["0x65ba5b3da12a19d60365b1c233b8d0a5b7ee28a5652a36be4602f89e0d96bc21"]
+    "uncles": [
+      "0x65ba5b3da12a19d60365b1c233b8d0a5b7ee28a5652a36be4602f89e0d96bc21"
+    ]
   }
 }

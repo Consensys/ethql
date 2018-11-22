@@ -1,7 +1,7 @@
-import { testGraphql } from '@ethql/base/dist/__tests__/utils';
+import * as _ from 'lodash';
 import core from '@ethql/base/dist/core';
 import erc20 from '@ethql/erc20';
-import * as _ from 'lodash';
+import { testGraphql } from '@ethql/base/dist/__tests__/utils';
 
 const { execQuery } = testGraphql({ optsOverride: { plugins: [core, erc20] } });
 

@@ -21,6 +21,8 @@
     "totalDifficulty": "0x1a4bd3e3df18",
     "transactions": [],
     "transactionsRoot": "0x56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421",
-    "uncles": ["0x429bcc1b81814807533e38d6ed1cc703412ad519429579b003235217e45b093c"]
+    "uncles": [
+      "0x429bcc1b81814807533e38d6ed1cc703412ad519429579b003235217e45b093c"
+    ]
   }
 }

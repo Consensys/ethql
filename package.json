@@ -26,14 +26,15 @@
     "node": ">=8.0.0"
   },
   "scripts": {
+    "clean": "lerna run clean",
     "start": "lerna run --stream --scope ethql start",
     "dev": "lerna run --stream --scope ethql dev",
     "debug": "lerna run --stream --scope ethql debug",
-    "build:ts": "lerna run build:ts",
     "build": "npm run build:docker",
+    "build:ts": "lerna run build:ts",
     "build:docker": "docker image build -t ethql .",
     "lint": "npm-run-all lint:ts lint:rest",
-    "lint:ts": "tslint --fix -t stylish -c tslint.json -p tsconfig.json && prettier --parser typescript --write 'packages/**/*.ts'",
+    "lint:ts": "tslint --fix -t stylish -c tslint.json -p tsconfig.json && prettier --parser typescript --write 'src/**/*.ts'",
     "lint:rest": "prettier '**/*.{md,json}' --write",
     "test": "jest",
     "test:watch": "jest --watch",

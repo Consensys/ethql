@@ -1,6 +1,6 @@
+import Contract from 'web3/eth/contract';
 import { EthqlContext } from '@ethql/base/dist/context';
 import { EthqlAccount } from '@ethql/base/dist/core/model';
-import Contract from 'web3/eth/contract';
 
 export interface Erc20Transaction {
   tokenContract: Erc20TokenContract;

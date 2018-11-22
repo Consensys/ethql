@@ -1,6 +1,6 @@
-import { testGraphql } from '@ethql/base/dist/__tests__/utils';
 import core from '@ethql/base/dist/core';
 import ens from '../';
+import { testGraphql } from '@ethql/base/dist/__tests__/utils';
 
 const { execQuery } = testGraphql({
   optsOverride: {

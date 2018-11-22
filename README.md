@@ -1,4 +1,4 @@
-# A GraphQL interface to Ethereum 🔥
+# A GraphQL interface to Ethereum 🔥 
 
 [![CircleCI](https://circleci.com/gh/ConsenSys/ethql.svg?style=svg)](https://circleci.com/gh/ConsenSys/ethql)
 [![Gitter](https://img.shields.io/gitter/room/ethql/lobby.js.svg?style=flat-square)](https://gitter.im/ethql/Lobby)

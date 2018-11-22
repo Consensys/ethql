@@ -1,6 +1,6 @@
-import { testGraphql } from '@ethql/base/dist/__tests__/utils';
 import core from '@ethql/base/dist/core';
 import erc20 from '@ethql/erc20';
+import { testGraphql } from '@ethql/base/dist/__tests__/utils';
 
 test('batching: requests are batched', async () => {
   const { execQuery, prepareContext } = testGraphql();
