@@ -11,8 +11,11 @@ jobs:
           - v1-dependencies-{{ checksum "yarn.lock" }}
           - v1-dependencies-
       - run:
-          name: Install dependencies
+          name: Install base dependencies
           command: yarn install
+      - run:
+          name: Install package dependencies
+          command: yarn bootstrap
       - save_cache:
           key: v1-dependencies-{{ checksum "yarn.lock" }}
           paths:

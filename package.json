@@ -28,6 +28,7 @@
   },
   "scripts": {
     "clean": "lerna run clean",
+    "bootstrap": "lerna bootstrap",
     "start": "lerna run --stream --scope ethql start",
     "dev": "lerna run --stream --scope ethql dev",
     "debug": "lerna run --stream --scope ethql debug",
