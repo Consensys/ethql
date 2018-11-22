@@ -4,7 +4,10 @@
   "license": "Apache-2.0",
   "scripts": {
     "clean": "rimraf dist",
-    "build:ts": "npm run clean && patch-package && tsc && copyfiles -u 1 src/schema/**/*.graphql src/abi/** dist"
+    "start": "dotenv -- node dist/index.js",
+    "dev": "dotenv -- tsc-watch -b --onSuccess 'node dist/index.js'",
+    "debug": "dotenv -- tsc-watch -b --onSuccess 'node --inspect dist/index.js'",
+    "build:ts": "npm run clean && patch-package && tsc -b"
   },
   "dependencies": {
     "@ethql/base": "^0.0.0",

@@ -5,7 +5,7 @@
   "license": "Apache-2.0",
   "scripts": {
     "clean": "rimraf dist",
-    "build:ts": "npm run clean && patch-package && tsc && copyfiles -u 1 src/schema/**/*.graphql src/abi/** dist"
+    "build:ts": "npm run clean && patch-package && tsc -b"
   },
   "dependencies": {
     "web3": "^1.0.0-beta.35",

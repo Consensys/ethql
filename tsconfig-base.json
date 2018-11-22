@@ -1,15 +1,18 @@
 {
   "compilerOptions": {
+    "baseUrl": ".",
+
+    "lib": ["esnext"],
     "target": "es6",
     "moduleResolution": "node",
     "module": "commonjs",
+    "allowSyntheticDefaultImports": true,
+
     "sourceMap": true,
     "declaration": true,
     "declarationMap": true,
-    "lib": ["esnext"],
-    "baseUrl": ".",
-    "allowSyntheticDefaultImports": true,
     "paths": {
+      "web3": ["packages/base/src/types/web3/"],
       "web3/*": ["packages/base/src/types/web3/*"]
     }
   }
