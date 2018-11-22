@@ -1,7 +1,30 @@
 {
   "name": "ethql",
-  "version": "0.0.0",
+  "version": "0.0.1",
+  "description": "A GraphQL interface to Ethereum",
+  "author": "ConsenSys",
   "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ConsenSys/ethql"
+  },
+  "bugs": {
+    "url": "https://github.com/ConsenSys/ethql/issues"
+  },
+  "contributors": [
+    "Raúl Kripalani <raul.kripalani@gmail.com>",
+    "Akhila Raju <akhila.raju@consensys.net>",
+    "Jonathan Buhler",
+    "Evgeniy Filatov <evgeniyfilatov@gmail.com>"
+  ],
+  "keywords": [
+    "ethereum",
+    "graphql"
+  ],
+  "main": "dist/index.js",
+  "engines": {
+    "node": ">=8.0.0"
+  },
   "scripts": {
     "clean": "rimraf dist",
     "start": "dotenv -- node dist/index.js",
@@ -10,10 +33,10 @@
     "build:ts": "npm run clean && patch-package && tsc -b"
   },
   "dependencies": {
-    "@ethql/base": "^0.0.0",
-    "web3": "^1.0.0-beta.35",
+    "@ethql/base": "^0.0.1",
+    "@ethql/ens": "^0.0.1",
+    "@ethql/erc20": "^0.0.1",
     "lodash": "^4.17.10",
-    "@ethql/erc20": "^0.0.0",
-    "@ethql/ens": "^0.0.0"
+    "web3": "^1.0.0-beta.35"
   }
 }
