@@ -2,9 +2,9 @@
   "extends": "./tsconfig-base.json",
   "compilerOptions": {
     "paths": {
-      "@ethql/base/dist/*": ["packages/base/src/*"],
-      "@ethql/*": ["packages/*/src/"],
-      "*": ["packages/base/src/types/*"]
+      "@ethql/base/dist/*": ["./packages/base/src/*"],
+      "@ethql/*": ["./packages/*/src/"],
+      "web3/*": ["./packages/base/src/types/web3/*"]
     }
   },
   "references": [

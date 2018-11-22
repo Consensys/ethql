@@ -5,11 +5,12 @@
     "module": "commonjs",
     "sourceMap": true,
     "declaration": true,
+    "declarationMap": true,
     "lib": ["esnext"],
     "baseUrl": ".",
     "allowSyntheticDefaultImports": true,
     "paths": {
-      "*": ["packages/base/src/types/*"]
+      "web3/*": ["packages/base/src/types/web3/*"]
     }
   }
 }

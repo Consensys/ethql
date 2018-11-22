@@ -4,6 +4,8 @@ import resolvers from './resolvers';
 
 import {} from '@ethql/base/dist/core/services/web3';
 
+import {} from './services/ens';
+
 const plugin: EthqlPluginFactory = config => ({
   name: 'ens',
   priority: 20,
