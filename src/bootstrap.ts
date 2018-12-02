@@ -90,7 +90,7 @@ export function bootstrap(opts: EthqlServerOpts): EthqlBootstrapResult {
     if (typeof plugin.resolvers === 'function') {
       plugin.resolvers = plugin.resolvers(merged.resolvers);
     }
-    merged = deepmerge(merged, plugin);
+    merged = deepmerge.all([merged, plugin]) as MergeResult;
   }
 
   const { schema, resolvers, serviceDefinitions } = merged;
