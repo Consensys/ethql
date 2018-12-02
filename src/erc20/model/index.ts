@@ -65,6 +65,13 @@ export class Erc20TokenContract {
       .call()
       .catch(() => undefined);
   }
+
+  public async decimals() {
+    return this._contract.methods
+      .decimals()
+      .call()
+      .catch(() => undefined);
+  }
 }
 
 export class Erc20TokenHolder {
