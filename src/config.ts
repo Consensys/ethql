@@ -1,5 +1,5 @@
-import * as commander from 'commander';
-import * as _ from 'lodash';
+import commander from 'commander';
+import _ from 'lodash';
 
 export class Options {
   public jsonrpc?: string;

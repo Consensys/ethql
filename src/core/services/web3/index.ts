@@ -1,5 +1,5 @@
 import { Promise as BPromise } from 'bluebird';
-import * as DataLoader from 'dataloader';
+import DataLoader from 'dataloader';
 import net = require('net');
 import * as url from 'url';
 import Web3 = require('web3');
