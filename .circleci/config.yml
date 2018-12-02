@@ -20,7 +20,7 @@ jobs:
             - ~/.cache/yarn
       - run: 
           name: Run tests
-          command: yarn test
+          command: yarn test:ci
       - run:
           name: Build ethql
           command: yarn build:ts

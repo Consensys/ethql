@@ -36,6 +36,7 @@
     "lint:ts": "$(npm bin)/tslint --fix -t stylish -c tslint.json -p tsconfig.json && $(npm bin)/prettier --parser typescript --write 'src/**/*.ts'",
     "lint:rest": "$(npm bin)/prettier '**/*.{md,json}' --write",
     "test": "$(npm bin)/jest",
+    "test:ci": "$(npm bin)/jest --maxWorkers=4",
     "test:watch": "$(npm bin)/jest --watch",
     "coverage": "$(npm bin)/jest --collectCoverage",
     "precommit": "npm run test && $(npm bin)/lint-staged",
