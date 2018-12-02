@@ -4,6 +4,6 @@ schema {
 }
 
 type Query {
-  foo: String
+  _: String
 }
 `;
