@@ -4,7 +4,7 @@ import { testGraphql } from '../utils';
 
 const { execQuery } = testGraphql({ optsOverride: { plugins: [core, erc165] } });
 
-test('erc165: Cryptokities supports ERC165 interface', async () => {
+test('erc165: Cryptokitties supports ERC165 interface', async () => {
   const query = `
     {
     	account(address:"0x06012c8cf97BEaD5deAe237070F9587f8E7A266d") {
@@ -19,7 +19,7 @@ test('erc165: Cryptokities supports ERC165 interface', async () => {
   expect(result.data.account.supportsInterface).toEqual(true);
 });
 
-test('erc165: Cryptokities supports ERC721 interface', async () => {
+test('erc165: Cryptokitties supports ERC721 interface', async () => {
   const query = `
     {
     	account(address:"0x06012c8cf97BEaD5deAe237070F9587f8E7A266d") {
