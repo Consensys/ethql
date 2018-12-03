@@ -48,7 +48,6 @@ class SimpleDecodingEngine implements DecodingEngine {
    */
   public decodeLog(log: EthqlLog, context: EthqlContext): DecodedLog | undefined {
     // Find a decoder that can process this log.
-
     for (const decoder of this.registry) {
       const logs: any[] = decoder.abiDecoder.decodeLogs([log]);
       if (!logs || logs[0] === undefined) {
