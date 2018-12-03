@@ -35,7 +35,7 @@ test('erc165: Cryptokities supports ERC721 interface', async () => {
   expect(result.data.account.supportsInterface).toEqual(true);
 });
 
-test('erc165: OmiseGO does not supports ERC165', async () => {
+test('erc165: OmiseGO does not support ERC165', async () => {
   const query = `
     {
     	account(address:"0xd26114cd6EE289AccF82350c8d8487fedB8A0C07") {
