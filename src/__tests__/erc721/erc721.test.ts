@@ -9,8 +9,10 @@ const { execQuery } = testGraphql({ optsOverride: { plugins: [core, erc165, erc7
 test('erc721: nftToken balanceOf query #1', async () => {
   const query = `
   {
-    nftToken(address:"0x6EbeAf8e8E946F0716E6533A6f2cefc83f60e8Ab") {
-      balanceOf(owner: "0xD418c5d0c4a3D87a6c555B7aA41f13EF87485Ec6")
+    account(address: "0x6EbeAf8e8E946F0716E6533A6f2cefc83f60e8Ab") {
+      nftToken {
+        balanceOf(owner: "0xD418c5d0c4a3D87a6c555B7aA41f13EF87485Ec6")
+      }
     }
   }
   `;
@@ -19,8 +21,10 @@ test('erc721: nftToken balanceOf query #1', async () => {
   expect(result.data).not.toBeUndefined();
 
   expect(result.data).toEqual({
-    nftToken: {
-      balanceOf: 0,
+    account: {
+      nftToken: {
+        balanceOf: 0,
+      },
     },
   });
 });
@@ -28,8 +32,10 @@ test('erc721: nftToken balanceOf query #1', async () => {
 test('erc721: nftToken balanceOf query #2', async () => {
   const query = `
   {
-    nftToken(address:"0x6EbeAf8e8E946F0716E6533A6f2cefc83f60e8Ab") {
-      balanceOf(owner: "0x6f00cE7253bFD3A5A1c307b5E13814BF3433C72f")
+    account(address: "0x6EbeAf8e8E946F0716E6533A6f2cefc83f60e8Ab") {
+      nftToken {
+        balanceOf(owner: "0x6f00cE7253bFD3A5A1c307b5E13814BF3433C72f")
+      }
     }
   }
   `;
@@ -38,8 +44,10 @@ test('erc721: nftToken balanceOf query #2', async () => {
   expect(result.data).not.toBeUndefined();
 
   expect(result.data).toEqual({
-    nftToken: {
-      balanceOf: 5,
+    account: {
+      nftToken: {
+        balanceOf: 5,
+      },
     },
   });
 });
@@ -47,8 +55,10 @@ test('erc721: nftToken balanceOf query #2', async () => {
 test('erc721: nftToken ownerOf query', async () => {
   const query = `
   {
-    nftToken(address:"0x6EbeAf8e8E946F0716E6533A6f2cefc83f60e8Ab") {
-      ownerOf(tokenId: 143880)
+    account(address: "0x6EbeAf8e8E946F0716E6533A6f2cefc83f60e8Ab") {
+      nftToken {
+        ownerOf(tokenId: 143880)
+      }
     }
   }
   `;
@@ -57,8 +67,10 @@ test('erc721: nftToken ownerOf query', async () => {
   expect(result.data).not.toBeUndefined();
 
   expect(result.data).toEqual({
-    nftToken: {
-      ownerOf: '0x6f00cE7253bFD3A5A1c307b5E13814BF3433C72f',
+    account: {
+      nftToken: {
+        ownerOf: '0x6f00cE7253bFD3A5A1c307b5E13814BF3433C72f',
+      },
     },
   });
 });
@@ -66,8 +78,10 @@ test('erc721: nftToken ownerOf query', async () => {
 test('erc721: nftToken getApproved query', async () => {
   const query = `
   {
-    nftToken(address:"0x6EbeAf8e8E946F0716E6533A6f2cefc83f60e8Ab") {
-      getApproved(tokenId: 33525)
+    account(address:"0x6EbeAf8e8E946F0716E6533A6f2cefc83f60e8Ab") {
+      nftToken {
+        getApproved(tokenId: 33525)
+      }
     }
   }
   `;
@@ -76,8 +90,10 @@ test('erc721: nftToken getApproved query', async () => {
   expect(result.data).not.toBeUndefined();
 
   expect(result.data).toEqual({
-    nftToken: {
-      getApproved: '0x0000000000000000000000000000000000000000',
+    account: {
+      nftToken: {
+        getApproved: '0x0000000000000000000000000000000000000000',
+      },
     },
   });
 });
@@ -85,8 +101,10 @@ test('erc721: nftToken getApproved query', async () => {
 test('erc721: nftToken isApprovedForAll query', async () => {
   const query = `
   {
-    nftToken(address:"0x6EbeAf8e8E946F0716E6533A6f2cefc83f60e8Ab") {
-      isApprovedForAll(owner: "0xb85e9bdfCA73a536BE641bB5eacBA0772eA3E61E", operator: "0xD418c5d0c4a3D87a6c555B7aA41f13EF87485Ec6")
+    account(address:"0x6EbeAf8e8E946F0716E6533A6f2cefc83f60e8Ab") {
+      nftToken {
+        isApprovedForAll(owner: "0xb85e9bdfCA73a536BE641bB5eacBA0772eA3E61E", operator: "0xD418c5d0c4a3D87a6c555B7aA41f13EF87485Ec6")
+      }
     }
   }
   `;
@@ -95,8 +113,10 @@ test('erc721: nftToken isApprovedForAll query', async () => {
   expect(result.data).not.toBeUndefined();
 
   expect(result.data).toEqual({
-    nftToken: {
-      isApprovedForAll: false,
+    account: {
+      nftToken: {
+        isApprovedForAll: false,
+      },
     },
   });
 });

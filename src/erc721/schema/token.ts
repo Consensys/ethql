@@ -1,7 +1,8 @@
 export default `
-extend type Query {
+
+extend type Account {
   "Selects an account."
-  nftToken(address: Address!): ERC721TokenContract
+  nftToken: ERC721TokenContract
 }
 
 type ERC721TokenHolder {
