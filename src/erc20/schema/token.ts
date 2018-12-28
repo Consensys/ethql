@@ -1,10 +1,10 @@
 export default `
-type TokenHolder {
+type ERC20TokenHolder {
   account: Account!
   tokenBalance: Long
 }
 
-type TokenContract {
+type ERC20TokenContract {
   account: Account
   symbol: String
   totalSupply: Long
