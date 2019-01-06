@@ -1,5 +1,5 @@
+import { EthqlServiceFactories, EthqlServices } from '.';
 import { Options } from './config';
-import { EthqlServiceFactories, EthqlServices } from './services';
 
 export class EthqlContext {
   public readonly services: EthqlServices;

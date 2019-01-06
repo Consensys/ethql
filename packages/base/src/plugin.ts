@@ -1,7 +1,6 @@
 import { IResolvers } from 'graphql-tools';
-import { EthqlBootstrapResult } from './bootstrap';
-import { EthqlServerOpts } from './server';
-import { EthqlServiceDefinitions, EthqlServices } from './services';
+import { EthqlServiceDefinitions, EthqlServices } from '.';
+import { EthqlBootstrapResult, EthqlOptions } from './bootstrap';
 
 export interface EthqlPlugin {
   /**
@@ -56,4 +55,4 @@ export interface EthqlPlugin {
   init?: (result: EthqlBootstrapResult) => void;
 }
 
-export type EthqlPluginFactory = (opts: EthqlServerOpts) => EthqlPlugin;
+export type EthqlPluginFactory = (opts: EthqlOptions) => EthqlPlugin;

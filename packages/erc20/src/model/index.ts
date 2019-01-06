@@ -1,6 +1,6 @@
+import { EthqlContext } from '@ethql/base';
+import { EthqlAccount } from '@ethql/core';
 import Contract from 'web3/eth/contract';
-import { EthqlContext } from '@ethql/base/dist/context';
-import { EthqlAccount } from '@ethql/base/dist/core/model';
 
 export interface Erc20Transaction {
   tokenContract: Erc20TokenContract;
@@ -68,7 +68,7 @@ export class Erc20TokenContract {
 }
 
 export class Erc20TokenHolder {
-  constructor(public readonly account: EthqlAccount, private readonly contract: Erc20TokenContract) {}
+  constructor(public readonly account: EthqlAccount, private readonly contract: Erc20TokenContract) { }
 
   public async tokenBalance() {
     return this.contract.balanceOf({ ...this.account });

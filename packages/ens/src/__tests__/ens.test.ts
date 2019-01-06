@@ -1,9 +1,9 @@
-import core from '@ethql/base/dist/core';
-import ens from '../';
-import { testGraphql } from '@ethql/base/dist/__tests__/utils';
+import { CORE_PLUGIN } from '@ethql/core';
+import { testGraphql } from '@ethql/core/dist/test';
+import { ENS_PLUGIN } from '..';
 
 const { execQuery } = testGraphql({
-  optsOverride: {
+  opts: {
     config: {
       jsonrpc: 'https://mainnet.infura.io',
       queryMaxSize: 10,
@@ -11,7 +11,7 @@ const { execQuery } = testGraphql({
       caching: true,
       port: 0,
     },
-    plugins: [core, ens],
+    plugins: [CORE_PLUGIN, ENS_PLUGIN],
   },
 });
 

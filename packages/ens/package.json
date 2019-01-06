@@ -2,7 +2,7 @@
   "name": "@ethql/ens",
   "version": "0.0.1",
   "main": "dist/index.js",
-  "description": "A GraphQL interface to Ethereum",
+  "description": "EthQL :: Plugins :: ENS",
   "author": "ConsenSys",
   "license": "Apache-2.0",
   "repository": {
@@ -31,6 +31,7 @@
   },
   "dependencies": {
     "@ethql/base": "^0.0.1",
+    "@ethql/core": "^0.0.1",
     "ez-ens": "^1.0.4",
     "graphql": "^14.0.2",
     "lodash": "^4.17.10",

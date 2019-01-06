@@ -1,16 +1,16 @@
-import core from '../core';
 import { EthqlPluginFactory } from '../plugin';
-import { testGraphql } from './utils';
+import { testGraphql } from '../test';
 
 test('plugins: plugin resolvers are used', async () => {
+  const schema = `
+  extend type Query {
+    test: String
+  }`;
+
   const testPlugin: EthqlPluginFactory = () => ({
     name: 'test-plugin',
     priority: 1000,
-    schema: [
-      `extend type Query {
-      test: String
-    }`,
-    ],
+    schema: [schema],
     resolvers: {
       Query: {
         test: () => 'testReply',
@@ -18,7 +18,9 @@ test('plugins: plugin resolvers are used', async () => {
     },
   });
 
-  const { execQuery } = testGraphql({ optsOverride: { plugins: [core, testPlugin] } });
+  const { execQuery } = testGraphql({
+    opts: { plugins: [testPlugin], config: { validation: { ignoreCorePluginAbsent: true } } },
+  });
   const resp = await execQuery(`
   {
     test

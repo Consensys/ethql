@@ -3,10 +3,9 @@ import { alg, Graph } from 'graphlib';
 import { GraphQLSchema } from 'graphql';
 import { IResolvers, makeExecutableSchema, mergeSchemas } from 'graphql-tools';
 import * as _ from 'lodash';
-import config, { Options } from './config';
-import { EthqlPlugin } from './plugin';
+import { Options, runtimeConfig } from './config';
+import { EthqlPlugin, EthqlPluginFactory } from './plugin';
 import rootSchema from './schema/root';
-import { EthqlServerOpts } from './server';
 import { EthqlServiceDefinitions, EthqlServiceFactories } from './services';
 
 type MergeResult = {
@@ -15,6 +14,15 @@ type MergeResult = {
   resolvers: IResolvers<any, any>;
   serviceDefinitions: Partial<EthqlServiceDefinitions>;
 };
+
+/**
+ * Options for EthQL server.
+ */
+export type EthqlOptions = {
+  config?: Options;
+  plugins?: EthqlPluginFactory[];
+};
+
 
 export type EthqlBootstrapResult = {
   config: Options;
@@ -36,7 +44,7 @@ const ERR_MSG_MANY_ROOTS = sources => `Expected plugin graph to be a tree, but t
  *
  * @param opts Server options.
  */
-export function bootstrap(opts: EthqlServerOpts): EthqlBootstrapResult {
+export function bootstrap(opts: EthqlOptions): EthqlBootstrapResult {
   let plugins = opts.plugins.map(pf => pf(opts));
 
   // Sanity checks.
@@ -44,7 +52,9 @@ export function bootstrap(opts: EthqlServerOpts): EthqlBootstrapResult {
     throw new Error(ERR_MSG_NO_PLUGINS);
   }
 
-  if (!_.find(plugins, { name: 'core' })) {
+  const validateCore = !(opts.config && opts.config.validation && opts.config.validation.ignoreCorePluginAbsent);
+  const coreLoaded = !!_.find(plugins, { name: 'core' });
+  if (validateCore && !coreLoaded) {
     throw new Error(ERR_MSG_CORE_REQUIRED);
   }
 
@@ -63,7 +73,7 @@ export function bootstrap(opts: EthqlServerOpts): EthqlBootstrapResult {
     graph.setNode(name, plugin);
 
     // Add an implicit dependency on core, if core is not explicitly listed.
-    if (name !== 'core' && ![...after, ...before].includes('core')) {
+    if (coreLoaded && name !== 'core' && ![...after, ...before].includes('core')) {
       after.push('core');
     }
 
@@ -85,7 +95,7 @@ export function bootstrap(opts: EthqlServerOpts): EthqlBootstrapResult {
   console.log(`⚒   Bootstrapping with plugins: ${orderedPlugins.map(p => p.name).join(', ')}.`);
 
   // Merge schemas, resolvers, serviceDefinitions from all plugins.
-  let merged: MergeResult = { config, schema: [], resolvers: {}, serviceDefinitions: {} };
+  let merged: MergeResult = { config: runtimeConfig, schema: [], resolvers: {}, serviceDefinitions: {} };
   for (let plugin of orderedPlugins) {
     if (typeof plugin.resolvers === 'function') {
       plugin.resolvers = plugin.resolvers(merged.resolvers);
@@ -126,7 +136,7 @@ export function bootstrap(opts: EthqlServerOpts): EthqlBootstrapResult {
       inheritResolversFromInterfaces: true,
       resolverValidationOptions: { requireResolversForResolveType: false },
     }),
-    config,
+    config: runtimeConfig,
     serviceDefinitions: serviceDefinitions as EthqlServiceDefinitions,
     serviceFactories: serviceFactories as EthqlServiceFactories,
   };

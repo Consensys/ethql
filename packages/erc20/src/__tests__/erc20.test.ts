@@ -1,8 +1,8 @@
-import core from '@ethql/base/dist/core';
-import erc20 from '../';
-import { testGraphql } from '@ethql/base/dist/__tests__/utils';
+import { CORE_PLUGIN } from '@ethql/core';
+import { testGraphql } from '@ethql/core/dist/test';
+import { ERC20_PLUGIN } from '../';
 
-const { execQuery } = testGraphql({ optsOverride: { plugins: [core, erc20] } });
+const { execQuery } = testGraphql({ opts: { plugins: [CORE_PLUGIN, ERC20_PLUGIN] } });
 
 test('erc20: not decodable', async () => {
   const query = `

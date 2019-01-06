@@ -1,11 +1,12 @@
 import ENS = require('ez-ens');
-import { EthqlPluginFactory } from '@ethql/base/dist/plugin';
+
+import { EthqlPluginFactory } from '@ethql/base';
+import '@ethql/core/dist/services/web3';
 import resolvers from './resolvers';
 
-import {} from '@ethql/base/dist/core/services/web3';
-import {} from './services/ens';
+import './services';
 
-const plugin: EthqlPluginFactory = config => ({
+export const ENS_PLUGIN: EthqlPluginFactory = _ => ({
   name: 'ens',
   priority: 20,
   resolvers,
@@ -20,5 +21,3 @@ const plugin: EthqlPluginFactory = config => ({
     },
   },
 });
-
-export default plugin;

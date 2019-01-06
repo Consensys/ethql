@@ -1,11 +1,16 @@
 import { graphql } from 'graphql';
 import { bootstrap } from '../bootstrap';
-import { initWeb3 } from '../core/services/web3';
 import { EthqlPluginFactory } from '../plugin';
 
 declare module '../services' {
+  interface EthqlServices {
+    testService1: {};
+    testService2: {};
+  }
+
   interface EthqlServiceDefinitions {
-    testService: EthqlServiceDefinition<string[], {}>;
+    testService1: EthqlServiceDefinition<string[], {}>;
+    testService2: EthqlServiceDefinition<string[], {}>;
   }
 }
 
@@ -22,7 +27,6 @@ test('bootstrap: error when core plugin not loaded', () => {
     }),
   ).toThrow("'core' plugin is required");
 });
-
 test('bootstrap: error when required service not present', () => {
   const plugin1: EthqlPluginFactory = () => ({
     name: 'plugin1',
@@ -33,7 +37,7 @@ test('bootstrap: error when required service not present', () => {
     name: 'core',
     priority: 10,
     dependsOn: {
-      services: ['decoder'],
+      services: ['testService1'],
     },
   });
 
@@ -42,7 +46,7 @@ test('bootstrap: error when required service not present', () => {
       config: {},
       plugins: [plugin1, plugin2],
     }),
-  ).toThrow('Missing services: decoder');
+  ).toThrow('Missing services: testService1');
 });
 
 test('bootstrap: no error when required service is present', () => {
@@ -50,13 +54,9 @@ test('bootstrap: no error when required service is present', () => {
     name: 'core',
     priority: 10,
     serviceDefinitions: {
-      web3: {
+      testService1: {
         implementation: {
-          factory: () =>
-            initWeb3({
-              jsonrpc: 'http://127.0.0.1:8545',
-              batching: false,
-            }),
+          singleton: () => ({}),
         },
       },
     },
@@ -66,7 +66,7 @@ test('bootstrap: no error when required service is present', () => {
     name: 'plugin1',
     priority: 11,
     dependsOn: {
-      services: ['web3'],
+      services: ['testService1'],
     },
   });
 
@@ -178,7 +178,7 @@ test('bootstrap: service configuration merged', () => {
     name: 'core',
     priority: 10,
     serviceDefinitions: {
-      testService: {
+      testService1: {
         config: ['value1'],
         implementation: {
           singleton: c => (config = c),
@@ -191,7 +191,7 @@ test('bootstrap: service configuration merged', () => {
     name: 'plugin1',
     priority: 11,
     serviceDefinitions: {
-      testService: {
+      testService1: {
         config: ['value2'],
       },
     },

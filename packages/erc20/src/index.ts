@@ -1,13 +1,14 @@
-import { EthqlPluginFactory } from '@ethql/base/dist/plugin';
+import { EthqlPluginFactory } from '@ethql/base';
 import { Erc20TokenDecoder } from './decoders';
 import erc20Schema from './schema/erc20';
 import tokenSchema from './schema/token';
 
-import {} from '@ethql/base/dist/core/services/decoder';
-import {} from '@ethql/base/dist/core/services/eth-service';
-import {} from '@ethql/base/dist/core/services/web3';
+import '@ethql/core';
+import '@ethql/core/dist/services/decoder';
+import '@ethql/core/dist/services/eth-service';
+import '@ethql/core/dist/services/web3';
 
-const plugin: EthqlPluginFactory = config => ({
+export const ERC20_PLUGIN: EthqlPluginFactory = _ => ({
   name: 'erc20',
   priority: 10,
   schema: [erc20Schema, tokenSchema],
@@ -19,11 +20,9 @@ const plugin: EthqlPluginFactory = config => ({
     },
   },
   dependsOn: {
-    services: ['web3', 'ethService', 'decoder'],
+    services: ['web3', 'eth', 'decoder'],
   },
   order: {
     after: ['core'],
   },
 });
-
-export default plugin;

@@ -7,6 +7,9 @@ export class Options {
   public port?: number;
   public batching?: boolean;
   public caching?: boolean;
+  public validation?: {
+    ignoreCorePluginAbsent?: boolean;
+  };
 }
 
 /* tslint:disable */
@@ -49,4 +52,4 @@ const env: Options = {
   caching: process.env.ETHQL_CACHING === undefined ? undefined : process.env.ETHQL_CACHING === 'true',
 };
 
-export default _.merge({}, options, env);
+export const runtimeConfig = _.merge({}, options, env);

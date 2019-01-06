@@ -22,7 +22,7 @@
     "ethereum",
     "graphql"
   ],
-  "main": "index.js",
+  "main": "dist/index.js",
   "engines": {
     "node": ">=8.0.0"
   },
