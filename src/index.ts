@@ -11,7 +11,11 @@ const server = new EthqlServer({
   plugins: [core, erc20, ens],
 });
 
-process.on('SIGINT', async () => (await server.stop()) || process.exit(0));
-process.on('SIGTERM', async () => (await server.stop()) || process.exit(0));
+const stopFn = async () => {
+  await server.stop();
+  process.exit(0);
+};
 
+process.on('SIGINT', stopFn);
+process.on('SIGTERM', stopFn);
 server.start();

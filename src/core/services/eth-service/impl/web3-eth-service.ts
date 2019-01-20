@@ -1,4 +1,5 @@
 import { GraphQLResolveInfo } from 'graphql';
+import * as _ from 'lodash';
 import Web3 = require('web3');
 import { EthService, fetchHints, FetchHints } from '..';
 import { EthqlAccount, EthqlBlock, EthqlLog, EthqlTransaction, TransactionStatus } from '../../../model';
@@ -14,10 +15,12 @@ export class Web3EthService implements EthService {
     if (hints.logs) {
       // getPastLogs does not convert number => hex block numbers, so we have to do it manually.
       const idHex = typeof id === 'number' ? this.web3.utils.toHex(id) : id;
-
+      const logOpts = hints.logFilters
+        ? { fromBlock: idHex, toBlock: idHex, topics: hints.logFilters }
+        : { fromBlock: idHex, toBlock: idHex };
       const [block, logs] = await Promise.all([
         this.web3.eth.getBlock(id, hints.transactions),
-        this.web3.eth.getPastLogs({ fromBlock: idHex, toBlock: idHex }),
+        this.web3.eth.getPastLogs(logOpts),
       ]);
 
       return block && new EthqlBlock(block, logs);
@@ -53,9 +56,14 @@ export class Web3EthService implements EthService {
     return address && this.web3.eth.getTransactionCount(address);
   }
 
-  public async fetchTransactionLogs(tx: EthqlTransaction): Promise<EthqlLog[]> {
-    const receipt = await this.web3.eth.getTransactionReceipt(tx.hash);
-    return receipt && (tx.logs = receipt.logs.map(l => new EthqlLog(l, tx)));
+  public async fetchTransactionLogs(tx: EthqlTransaction, filter: any): Promise<EthqlLog[]> {
+    const logOpts = filter
+      ? { fromBlock: tx.blockNumber, toBlock: tx.blockNumber, topics: filter.topics }
+      : { fromBlock: tx.blockNumber, toBlock: tx.blockNumber };
+
+    const logs = await this.web3.eth.getPastLogs(logOpts);
+    const logsByTxIdx = _.groupBy(logs, l => l.transactionIndex);
+    return logs && (tx.logs = logsByTxIdx[tx.index] ? logsByTxIdx[tx.index].map(l => new EthqlLog(l, tx)) : []);
   }
 
   public async fetchCreatedContract(tx: EthqlTransaction): Promise<EthqlAccount> {
