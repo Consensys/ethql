@@ -18,4 +18,5 @@ const stopFn = async () => {
 
 process.on('SIGINT', stopFn);
 process.on('SIGTERM', stopFn);
+
 server.start();
