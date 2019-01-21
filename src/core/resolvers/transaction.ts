@@ -4,7 +4,7 @@ import { EthqlAccount, EthqlBlock, EthqlLog, EthqlTransaction, TransactionStatus
 import { DecodedTransaction } from '../services/decoder';
 
 async function logs(obj: EthqlTransaction, args, { services }: EthqlContext): Promise<EthqlLog[]> {
-  return obj.logs || services.ethService.fetchTransactionLogs(obj);
+  return obj.logs || services.ethService.fetchTransactionLogs(obj, args.filter);
 }
 
 function decoded(obj: EthqlTransaction, args, context: EthqlContext): DecodedTransaction {
