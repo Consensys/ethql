@@ -1,15 +1,30 @@
-import { DEFAULT_TEST_OPTS } from '@ethql/test';
+import { EthqlOptions } from '@ethql/base';
 import axios from 'axios';
-import * as _ from 'lodash';
-import { EthqlServer, EthqlServerOpts } from '../server';
-
 import availablePort = require('get-port');
+import * as _ from 'lodash';
+import { EthqlServer } from '../server';
+
+import { CORE_PLUGIN } from '@ethql/core';
+import { ENS_PLUGIN } from '@ethql/ens';
+import { ERC20_PLUGIN } from '@ethql/erc20';
 
 const testServers: EthqlServer[] = [];
 
-const newServer = async (options: EthqlServerOpts = {}) => {
+const defaultOpts: EthqlOptions = {
+  config: {
+    jsonrpc: 'https://mainnet.infura.io',
+    queryMaxSize: 10,
+    port: 0,
+    validation: {
+      ignoreCorePluginAbsent: true,
+    },
+  },
+  plugins: [CORE_PLUGIN, ENS_PLUGIN, ERC20_PLUGIN],
+};
+
+const newServer = async (options: EthqlOptions = {}) => {
   // _.merge mutates the initial object; hence we use a fresh empty obj.
-  const server = new EthqlServer(_.merge({}, defaultTestServerOpts, options));
+  const server = new EthqlServer(_.merge({}, defaultOpts, options));
   testServers.push(server);
 
   await server.start();
