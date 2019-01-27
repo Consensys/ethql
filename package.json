@@ -1,5 +1,5 @@
 {
-  "name": "@ethql/distro",
+  "name": "ethql",
   "private": true,
   "version": "0.0.1",
   "description": "A GraphQL interface to Ethereum",
@@ -29,21 +29,20 @@
   "scripts": {
     "clean": "lerna run clean",
     "bootstrap": "lerna bootstrap",
-    "start": "lerna run --stream --scope ethql start",
-    "dev": "lerna run --stream --scope ethql dev",
-    "debug": "lerna run --stream --scope ethql debug",
+    "start": "lerna link && lerna run --stream start",
+    "dev": "lerna link && lerna run --stream dev",
+    "debug": "lerna link && lerna run --stream debug",
     "build": "npm run build:docker",
-    "build:ts": "lerna run build:ts",
+    "build:ts": "lerna link && lerna run --stream build:ts",
     "build:docker": "docker image build -t ethql .",
     "lint": "npm-run-all lint:ts lint:rest",
-    "lint:ts": "tslint --fix -t stylish -c tslint.json -p tsconfig.json && prettier --parser typescript --write 'src/**/*.ts'",
-    "lint:rest": "prettier '**/*.{md,json}' --write",
-    "test": "jest",
-    "test:ci": "jest --maxWorkers=4",
-    "test:watch": "jest --watch",
+    "lint:ts": "tslint --fix -t stylish -c tslint.json -p tsconfig.json && prettier --parser typescript --write 'packages/*/src/**/*.ts'",
+    "lint:rest": "prettier 'packages/*/**/*.{md,json}' --write",
+    "test": "lerna link && lerna run --parallel test ",
+    "test:ci": "lerna link && lerna run --parallel test:ci",
+    "test:watch": "lerna link && lerna run --parallel test:watch",
     "coverage": "jest --collectCoverage",
-    "precommit": "npm run test && lint-staged",
-    "postinstall": "patch-package"
+    "precommit": "npm run test && lerna run --parallel lint"
   },
   "lint-staged": {
     "*.ts": [
@@ -59,10 +58,6 @@
   "workspaces": [
     "packages/*"
   ],
-  "dependencies": {
-    "patch-package": "^5.1.1",
-    "postinstall-postinstall": "^2.0.0"
-  },
   "devDependencies": {
     "@types/bluebird": "^3.5.20",
     "@types/bn.js": "^4.11.3",
@@ -73,20 +68,38 @@
     "@types/jest": "^23.1.0",
     "@types/lodash": "^4.14.109",
     "@types/underscore": "^1.8.9",
+    "abi-decoder": "^1.2.0",
+    "apollo-server": "^2.0.5",
+    "axios": "^0.18.0",
+    "bluebird": "^3.5.1",
+    "bn.js": "^4.11.8",
+    "commander": "^2.17.1",
     "copyfiles": "^2.0.0",
-    "dotenv": "^6.0.0",
+    "cors": "^2.8.4",
+    "dataloader": "^1.4.0",
+    "deepmerge": "^2.1.1",
     "dotenv-cli": "^1.4.0",
+    "dotenv": "^6.0.0",
+    "express": "^4.16.3",
+    "get-port": "^4.0.0",
+    "graphlib": "^2.1.5",
+    "graphql-import": "^0.7.1",
+    "graphql-tools": "^4.0.3",
+    "graphql": "^14.0.2",
     "husky": "^1.2.0",
+    "immutable": "^4.0.0-rc.12",
     "jest": "^23.5.0",
     "lerna": "^3.4.3",
     "lint-staged": "^8.1.0",
+    "lodash": "^4.17.10",
     "npm-run-all": "^4.1.3",
     "prettier": "1.15.3",
     "rimraf": "^2.6.2",
     "ts-jest": "^23.1.4",
     "tsc-watch": "^1.0.30",
-    "tslint": "^5.10.0",
     "tslint-config-prettier": "^1.15.0",
-    "typescript": "^3.0.1"
+    "tslint": "^5.10.0",
+    "typescript": "^3.0.1",
+    "web3": "^1.0.0-beta.35"
   }
 }

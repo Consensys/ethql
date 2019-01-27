@@ -4,7 +4,7 @@ import { EthService, fetchHints, FetchHints } from '..';
 import { EthqlAccount, EthqlBlock, EthqlLog, EthqlTransaction, TransactionStatus } from '../../../model';
 
 export class Web3EthService implements EthService {
-  constructor(private web3: Web3) { }
+  constructor(private web3: Web3) {}
 
   public async fetchBlock(id: number | string, infoOrHints: GraphQLResolveInfo | FetchHints): Promise<EthqlBlock> {
     const hints = (infoOrHints as any).fieldName

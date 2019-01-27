@@ -23,7 +23,6 @@ export type EthqlOptions = {
   plugins?: EthqlPluginFactory[];
 };
 
-
 export type EthqlBootstrapResult = {
   config: Options;
   schema: GraphQLSchema;

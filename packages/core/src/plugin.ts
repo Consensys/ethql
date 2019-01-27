@@ -15,7 +15,7 @@ export const CORE_PLUGIN: EthqlPluginFactory = opts => {
       web3: {
         implementation: {
           factory: () => initWeb3(opts.config),
-        }
+        },
       },
       eth: {
         implementation: {

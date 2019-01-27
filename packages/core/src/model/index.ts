@@ -13,7 +13,7 @@ export enum EthqlAccountType {
 }
 
 export class EthqlAccount {
-  constructor(public address: string) { }
+  constructor(public address: string) {}
 
   public equals(addressOrAccount: string | EthqlAccount) {
     // Fail soon if any of the addresses is null, which could stand for contract creation.
@@ -27,12 +27,12 @@ export class EthqlAccount {
 
 export interface EthqlLog
   extends Overwrite<
-  Log,
-  {
-    logIndex: never;
-    index: number;
-  }
-  > { }
+    Log,
+    {
+      logIndex: never;
+      index: number;
+    }
+  > {}
 
 export class EthqlLog {
   constructor(log: Log, public transaction: EthqlTransaction) {
@@ -51,15 +51,15 @@ export class EthqlLog {
 
 export interface EthqlTransaction
   extends Overwrite<
-  Transaction,
-  {
-    from: EthqlAccount;
-    to: EthqlAccount;
-    input: never;
-    transactionIndex: never;
-    index: number;
-  }
-  > { }
+    Transaction,
+    {
+      from: EthqlAccount;
+      to: EthqlAccount;
+      input: never;
+      transactionIndex: never;
+      index: number;
+    }
+  > {}
 
 export class EthqlTransaction {
   public readonly from: EthqlAccount;
@@ -85,12 +85,12 @@ export class EthqlTransaction {
 
 export interface EthqlBlock
   extends Overwrite<
-  Block,
-  {
-    transactions: EthqlTransaction[];
-    miner: EthqlAccount;
-  }
-  > { }
+    Block,
+    {
+      transactions: EthqlTransaction[];
+      miner: EthqlAccount;
+    }
+  > {}
 
 export class EthqlBlock implements EthqlBlock {
   public readonly transactions: EthqlTransaction[];
@@ -133,7 +133,7 @@ export type StorageAccessorElement = {
 };
 
 export class StorageAccessor {
-  constructor(public address: string, public readonly path: List<StorageAccessorElement> = List()) { }
+  constructor(public address: string, public readonly path: List<StorageAccessorElement> = List()) {}
 
   public push(obj: StorageAccessorElement) {
     return new StorageAccessor(this.address, this.path.push(obj));

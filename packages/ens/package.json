@@ -27,7 +27,10 @@
   },
   "scripts": {
     "clean": "rimraf dist",
-    "build:ts": "npm run clean && patch-package && tsc -b"
+    "build:ts": "npm run clean && tsc -b",
+    "test": "jest",
+    "test:ci": "jest --maxWorkers=4",
+    "test:watch": "jest --watch"
   },
   "dependencies": {
     "@ethql/base": "^0.0.1",

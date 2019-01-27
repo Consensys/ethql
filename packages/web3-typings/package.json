@@ -24,6 +24,6 @@
   },
   "scripts": {
     "clean": "rimraf dist",
-    "build:ts": "npm run clean && patch-package && tsc -b"
+    "build:ts": "npm run clean && tsc -b"
   }
 }

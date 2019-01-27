@@ -68,7 +68,7 @@ export class Erc20TokenContract {
 }
 
 export class Erc20TokenHolder {
-  constructor(public readonly account: EthqlAccount, private readonly contract: Erc20TokenContract) { }
+  constructor(public readonly account: EthqlAccount, private readonly contract: Erc20TokenContract) {}
 
   public async tokenBalance() {
     return this.contract.balanceOf({ ...this.account });
