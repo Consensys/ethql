@@ -27,12 +27,12 @@ export class EthqlAccount {
 
 export interface EthqlLog
   extends Overwrite<
-      Log,
-      {
-        logIndex: never;
-        index: number;
-      }
-    > {}
+    Log,
+    {
+      logIndex: never;
+      index: number;
+    }
+  > {}
 
 export class EthqlLog {
   constructor(log: Log, public transaction: EthqlTransaction) {
@@ -51,15 +51,15 @@ export class EthqlLog {
 
 export interface EthqlTransaction
   extends Overwrite<
-      Transaction,
-      {
-        from: EthqlAccount;
-        to: EthqlAccount;
-        input: never;
-        transactionIndex: never;
-        index: number;
-      }
-    > {}
+    Transaction,
+    {
+      from: EthqlAccount;
+      to: EthqlAccount;
+      input: never;
+      transactionIndex: never;
+      index: number;
+    }
+  > {}
 
 export class EthqlTransaction {
   public readonly from: EthqlAccount;
@@ -85,12 +85,12 @@ export class EthqlTransaction {
 
 export interface EthqlBlock
   extends Overwrite<
-      Block,
-      {
-        transactions: EthqlTransaction[];
-        miner: EthqlAccount;
-      }
-    > {}
+    Block,
+    {
+      transactions: EthqlTransaction[];
+      miner: EthqlAccount;
+    }
+  > {}
 
 export class EthqlBlock implements EthqlBlock {
   public readonly transactions: EthqlTransaction[];
@@ -141,3 +141,7 @@ export class StorageAccessor {
 }
 
 export type TransactionStatus = 'PENDING' | 'SUCCESS' | 'FAILED';
+
+export type LogFilter = {
+  topics: string[][];
+};

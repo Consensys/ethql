@@ -2,7 +2,7 @@ import { GraphQLResolveInfo } from 'graphql';
 import * as _ from 'lodash';
 import Web3 = require('web3');
 import { EthService, fetchHints, FetchHints } from '..';
-import { EthqlAccount, EthqlBlock, EthqlLog, EthqlTransaction, TransactionStatus } from '../../../model';
+import { EthqlAccount, EthqlBlock, EthqlLog, EthqlTransaction, LogFilter, TransactionStatus } from '../../../model';
 
 export class Web3EthService implements EthService {
   constructor(private web3: Web3) {}
@@ -56,7 +56,7 @@ export class Web3EthService implements EthService {
     return address && this.web3.eth.getTransactionCount(address);
   }
 
-  public async fetchTransactionLogs(tx: EthqlTransaction, filter: any): Promise<EthqlLog[]> {
+  public async fetchTransactionLogs(tx: EthqlTransaction, filter: LogFilter): Promise<EthqlLog[]> {
     const logOpts = filter
       ? { fromBlock: tx.blockNumber, toBlock: tx.blockNumber, topics: filter.topics }
       : { fromBlock: tx.blockNumber, toBlock: tx.blockNumber };
