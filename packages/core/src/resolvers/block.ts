@@ -1,4 +1,4 @@
-import { EthqlContext } from '@ethql/base/dist/context';
+import { EthqlContext } from '@ethql/base';
 import { GraphQLResolveInfo } from 'graphql';
 import { EthqlAccount, EthqlBlock, EthqlTransaction } from '../model';
 

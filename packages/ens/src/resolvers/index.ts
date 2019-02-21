@@ -3,8 +3,6 @@ import { EthqlBlock } from '@ethql/core';
 import * as _ from 'lodash';
 import { Address, addressFn } from './scalars';
 
-import '@ethql/base/dist/services';
-
 // This uses the _reduction_ approach for installing plugin resolvers.
 // `prev` is the entire resolver tree prior to loading this plugin.
 //

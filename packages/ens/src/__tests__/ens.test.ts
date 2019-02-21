@@ -1,19 +1,8 @@
 import { CORE_PLUGIN } from '@ethql/core';
-import { testGraphql } from '@ethql/core/dist/test';
+import { testGraphql } from '@ethql/plugin';
 import { ENS_PLUGIN } from '..';
 
-const { execQuery } = testGraphql({
-  opts: {
-    config: {
-      jsonrpc: 'https://mainnet.infura.io',
-      queryMaxSize: 10,
-      batching: true,
-      caching: true,
-      port: 0,
-    },
-    plugins: [CORE_PLUGIN, ENS_PLUGIN],
-  },
-});
+const { execQuery } = testGraphql({ opts: { plugins: [CORE_PLUGIN, ENS_PLUGIN] }});
 
 test('account: select by ens domain: parseLiteral', async () => {
   const query = `

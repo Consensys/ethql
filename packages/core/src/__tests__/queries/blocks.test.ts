@@ -1,6 +1,8 @@
-import { testGraphql } from '../../test';
+import { EthqlOptions, testGraphql, TestMode } from '@ethql/plugin';
+import { CORE_PLUGIN } from '../../plugin';
 
-const { execQuery } = testGraphql();
+const testServerOpts: EthqlOptions = { plugins: [CORE_PLUGIN] };
+const { execQuery } = testGraphql({opts: testServerOpts});
 
 test('blocks: select multiple blocks by specific numbers', async () => {
   const query = `

@@ -25,5 +25,11 @@
   "scripts": {
     "clean": "rimraf dist",
     "build:ts": "npm run clean && tsc -b"
+  },
+  "dependencies": {
+    "@types/node": "^11.9.4",
+    "bn.js": "^4.11.8",
+    "graphql": "^14.1.1",
+    "underscore": "^1.9.1"
   }
 }

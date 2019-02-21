@@ -1,6 +1,8 @@
-import { testGraphql } from '../../test';
+import { EthqlOptions, testGraphql, TestMode } from '@ethql/plugin';
+import { CORE_PLUGIN } from '../../plugin';
 
-const { execQuery } = testGraphql();
+const testServerOpts: EthqlOptions = { plugins: [CORE_PLUGIN] };
+const { execQuery } = testGraphql({opts: testServerOpts});
 
 test('blockOffset: select single block by number with positive offset', async () => {
   const query = `

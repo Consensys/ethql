@@ -1,0 +1,36 @@
+{
+  "name": "@ethql/plugin",
+  "version": "0.0.1",
+  "description": "> TODO: description",
+  "author": "Kris Shinn <raggamuffin.music@gmail.com>",
+  "homepage": "https://github.com/kshinn/ethql#readme",
+  "license": "ISC",
+  "main": "dist/index.js",
+  "directories": {
+    "dist": "dist",
+    "test": "src/__tests__"
+  },
+  "files": [
+    "dist"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kshinn/ethql.git"
+  },
+  "scripts": {
+    "build:ts": "tsc -b",
+    "test": "jest"
+  },
+  "bugs": {
+    "url": "https://github.com/kshinn/ethql/issues"
+  },
+  "dependencies": {
+    "@ethql/base": "^0.0.1",
+    "@types/node": "^11.9.4",
+    "deepmerge": "^3.2.0",
+    "graphlib": "^2.1.7",
+    "graphql": "^14.1.1",
+    "graphql-tools": "^4.0.4",
+    "lodash": "^4.17.11"
+  }
+}

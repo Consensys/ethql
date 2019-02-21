@@ -1,13 +1,6 @@
 {
   "extends": "./tsconfig-base.json",
-  "compilerOptions": {
-    "paths": {
-      // fix package resolution for jest
-      //"@ethql/base/dist/*": ["./packages/base/src/*"],
-      //"@ethql/*": ["./packages/*/src/"],
-      // use custom web3 types
-      "web3": ["./packages/web3-typings/src/"],
-      "web3/*": ["./packages/web3-typings/src/*"]
-    }
-  }
+  "references": [
+    {"path": "packages"}
+  ],
 }

@@ -34,6 +34,17 @@
     "test:watch": "jest --watch"
   },
   "dependencies": {
-    "@ethql/base": "^0.0.1"
+    "@ethql/base": "^0.0.1",
+    "@ethql/plugin": "^0.0.1",
+    "abi-decoder": "^1.2.0",
+    "bluebird": "^3.5.3",
+    "dataloader": "^1.4.0",
+    "deepmerge": "^3.2.0",
+    "graphql": "^14.1.1",
+    "immutable": "^4.0.0-rc.12",
+    "lodash": "^4.17.11",
+    "number-to-bn": "^1.7.0",
+    "web3": "1.0.0-beta.35",
+    "web3-utils": "1.0.0-beta.35"
   }
 }

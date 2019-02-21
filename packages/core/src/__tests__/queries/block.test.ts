@@ -1,7 +1,8 @@
-import { TestMode } from '@ethql/base/dist/test';
-import { testGraphql } from '../../test';
+import { EthqlOptions, testGraphql, TestMode } from '@ethql/plugin';
+import { CORE_PLUGIN } from '../../plugin';
 
-const { execQuery } = testGraphql();
+const testServerOpts: EthqlOptions = { plugins: [CORE_PLUGIN] };
+const { execQuery } = testGraphql({opts: testServerOpts});
 
 test('block: select single block by number', async () => {
   const query = `
@@ -18,7 +19,7 @@ test('block: select single block by number', async () => {
 });
 
 test('block: select single block by tag', async () => {
-  const { execQuery } = testGraphql({ mode: TestMode.passthrough });
+  const { execQuery } = testGraphql({ opts: testServerOpts, mode: TestMode.passthrough });
   const query = `
     {
       block(tag: LATEST) {

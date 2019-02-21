@@ -1,6 +1,9 @@
-import { testGraphql } from '../../test';
+import { EthqlOptions, testGraphql } from '@ethql/plugin';
+import { CORE_PLUGIN } from '../../plugin';
 
-const { execQuery } = testGraphql();
+const testServerOpts: EthqlOptions = { plugins: [CORE_PLUGIN] };
+
+const { execQuery } = testGraphql({opts: testServerOpts});
 
 describe('transactionFilter on Block->transactions', async () => {
   test('withInput: true value, returns only transactions with input data', async () => {

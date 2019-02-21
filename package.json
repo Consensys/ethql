@@ -59,33 +59,10 @@
     "packages/*"
   ],
   "devDependencies": {
-    "@types/bluebird": "^3.5.20",
-    "@types/bn.js": "^4.11.3",
-    "@types/deepmerge": "^2.1.0",
-    "@types/get-port": "^4.0.0",
-    "@types/graphlib": "^2.1.4",
-    "@types/graphql": "^14.0.3",
     "@types/jest": "^23.1.0",
-    "@types/lodash": "^4.14.109",
-    "@types/underscore": "^1.8.9",
-    "abi-decoder": "^1.2.0",
-    "apollo-server": "^2.0.5",
-    "axios": "^0.18.0",
-    "bluebird": "^3.5.1",
-    "bn.js": "^4.11.8",
-    "commander": "^2.17.1",
     "copyfiles": "^2.0.0",
-    "cors": "^2.8.4",
-    "dataloader": "^1.4.0",
-    "deepmerge": "^2.1.1",
     "dotenv-cli": "^1.4.0",
     "dotenv": "^6.0.0",
-    "express": "^4.16.3",
-    "get-port": "^4.0.0",
-    "graphlib": "^2.1.5",
-    "graphql-import": "^0.7.1",
-    "graphql-tools": "^4.0.3",
-    "graphql": "^14.0.2",
     "husky": "^1.2.0",
     "immutable": "^4.0.0-rc.12",
     "jest": "^23.5.0",
@@ -99,7 +76,6 @@
     "tsc-watch": "^1.0.30",
     "tslint-config-prettier": "^1.15.0",
     "tslint": "^5.10.0",
-    "typescript": "^3.0.1",
-    "web3": "^1.0.0-beta.35"
+    "typescript": "^3.0.1"
   }
 }

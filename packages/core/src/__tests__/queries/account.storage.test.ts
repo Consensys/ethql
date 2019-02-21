@@ -1,6 +1,11 @@
-import { testGraphql } from '../../test';
+import { testGraphql } from '@ethql/plugin';
+import { CORE_PLUGIN } from '../../plugin';
 
-const { execQuery } = testGraphql({ opts: { config: { jsonrpc: 'https://ropsten.infura.io' } } });
+const { execQuery } = testGraphql({
+  opts: {
+    config: { jsonrpc: 'https://ropsten.infura.io' },
+    plugins: [CORE_PLUGIN]
+}});
 const contractAddress = '"0x9c72Eda6de2F67F3B3DbcA3788Aa307AEF1e0Cef"';
 
 /*

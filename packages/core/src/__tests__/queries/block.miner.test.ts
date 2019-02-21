@@ -1,6 +1,8 @@
-import { testGraphql } from '../../test';
+import { EthqlOptions, testGraphql } from '@ethql/plugin';
+import { CORE_PLUGIN } from '../../plugin';
 
-const { execQuery } = testGraphql();
+const testServerOpts: EthqlOptions = { plugins: [CORE_PLUGIN] };
+const { execQuery } = testGraphql({opts: testServerOpts});
 
 test('block->miner: successfully returns miner account', async () => {
   const query = `

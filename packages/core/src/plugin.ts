@@ -1,4 +1,4 @@
-import { EthqlPluginFactory } from '@ethql/base';
+import { EthqlPluginFactory } from '@ethql/plugin';
 import resolvers from './resolvers';
 import coreSchema from './schema';
 import { SimpleDecodingEngine } from './services/decoder/impl/simple';

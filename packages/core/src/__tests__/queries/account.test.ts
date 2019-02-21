@@ -1,7 +1,14 @@
+import { EthqlOptions, testGraphql, TestRunnerOpts } from '@ethql/plugin';
 import Web3 = require('web3');
-import { testGraphql } from '../../test';
+import { CORE_PLUGIN } from '../../plugin';
 
-const { execQuery } = testGraphql();
+const testServerOpts: EthqlOptions = { plugins: [CORE_PLUGIN] };
+
+const testOpts: TestRunnerOpts = {
+  opts: testServerOpts
+};
+
+const { execQuery } = testGraphql(testOpts);
 
 test('account: select by address', async () => {
   const query = `

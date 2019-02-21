@@ -7,11 +7,9 @@
   },
   "exclude": ["src/__tests__"],
   "include": ["src/**/*"],
-  "references": [{
-      "path": "../core"
-    },
-    {
-      "path": "../base"
-    }
+  "references": [
+    { "path": "../base" },
+    { "path": "../core" },
+    { "path": "../plugin" }
   ]
 }

@@ -1,7 +1,7 @@
 import ENS = require('ez-ens');
 
-import { EthqlPluginFactory } from '@ethql/base';
-import '@ethql/core/dist/services/web3';
+import '@ethql/core';
+import { EthqlPluginFactory } from '@ethql/plugin';
 import resolvers from './resolvers';
 
 import './services';
