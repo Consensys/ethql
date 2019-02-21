@@ -36,6 +36,7 @@
     "@ethql/base": "^0.0.1",
     "@ethql/core": "^0.0.1",
     "@ethql/plugin": "^0.0.1",
+    "@types/graphql": "^14.0.7",
     "graphql": "^14.1.1"
   }
 }

@@ -26,6 +26,7 @@
   },
   "dependencies": {
     "@ethql/base": "^0.0.1",
+    "@types/graphql": "^14.0.7",
     "@types/node": "^11.9.4",
     "deepmerge": "^3.2.0",
     "graphlib": "^2.1.7",
