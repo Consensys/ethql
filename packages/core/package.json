@@ -36,6 +36,7 @@
   "dependencies": {
     "@ethql/base": "^0.0.1",
     "@ethql/plugin": "^0.0.1",
+    "@types/graphql": "^14.0.7",
     "abi-decoder": "^1.2.0",
     "bluebird": "^3.5.3",
     "dataloader": "^1.4.0",

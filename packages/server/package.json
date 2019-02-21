@@ -1,8 +1,7 @@
 {
-  "name": "@ethql/ens",
+  "name": "@ethql/server",
   "version": "0.0.1",
-  "main": "dist/index.js",
-  "description": "EthQL :: Plugins :: ENS",
+  "description": "EthQL :: Server",
   "author": "ConsenSys",
   "license": "Apache-2.0",
   "repository": {
@@ -22,11 +21,15 @@
     "ethereum",
     "graphql"
   ],
+  "bin": "dist/index.js",
   "engines": {
     "node": ">=8.0.0"
   },
   "scripts": {
     "clean": "rimraf dist",
+    "start": "dotenv -- node dist/index.js",
+    "dev": "dotenv -- tsc-watch -b --onSuccess 'node dist/index.js'",
+    "debug": "dotenv -- tsc-watch -b --onSuccess 'node --inspect dist/index.js'",
     "build:ts": "npm run clean && tsc -b",
     "test": "jest",
     "test:ci": "jest --maxWorkers=4",
@@ -35,11 +38,14 @@
   "dependencies": {
     "@ethql/base": "^0.0.1",
     "@ethql/core": "^0.0.1",
+    "@ethql/ens": "^0.0.1",
+    "@ethql/erc20": "^0.0.1",
     "@ethql/plugin": "^0.0.1",
     "@types/graphql": "^14.0.7",
-    "ez-ens": "^1.0.4",
-    "graphql": "^14.0.2",
-    "lodash": "^4.17.10",
-    "web3": "1.0.0-beta.37"
+    "apollo-server": "^2.4.2",
+    "axios": "^0.18.0",
+    "get-port": "^4.1.0",
+    "graphql": "^14.1.1",
+    "lodash": "^4.17.11"
   }
 }

@@ -35,7 +35,7 @@ Clone the repo and run:
 
 ```
 $ yarn install
-$ lerna bootstrap
+$ yarn bootstrap
 $ yarn run dev
 JSON-RPC (web3): Using HTTP(S) provider with endpoint: https://mainnet.infura.io/
 Running a GraphQL API server at http://0.0.0.0:4000/graphql (browse here: http://localhost:4000/graphql)
