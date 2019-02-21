@@ -1,6 +1,6 @@
 {
   "name": "@ethql/plugin",
-  "version": "0.0.1",
+  "version": "0.1.0-alpha.0",
   "description": "> TODO: description",
   "author": "Kris Shinn <raggamuffin.music@gmail.com>",
   "homepage": "https://github.com/kshinn/ethql#readme",
@@ -25,7 +25,7 @@
     "url": "https://github.com/kshinn/ethql/issues"
   },
   "dependencies": {
-    "@ethql/base": "^0.0.1",
+    "@ethql/base": "^0.1.0-alpha.0",
     "@types/graphql": "^14.0.7",
     "@types/node": "^11.9.4",
     "deepmerge": "^3.2.0",

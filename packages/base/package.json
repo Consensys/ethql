@@ -1,6 +1,6 @@
 {
   "name": "@ethql/base",
-  "version": "0.0.1",
+  "version": "0.1.0-alpha.0",
   "description": "EthQL :: Base",
   "author": "ConsenSys",
   "license": "Apache-2.0",
