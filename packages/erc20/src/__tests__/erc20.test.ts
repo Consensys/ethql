@@ -1,5 +1,5 @@
 import { CORE_PLUGIN } from '@ethql/core';
-import { testGraphql } from '@ethql/core/dist/test';
+import { testGraphql } from '@ethql/plugin';
 import { ERC20_PLUGIN } from '../';
 
 const { execQuery } = testGraphql({ opts: { plugins: [CORE_PLUGIN, ERC20_PLUGIN] } });

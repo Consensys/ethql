@@ -24,14 +24,22 @@ type Unit =
   | 'mether'
   | 'gether'
   | 'tether';
+
+// TODO: Work around a typescript bug that surfaced when web3 took away statics.
+// Ref: https://github.com/ethereum/web3.js/issues/2350
+export class BN extends BigNumber {
+  constructor(number: number | string | number[] | Buffer | BN, base?: number | 'hex', endian?: 'le' | 'be');
+}
+
 export default interface Utils {
-  BN: BigNumber; // TODO only static-definition
+  BN: BN; // TODO only static-definition
+  _: us.UnderscoreStatic;
+  unitMap: any;
   isBN(val: any): boolean;
   isBigNumber(val: any): boolean;
   isAddress(val: any): boolean;
   isHex(val: any): boolean;
   isHexStrict(val: any): boolean;
-  _: us.UnderscoreStatic;
   asciiToHex(val: string): string;
   hexToAscii(val: string): string;
   bytesToHex(val: number[]): string;
@@ -64,5 +72,4 @@ export default interface Utils {
   toUtf8(val: any): string;
   toWei(val: BigNumber, unit: Unit): string | BigNumber;
   toWei(val: string | number, unit: Unit): string;
-  unitMap: any;
 }

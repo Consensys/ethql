@@ -1,7 +1,9 @@
+import { EthqlOptions, testGraphql, TestMode } from '@ethql/plugin';
 import * as _ from 'lodash';
-import { testGraphql } from '../../test';
+import { CORE_PLUGIN } from '../../plugin';
 
-const { execQuery } = testGraphql();
+const testServerOpts: EthqlOptions = { plugins: [CORE_PLUGIN] };
+const { execQuery } = testGraphql({opts: testServerOpts});
 
 test('logs: fetch logs from all transactions', async () => {
   const query = `

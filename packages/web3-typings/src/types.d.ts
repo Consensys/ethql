@@ -1,7 +1,7 @@
 import BigNumber = require('bn.js');
 import * as us from 'underscore';
-import PromiEvent from './promiEvent';
 import { ABIDefinition } from './eth/abi';
+import PromiEvent from './promiEvent';
 export type Callback<T> = (error: Error, result: T) => void;
 
 export interface EventEmitter {
@@ -74,9 +74,9 @@ export interface Log {
 export interface Subscribe<T> {
   subscription: {
     id: string;
+    arguments: object;
     subscribe(callback?: Callback<Subscribe<T>>): Subscribe<T>;
     unsubscribe(callback?: Callback<boolean>): void | boolean;
-    arguments: object;
   };
   on(type: 'data' | 'changed', handler: (data: T) => void): void;
   on(type: 'error', handler: (data: Error) => void): void;

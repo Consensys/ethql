@@ -1,15 +1,15 @@
 import { GraphQLScalarType, Kind } from 'graphql';
 
-import Web3 = require('web3');
+import * as web3Utils from 'web3-utils';
 
 // tslint:disable-next-line
 const Address = new GraphQLScalarType({
   name: 'Address',
   description: 'An account address',
   serialize: String,
-  parseValue: input => (Web3.utils.isAddress(input) ? input : undefined),
+  parseValue: input => (web3Utils.isAddress(input) ? input : undefined),
   parseLiteral: ast => {
-    if (ast.kind !== Kind.STRING || !Web3.utils.isAddress(ast.value)) {
+    if (ast.kind !== Kind.STRING || !web3Utils.isAddress(ast.value)) {
       return undefined;
     }
     return String(ast.value);
@@ -41,13 +41,13 @@ const Bytes32 = new GraphQLScalarType({
     'A 32-byte value in hex format, e.g. Keccak hashes (used to identify blocks and transactions), log topics, etc.',
   serialize: String,
   parseValue: input => {
-    return !Web3.utils.isHexStrict(input) || Web3.utils.hexToBytes(input).length !== 32 ? undefined : input;
+    return !web3Utils.isHexStrict(input) || web3Utils.hexToBytes(input).length !== 32 ? undefined : input;
   },
   parseLiteral: ast => {
     if (
       ast.kind !== Kind.STRING ||
-      !Web3.utils.isHexStrict(ast.value) ||
-      Web3.utils.hexToBytes(ast.value).length !== 32
+      !web3Utils.isHexStrict(ast.value) ||
+      web3Utils.hexToBytes(ast.value).length !== 32
     ) {
       return undefined;
     }

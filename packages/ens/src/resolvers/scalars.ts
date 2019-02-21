@@ -1,4 +1,4 @@
-import { EthqlContext } from '@ethql/base/dist/context';
+import { EthqlContext } from '@ethql/base';
 import { GraphQLScalarType, Kind } from 'graphql';
 import Web3 = require('web3');
 
@@ -20,7 +20,7 @@ const Address = new GraphQLScalarType({
   parseValue: input => {
     if (isEnsDomain(input)) {
       // If this is an ENS domain, return a 1-arg thunk. See docs on `addressFn` type.
-      const addrFn: addressFn = async context => context.services.ens.resolve(input);
+      const addrFn: addressFn = async context => context.services.ens.resolve(input, {web3: context.services.web3});
       return addrFn;
     } else if (Web3.utils.isAddress(input)) {
       return input;
@@ -35,7 +35,7 @@ const Address = new GraphQLScalarType({
       return ast.value;
     } else if (isEnsDomain(ast.value)) {
       // If this is an ENS domain, return a 1-arg thunk. See docs on `addressFn` type.
-      const addrFn: addressFn = async context => context.services.ens.resolve(ast.value);
+      const addrFn: addressFn = async context => context.services.ens.resolve(ast.value, {web3: context.services.web3});
       return addrFn;
     } else {
       return undefined;

@@ -1,0 +1,18 @@
+{
+  "extends": "../tsconfig-base.json",
+  "compilerOptions": {
+    "composite": true,
+    "rootDir": "src",
+    "outDir": "dist"
+  },
+  "include": ["src/**/*"],
+  "exclude": [ "**/*.test.ts" ],
+  "references": [
+    { "path": "./base" },
+    { "path": "./core" },
+    { "path": "./ens" },
+    { "path": "./erc20" },
+    { "path": "./plugin" },
+    { "path": "./web3-typings" }
+  ]
+}

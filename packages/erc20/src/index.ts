@@ -1,4 +1,4 @@
-import { EthqlPluginFactory } from '@ethql/base';
+import { EthqlPluginFactory } from '@ethql/plugin';
 import { Erc20TokenDecoder } from './decoders';
 import erc20Schema from './schema/erc20';
 import tokenSchema from './schema/token';

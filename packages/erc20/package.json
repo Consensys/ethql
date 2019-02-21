@@ -34,6 +34,8 @@
   },
   "dependencies": {
     "@ethql/base": "^0.0.1",
-    "@ethql/core": "^0.0.1"
+    "@ethql/core": "^0.0.1",
+    "@ethql/plugin": "^0.0.1",
+    "graphql": "^14.1.1"
   }
 }

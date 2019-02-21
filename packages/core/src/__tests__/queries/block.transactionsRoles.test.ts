@@ -1,7 +1,9 @@
+import { EthqlOptions, testGraphql, TestMode } from '@ethql/plugin';
 import { EthqlTransaction } from '../../model';
-import { testGraphql } from '../../test';
+import { CORE_PLUGIN } from '../../plugin';
 
-const { execQuery } = testGraphql();
+const testServerOpts: EthqlOptions = { plugins: [CORE_PLUGIN] };
+const { execQuery } = testGraphql({opts: testServerOpts});
 
 test('block->transactionsRoles: error when an invalid from address is specified', async () => {
   const query = `
