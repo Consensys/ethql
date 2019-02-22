@@ -1,5 +1,6 @@
 {
-  "name": "@ethql/distro",
+  "name": "ethql",
+  "private": true,
   "version": "0.0.1",
   "description": "A GraphQL interface to Ethereum",
   "author": "ConsenSys",
@@ -14,33 +15,34 @@
   "contributors": [
     "Raúl Kripalani <raul.kripalani@gmail.com>",
     "Akhila Raju <akhila.raju@consensys.net>",
-    "Jonathan Buhler"
+    "Jonathan Buhler",
+    "Evgeniy Filatov <evgeniyfilatov@gmail.com>"
   ],
   "keywords": [
     "ethereum",
     "graphql"
   ],
-  "main": "index.js",
+  "main": "dist/index.js",
   "engines": {
     "node": ">=8.0.0"
   },
   "scripts": {
-    "clean": "$(npm bin)/rimraf dist",
-    "start": "$(npm bin)/dotenv -- node dist/index.js",
-    "dev": "$(npm bin)/nodemon -e ts -x ts-node --files src/index.ts",
-    "debug": "$(npm bin)/dotenv -- nodemon -e ts -x ts-node --inspect --files src/index.ts",
+    "clean": "lerna run clean",
+    "bootstrap": "lerna bootstrap",
+    "start": "lerna link && lerna run --stream start",
+    "dev": "lerna link && lerna run --stream dev",
+    "debug": "lerna link && lerna run --stream debug",
     "build": "npm run build:docker",
-    "build:ts": "npm run clean && $(npm bin)/patch-package && tsc && $(npm bin)/copyfiles -u 1 src/schema/**/*.graphql src/abi/** dist",
+    "build:ts": "lerna link && lerna run --stream build:ts",
     "build:docker": "docker image build -t ethql .",
-    "lint": "$(npm bin)/npm-run-all lint:ts lint:rest",
-    "lint:ts": "$(npm bin)/tslint --fix -t stylish -c tslint.json -p tsconfig.json && $(npm bin)/prettier --parser typescript --write 'src/**/*.ts'",
-    "lint:rest": "$(npm bin)/prettier '**/*.{md,json}' --write",
-    "test": "$(npm bin)/jest",
-    "test:ci": "$(npm bin)/jest --maxWorkers=4",
-    "test:watch": "$(npm bin)/jest --watch",
-    "coverage": "$(npm bin)/jest --collectCoverage",
-    "precommit": "npm run test && $(npm bin)/lint-staged",
-    "postinstall": "$(npm bin)/patch-package"
+    "lint": "npm-run-all lint:ts lint:rest",
+    "lint:ts": "tslint --fix -t stylish -c tslint.json -p tsconfig.json && prettier --parser typescript --write 'packages/*/src/**/*.ts'",
+    "lint:rest": "prettier 'packages/*/**/*.{md,json}' --write",
+    "test": "lerna link && lerna run --parallel test ",
+    "test:ci": "lerna link && lerna run --parallel test:ci",
+    "test:watch": "lerna link && lerna run --parallel test:watch",
+    "coverage": "jest --collectCoverage",
+    "precommit": "npm run test && lerna run --parallel lint"
   },
   "lint-staged": {
     "*.ts": [
@@ -53,56 +55,51 @@
       "git add"
     ]
   },
-  "nodemonConfig": {
-    "ignore": [
-      "src/__tests__/*"
-    ]
-  },
-  "dependencies": {
+  "workspaces": [
+    "packages/*"
+  ],
+  "devDependencies": {
     "@types/bluebird": "^3.5.20",
+    "@types/bn.js": "^4.11.3",
     "@types/deepmerge": "^2.1.0",
     "@types/get-port": "^4.0.0",
     "@types/graphlib": "^2.1.4",
+    "@types/graphql": "^14.0.3",
+    "@types/jest": "^23.1.0",
+    "@types/lodash": "^4.14.109",
+    "@types/underscore": "^1.8.9",
     "abi-decoder": "^1.2.0",
     "apollo-server": "^2.0.5",
     "axios": "^0.18.0",
     "bluebird": "^3.5.1",
     "bn.js": "^4.11.8",
     "commander": "^2.17.1",
+    "copyfiles": "^2.0.0",
     "cors": "^2.8.4",
     "dataloader": "^1.4.0",
     "deepmerge": "^2.1.1",
+    "dotenv-cli": "^1.4.0",
+    "dotenv": "^6.0.0",
     "express": "^4.16.3",
-    "ez-ens": "^1.0.4",
     "get-port": "^4.0.0",
     "graphlib": "^2.1.5",
-    "graphql": "^14.0.2",
     "graphql-import": "^0.7.1",
     "graphql-tools": "^4.0.3",
-    "immutable": "^4.0.0-rc.12",
-    "lodash": "^4.17.10",
-    "patch-package": "^5.1.1",
-    "postinstall-postinstall": "^2.0.0",
-    "web3": "^1.0.0-beta.35"
-  },
-  "devDependencies": {
-    "@types/graphql": "^14.0.3",
-    "@types/jest": "^23.1.0",
-    "@types/lodash": "^4.14.109",
-    "copyfiles": "^2.0.0",
-    "dotenv": "^6.0.0",
-    "dotenv-cli": "^1.4.0",
+    "graphql": "^14.0.2",
     "husky": "^1.2.0",
+    "immutable": "^4.0.0-rc.12",
     "jest": "^23.5.0",
+    "lerna": "^3.4.3",
     "lint-staged": "^8.1.0",
-    "nodemon": "^1.17.5",
+    "lodash": "^4.17.10",
     "npm-run-all": "^4.1.3",
     "prettier": "1.15.3",
     "rimraf": "^2.6.2",
     "ts-jest": "^23.1.4",
-    "ts-node": "^7.0.1",
-    "tslint": "^5.10.0",
+    "tsc-watch": "^1.0.30",
     "tslint-config-prettier": "^1.15.0",
-    "typescript": "^3.0.1"
+    "tslint": "^5.10.0",
+    "typescript": "^3.0.1",
+    "web3": "^1.0.0-beta.35"
   }
 }

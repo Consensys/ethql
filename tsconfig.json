@@ -1,18 +1,13 @@
 {
+  "extends": "./tsconfig-base.json",
   "compilerOptions": {
-    "target": "es6",
-    "moduleResolution": "node",
-    "esModuleInterop": true,
-    "module": "commonjs",
-    "sourceMap": true,
-    "rootDir": "src",
-    "outDir": "dist",
-    "baseUrl": ".",
-    "lib": ["esnext"],
     "paths": {
-      "web3": ["src/types/web3/index.d.ts"],
-      "*": ["node_modules/*", "src/types/*"]
+      // fix package resolution for jest
+      //"@ethql/base/dist/*": ["./packages/base/src/*"],
+      //"@ethql/*": ["./packages/*/src/"],
+      // use custom web3 types
+      "web3": ["./packages/web3-typings/src/"],
+      "web3/*": ["./packages/web3-typings/src/*"]
     }
-  },
-  "include": ["src/**/*"]
+  }
 }
