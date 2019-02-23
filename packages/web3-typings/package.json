@@ -1,6 +1,6 @@
 {
   "name": "@ethql/web3-typings",
-  "version": "0.1.0-alpha.0",
+  "version": "0.1.2-alpha.0",
   "description": "EthQL :: Typings :: web3.js",
   "author": "ConsenSys",
   "license": "Apache-2.0",

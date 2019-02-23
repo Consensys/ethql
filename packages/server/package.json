@@ -1,6 +1,6 @@
 {
   "name": "@ethql/server",
-  "version": "0.1.1-alpha.0",
+  "version": "0.1.2-alpha.0",
   "description": "EthQL :: Server",
   "author": "ConsenSys",
   "license": "Apache-2.0",
@@ -38,11 +38,11 @@
     "test:watch": "jest --watch"
   },
   "dependencies": {
-    "@ethql/base": "^0.1.0-alpha.0",
-    "@ethql/core": "^0.1.0-alpha.0",
-    "@ethql/ens": "^0.1.0-alpha.0",
-    "@ethql/erc20": "^0.1.0-alpha.0",
-    "@ethql/plugin": "^0.1.0-alpha.0",
+    "@ethql/base": "^0.1.2-alpha.0",
+    "@ethql/core": "^0.1.2-alpha.0",
+    "@ethql/ens": "^0.1.2-alpha.0",
+    "@ethql/erc20": "^0.1.2-alpha.0",
+    "@ethql/plugin": "^0.1.2-alpha.0",
     "@types/graphql": "^14.0.7",
     "apollo-server": "^2.4.2",
     "axios": "^0.18.0",
