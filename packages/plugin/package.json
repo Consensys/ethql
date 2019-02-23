@@ -1,7 +1,7 @@
 {
   "name": "@ethql/plugin",
   "version": "0.1.2-alpha.0",
-  "description": "> TODO: description",
+  "description": "Adds plugin and bootstrap support to Ethql",
   "author": "Kris Shinn <raggamuffin.music@gmail.com>",
   "homepage": "https://github.com/kshinn/ethql#readme",
   "license": "ISC",
