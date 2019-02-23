@@ -21,7 +21,7 @@
     "ethereum",
     "graphql"
   ],
-  "bin": "dist/index.js",
+  "bin": {"ethql": "./dist/index.js"},
   "engines": {
     "node": ">=8.0.0"
   },
