@@ -62,8 +62,8 @@
   "devDependencies": {
     "@types/jest": "^23.1.0",
     "copyfiles": "^2.0.0",
-    "dotenv-cli": "^1.4.0",
     "dotenv": "^6.0.0",
+    "dotenv-cli": "^1.4.0",
     "husky": "^1.2.0",
     "immutable": "^4.0.0-rc.12",
     "jest": "^23.5.0",
@@ -75,8 +75,8 @@
     "rimraf": "^2.6.2",
     "ts-jest": "^23.1.4",
     "tsc-watch": "^1.0.30",
-    "tslint-config-prettier": "^1.15.0",
     "tslint": "^5.10.0",
-    "typescript": "^3.0.1"
+    "tslint-config-prettier": "^1.15.0",
+    "typescript": "^3.3.3333"
   }
 }
