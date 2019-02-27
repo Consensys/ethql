@@ -34,7 +34,7 @@
     "debug": "dotenv -- tsc-watch -b --onSuccess 'node --inspect dist/index.js'",
     "build:ts": "npm run clean && tsc -b",
     "test": "jest",
-    "test:ci": "jest --maxWorkers=4",
+    "test:ci": "jest",
     "test:watch": "jest --watch"
   },
   "dependencies": {

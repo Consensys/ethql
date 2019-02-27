@@ -19,7 +19,8 @@
   },
   "scripts": {
     "build:ts": "tsc -b",
-    "test": "jest"
+    "test": "jest",
+    "test:ci": "jest --maxWorkers=4"
   },
   "bugs": {
     "url": "https://github.com/kshinn/ethql/issues"
