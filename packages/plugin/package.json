@@ -1,6 +1,6 @@
 {
   "name": "@ethql/plugin",
-  "version": "0.1.2-alpha.0",
+  "version": "0.1.2",
   "description": "EthQL :: Base :: Plugin",
   "author": "Kris Shinn <raggamuffin.music@gmail.com>",
   "homepage": "https://github.com/kshinn/ethql#readme",
@@ -26,7 +26,7 @@
     "url": "https://github.com/kshinn/ethql/issues"
   },
   "dependencies": {
-    "@ethql/base": "^0.1.2-alpha.0",
+    "@ethql/base": "^0.1.2",
     "@types/debug": "^4.1.2",
     "@types/graphql": "^14.0.7",
     "@types/node": "^11.9.4",
