@@ -40,7 +40,6 @@ export class EthqlServer {
     this.server = server;
     this._address = { address, family, port: Number(port) };
     this._status = 'started';
-
     console.log(`🚀  Running a GraphQL API server at ${url}\nMerry querying!`);
   }
 
@@ -58,11 +57,14 @@ export class EthqlServer {
 
   protected createServer() {
     const result = bootstrap(this.opts);
-
+    if (!!process.env.TRACING)  {
+      console.log('Tracing enabled...');
+    }
     return new ApolloServer({
       schema: result.schema,
       context: () => new EthqlContext(this.opts.config, result.serviceFactories),
       playground,
+      tracing: !!process.env.TRACING
     });
   }
 

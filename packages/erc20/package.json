@@ -1,6 +1,6 @@
 {
   "name": "@ethql/erc20",
-  "version": "0.1.2-alpha.0",
+  "version": "0.1.2",
   "main": "dist/index.js",
   "description": "EthQL :: Plugins :: ERC20",
   "author": "ConsenSys",
@@ -33,9 +33,9 @@
     "test:watch": "jest --watch"
   },
   "dependencies": {
-    "@ethql/base": "^0.1.2-alpha.0",
-    "@ethql/core": "^0.1.2-alpha.0",
-    "@ethql/plugin": "^0.1.2-alpha.0",
+    "@ethql/base": "^0.1.2",
+    "@ethql/core": "^0.1.2",
+    "@ethql/plugin": "^0.1.2",
     "@types/graphql": "^14.0.7",
     "graphql": "^14.1.1"
   }
