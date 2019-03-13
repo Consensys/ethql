@@ -48,6 +48,20 @@ don't, you should sign up for one!) you can set it like this:
 $ INFURA_ID=myid yarn run dev
 ```
 
+## Development
+All of the regular tasks you need to develop are available as package.json scripts. 
+
+Running tests:
+```
+$ yarn test
+```
+
+Tracing is a nice feature to give you field level timing metrics and discover bottlenecks in the code. Enable Graphql tracing
+```
+$ TRACING=true yarn dev
+```
+
+
 ## Query Handbook
 
 We suggest fiddling with some [Example Use Cases](https://github.com/ConsenSys/ethql/wiki/Example-Use-Cases) to see some
