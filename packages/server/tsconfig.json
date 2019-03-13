@@ -1,0 +1,16 @@
+{
+  "extends": "../../tsconfig-base.json",
+  "compilerOptions": {
+    "composite": true,
+    "rootDir": "src",
+    "outDir": "dist"
+  },
+  "exclude": ["**/*.test.ts"],
+  "include": ["src/**/*"],
+  "references": [
+    { "path": "../base" },
+    { "path": "../erc20" },
+    { "path": "../ens" }, 
+    { "path": "../core" }
+  ]
+}

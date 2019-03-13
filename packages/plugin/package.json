@@ -1,0 +1,38 @@
+{
+  "name": "@ethql/plugin",
+  "version": "0.1.2-alpha.0",
+  "description": "EthQL :: Base :: Plugin",
+  "author": "Kris Shinn <raggamuffin.music@gmail.com>",
+  "homepage": "https://github.com/kshinn/ethql#readme",
+  "license": "ISC",
+  "main": "dist/index.js",
+  "directories": {
+    "dist": "dist",
+    "test": "src/__tests__"
+  },
+  "files": [
+    "dist"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kshinn/ethql.git"
+  },
+  "scripts": {
+    "build:ts": "tsc -b",
+    "test": "jest",
+    "test:ci": "jest --maxWorkers=4"
+  },
+  "bugs": {
+    "url": "https://github.com/kshinn/ethql/issues"
+  },
+  "dependencies": {
+    "@ethql/base": "^0.1.2-alpha.0",
+    "@types/graphql": "^14.0.7",
+    "@types/node": "^11.9.4",
+    "deepmerge": "^3.2.0",
+    "graphlib": "^2.1.7",
+    "graphql": "^14.1.1",
+    "graphql-tools": "^4.0.4",
+    "lodash": "^4.17.11"
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "lib": ["esnext"],
+    "target": "es6",
+    "moduleResolution": "node",
+    "module": "commonjs",
+    "esModuleInterop": true,
+    "sourceMap": true,
+    "declaration": true,
+    "declarationMap": true,
+    "paths": {
+      "web3": ["packages/web3-typings/src"],
+      "web3/*": ["packages/web3-typings/src/*"],
+    },
+    "typeRoots": [
+      "./packages/web3-typings/src",
+      "./node_modules/@types",
+    ]
+  }
+}

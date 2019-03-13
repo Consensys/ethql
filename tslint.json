@@ -17,6 +17,7 @@
     "variable-name": [true, "allow-leading-underscore"],
     "object-literal-sort-keys": false,
     "max-classes-per-file": false,
+    "member-ordering": [false],
     "whitespace": [
       true,
       "check-branch",

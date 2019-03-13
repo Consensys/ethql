@@ -1,0 +1,51 @@
+{
+  "name": "@ethql/core",
+  "version": "0.1.2-alpha.0",
+  "description": "EthQL :: Plugins :: Core",
+  "author": "ConsenSys",
+  "license": "Apache-2.0",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ConsenSys/ethql"
+  },
+  "bugs": {
+    "url": "https://github.com/ConsenSys/ethql/issues"
+  },
+  "contributors": [
+    "Raúl Kripalani <raul.kripalani@gmail.com>",
+    "Akhila Raju <akhila.raju@consensys.net>",
+    "Jonathan Buhler",
+    "Evgeniy Filatov <evgeniyfilatov@gmail.com>"
+  ],
+  "keywords": [
+    "ethereum",
+    "graphql"
+  ],
+  "engines": {
+    "node": ">=8.0.0"
+  },
+  "scripts": {
+    "clean": "rimraf dist",
+    "build:ts": "npm run clean && tsc -b",
+    "test": "jest",
+    "test:ci": "jest --maxWorkers=4",
+    "test:watch": "jest --watch"
+  },
+  "dependencies": {
+    "@ethql/base": "^0.1.2-alpha.0",
+    "@ethql/plugin": "^0.1.2-alpha.0",
+    "@types/graphql": "^14.0.7",
+    "abi-decoder": "^1.2.0",
+    "bluebird": "^3.5.3",
+    "dataloader": "^1.4.0",
+    "deepmerge": "^3.2.0",
+    "graphql": "^14.1.1",
+    "immutable": "^4.0.0-rc.12",
+    "lodash": "^4.17.11",
+    "number-to-bn": "^1.7.0",
+    "web3": "1.0.0-beta.35",
+    "web3-utils": "1.0.0-beta.35"
+  }
+}

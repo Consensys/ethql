@@ -35,7 +35,8 @@ Clone the repo and run:
 
 ```
 $ yarn install
-$ npm run dev
+$ yarn bootstrap
+$ yarn run dev
 JSON-RPC (web3): Using HTTP(S) provider with endpoint: https://mainnet.infura.io/
 Running a GraphQL API server at http://0.0.0.0:4000/graphql (browse here: http://localhost:4000/graphql)
 ```
@@ -44,7 +45,7 @@ This EthQL server uses [Infura](https://infura.io/) as a backend in anonymous mo
 don't, you should sign up for one!) you can set it like this:
 
 ```
-$ INFURA_ID=myid npm run dev
+$ INFURA_ID=myid yarn run dev
 ```
 
 ## Query Handbook

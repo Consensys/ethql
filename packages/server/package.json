@@ -1,0 +1,54 @@
+{
+  "name": "@ethql/server",
+  "version": "0.1.2-alpha.0",
+  "description": "EthQL :: Server",
+  "author": "ConsenSys",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ConsenSys/ethql"
+  },
+  "bugs": {
+    "url": "https://github.com/ConsenSys/ethql/issues"
+  },
+  "contributors": [
+    "Raúl Kripalani <raul.kripalani@gmail.com>",
+    "Akhila Raju <akhila.raju@consensys.net>",
+    "Jonathan Buhler",
+    "Evgeniy Filatov <evgeniyfilatov@gmail.com>"
+  ],
+  "keywords": [
+    "ethereum",
+    "graphql"
+  ],
+  "bin": {
+    "ethql": "./bin/ethql.js"
+  },
+  "engines": {
+    "node": ">=8.0.0"
+  },
+  "scripts": {
+    "clean": "rimraf dist",
+    "start": "dotenv -- node dist/index.js",
+    "dev": "dotenv -- tsc-watch -b --onSuccess 'node dist/index.js'",
+    "debug": "dotenv -- tsc-watch -b --onSuccess 'node --inspect dist/index.js'",
+    "build:ts": "npm run clean && tsc -b",
+    "test": "jest",
+    "test:ci": "jest",
+    "test:watch": "jest --watch"
+  },
+  "dependencies": {
+    "@ethql/base": "^0.1.2-alpha.0",
+    "@ethql/core": "^0.1.2-alpha.0",
+    "@ethql/ens": "^0.1.2-alpha.0",
+    "@ethql/erc20": "^0.1.2-alpha.0",
+    "@ethql/plugin": "^0.1.2-alpha.0",
+    "@types/graphql": "^14.0.7",
+    "apollo-server": "^2.4.2",
+    "axios": "^0.18.0",
+    "get-port": "4.1.0",
+    "graphql": "^14.1.1",
+    "lodash": "^4.17.11"
+  },
+  "gitHead": "9792ffc037e7dff5fbfa098dce52a9e3121c8157"
+}

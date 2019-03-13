@@ -1,0 +1,43 @@
+{
+  "name": "@ethql/base",
+  "version": "0.1.2-alpha.0",
+  "description": "EthQL :: Base",
+  "author": "ConsenSys",
+  "license": "Apache-2.0",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ConsenSys/ethql"
+  },
+  "bugs": {
+    "url": "https://github.com/ConsenSys/ethql/issues"
+  },
+  "contributors": [
+    "Raúl Kripalani <raul.kripalani@gmail.com>",
+    "Akhila Raju <akhila.raju@consensys.net>",
+    "Jonathan Buhler",
+    "Evgeniy Filatov <evgeniyfilatov@gmail.com>"
+  ],
+  "keywords": [
+    "ethereum",
+    "graphql"
+  ],
+  "engines": {
+    "node": ">=8.0.0"
+  },
+  "directories": {
+    "lib": "dist"
+  },
+  "scripts": {
+    "clean": "rimraf dist",
+    "build:ts": "npm run clean && tsc -b"
+  },
+  "dependencies": {
+    "@types/graphql": "^14.0.7",
+    "@types/node": "^11.9.4",
+    "deepmerge": "^3.2.0",
+    "graphql": "^14.1.1",
+    "graphql-tools": "^4.0.4"
+  }
+}
