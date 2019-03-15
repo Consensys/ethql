@@ -1,10 +1,14 @@
 import { EthqlContext } from '@ethql/base';
+import * as Debug from 'debug';
 import { GraphQLResolveInfo } from 'graphql';
 import { EthqlAccount, EthqlBlock, EthqlLog, EthqlTransaction, TransactionStatus } from '../model';
 import { DecodedTransaction } from '../services/decoder';
 
+const debug = Debug.debug('ethql:tx-resolve');
 async function logs(obj: EthqlTransaction, args, { services }: EthqlContext): Promise<EthqlLog[]> {
-  return obj.logs || services.eth.fetchTransactionLogs(obj);
+  debug('obj: %O', obj);
+  debug('args: %O', args);
+  return obj.logs || services.eth.fetchTransactionLogs(obj, args.filter);
 }
 
 function decoded(obj: EthqlTransaction, args, context: EthqlContext): DecodedTransaction {

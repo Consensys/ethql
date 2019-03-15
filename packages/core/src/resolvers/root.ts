@@ -1,7 +1,10 @@
 import { EthqlContext } from '@ethql/base';
+import * as Debug from 'debug';
 import { GraphQLResolveInfo } from 'graphql';
 import * as _ from 'lodash';
 import { EthqlAccount, EthqlBlock, EthqlTransaction } from '../model';
+
+const debug = Debug.debug('ethql:resolve');
 
 // Select a single block.
 type BlockArgs = { number?: number; hash?: string; tag?: string };
@@ -16,6 +19,8 @@ type BlocksArgs = { numbers?: number[]; hashes?: string[] };
 type BlocksRangeArgs = { numberRange?: [number, number]; hashRange?: [string, string] };
 
 async function block(obj, args: BlockArgs, { services }: EthqlContext, info: GraphQLResolveInfo): Promise<EthqlBlock> {
+  debug('Fetching block');
+  debug('args: %O', args);
   let { number: blockNumber, hash, tag } = args;
   hash = hash ? hash.trim() : hash;
   tag = tag ? tag.trim().toLowerCase() : tag;
@@ -28,7 +33,7 @@ async function block(obj, args: BlockArgs, { services }: EthqlContext, info: Gra
   if (params.length > 1) {
     throw new Error('Only one of number, hash or tag argument should be provided.');
   }
-
+  debug('params: %O', params);
   return services.eth.fetchBlock(params[0], info);
 }
 

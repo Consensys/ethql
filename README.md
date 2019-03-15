@@ -47,6 +47,13 @@ don't, you should sign up for one!) you can set it like this:
 ```
 $ INFURA_ID=myid yarn run dev
 ```
+## Development
+The `debug` module is included in Dev Dependencies
+
+To turn on debugging:
+```
+DEBUG=ethql:*
+```
 
 ## Query Handbook
 

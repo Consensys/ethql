@@ -50,5 +50,9 @@
     "graphql": "^14.1.1",
     "lodash": "^4.17.11"
   },
-  "gitHead": "9792ffc037e7dff5fbfa098dce52a9e3121c8157"
+  "gitHead": "9792ffc037e7dff5fbfa098dce52a9e3121c8157",
+  "devDependencies": {
+    "@types/debug": "^4.1.2",
+    "debug": "^4.1.1"
+  }
 }
