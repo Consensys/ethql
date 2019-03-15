@@ -6,11 +6,13 @@ import {
   rootSchema,
   runtimeConfig,
 } from '@ethql/base';
+import * as Debug from 'debug';
 import * as deepmerge from 'deepmerge';
 import { alg, Graph } from 'graphlib';
 import { IResolvers, makeExecutableSchema } from 'graphql-tools';
 import * as _ from 'lodash';
 import { EthqlPlugin, EthqlPluginFactory } from '.';
+const debug = Debug.debug('ethql:bootstrap');
 
 type MergeResult = {
   config: Options;
@@ -41,6 +43,7 @@ const ERR_MSG_MANY_ROOTS = sources => `Expected plugin graph to be a tree, but t
  * @param opts Server options.
  */
 export function bootstrap(opts: EthqlOptions): EthqlBootstrapResult {
+  debug('Bootstrapping Ethql');
   let plugins = opts.plugins.map(pf => pf(opts));
 
   // Sanity checks.

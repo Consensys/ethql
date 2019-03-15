@@ -39,5 +39,9 @@
     "deepmerge": "^3.2.0",
     "graphql": "^14.1.1",
     "graphql-tools": "^4.0.4"
+  },
+  "devDependencies": {
+    "@types/debug": "^4.1.2",
+    "debug": "^4.1.1"
   }
 }

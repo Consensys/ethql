@@ -141,3 +141,5 @@ export class StorageAccessor {
 }
 
 export type TransactionStatus = 'PENDING' | 'SUCCESS' | 'FAILED';
+
+export type LogFilter = { topics: string[][] };
