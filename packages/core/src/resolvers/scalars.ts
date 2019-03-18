@@ -1,5 +1,4 @@
 import { GraphQLScalarType, Kind } from 'graphql';
-
 import * as web3Utils from 'web3-utils';
 
 // tslint:disable-next-line
@@ -64,9 +63,19 @@ const Long = new GraphQLScalarType({
   parseLiteral: ast => (ast.kind === Kind.INT ? parseInt(ast.value, 10) : undefined),
 });
 
+//tslint:disable-next-line
+const BigInt = new GraphQLScalarType({
+  name: 'BigInt',
+  description: 'Large Integer',
+  serialize: Number,
+  parseValue: Number,
+  parseLiteral: ast => (ast.kind === Kind.INT ? parseInt(ast.value, 10) : undefined)
+});
+
 export default {
   Long,
   BlockNumber,
   Address,
   Bytes32,
+  BigInt,
 };

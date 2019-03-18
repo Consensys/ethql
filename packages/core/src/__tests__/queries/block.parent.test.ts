@@ -31,7 +31,7 @@ test('block->parent: successfully returns parent', async () => {
         hash: '0x59e10ec08e0a28ae3d9dbc1fff949816371cde4b40a0203ea33a09db181c3ffc',
         parent: {
           hash: '0x21ee387412a1e069d665bee16600c7720530347cbde0b705ea1c85683844f421',
-          timestamp: '1528744982',
+          timestamp: 1528744982,
           transactionsRoles: [
             {
               hash: '0xfb9768dc2573de609fe808184fc187f47db0696da530593f609883352dcee207',

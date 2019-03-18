@@ -20,7 +20,7 @@ test('Long: parseLiteral', async () => {
 
 test('Long: parseValue', async () => {
   const query = `
-    query($long: BlockNumber) {
+    query($long: Long) {
       blockOffset(number: $long, offset: 13212) {
         number
       }
@@ -49,7 +49,7 @@ test('BlockNumber: parseLiteral', async () => {
 
 test('BlockNumber: parseValue', async () => {
   const query = `
-    query($number: BlockNumber) {
+    query($number: Long) {
       block(number: $number) {
           number
         }

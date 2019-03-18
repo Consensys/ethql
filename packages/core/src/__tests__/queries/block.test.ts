@@ -119,7 +119,7 @@ test('block: error when selecting block by invalid hash', async () => {
   expect(result.errors[0].message).toMatch(/^Expected type Bytes32/);
 });
 
-test('block: error when selecting block with no number, hash, or tag', async () => {
+test('block: latest block returns when selecting block with no number, hash, or tag', async () => {
   const query = `
     {
       block {
@@ -129,8 +129,8 @@ test('block: error when selecting block with no number, hash, or tag', async () 
   `;
 
   const result = await execQuery(query);
-  expect(result.errors).toHaveLength(1);
-  expect(result.errors[0].message).toMatch(/^Expected either number, hash or tag argument/);
+  expect(result.data.block).not.toBeNull();
+  expect(result.errors).toBeUndefined();
 });
 
 test('block: error when selecting block with more than one argument', async () => {
@@ -162,8 +162,11 @@ test('block: all scalar fields successfully returned', async () => {
         receiptsRoot
         stateRoot
         transactionsRoot
+        transactionCount
         timestamp
         totalDifficulty
+        ommerHash
+        ommerCount
       }
     }
   `;
@@ -182,8 +185,11 @@ test('block: all scalar fields successfully returned', async () => {
         receiptsRoot: '0x56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421',
         stateRoot: '0x262da2fca20d165b195dbf2858d983c90d1d1f7f376da838b704e0632dd28174',
         transactionsRoot: '0x56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421',
-        timestamp: '1438367018',
+        transactionCount: 0,
+        timestamp: 1438367018,
         totalDifficulty: 3861404974593840,
+        ommerHash: '0x1dcc4de8dec75d7aab85b567b6ccd41ad312451b948a7413f0a142fd40d49347',
+        ommerCount: 0
       },
     },
   };

@@ -1,22 +1,44 @@
 export default `
 extend type Query {
   "Selects an account."
-  account(address: Address!): Account
+  account(address: Address!, blockNumber: Long): Account!
 
   "Selects a block based on either a number, hash or a tag."
-  block(number: BlockNumber, hash: Bytes32, tag: BlockTag): Block
+  block(number: Long, hash: Bytes32, tag: BlockTag): Block
 
-  "Selects a block based on a reference block and an offset from it."
-  blockOffset(number: BlockNumber, hash: Bytes32, tag: BlockTag, offset: Int!): Block
+  """Return all blocks between tow numbers, inclusive. If to
+  is not supplied, it defaults to the most recent known block
+  """
+  blocks(from: Long!, to: Long): [Block!]!
 
   "Selects an arbitrary set of blocks based on their numbers or hashes."
-  blocks(numbers: [BlockNumber], hashes: [Bytes32]): [Block]
+  blockList(numbers: [Long], hashes: [Bytes32]): [Block]
+
+  "Selects a block based on a reference block and an offset from it."
+  blockOffset(number: Long, hash: Bytes32, tag: BlockTag, offset: Int!): Block
 
   "Selects a range of blocks."
-  blocksRange(numberRange: [BlockNumber], hashRange: [Bytes32]): [Block]
+  blocksRange(numberRange: [Long], hashRange: [Bytes32]): [Block]
 
   "Selects a transaction by hash."
   transaction(hash: Bytes32): Transaction
+
+  """EstimateGas estimates the amount of gas that will be required for
+  successful execution of a transaction. If blockNumber is not specified,
+  it defaults ot the most recent known block."""
+  estimateGas(data: CallData!, blockNumber: Long): Long!
+
+  """ Logs return log entries matching the provided filter"""
+  logs(filter: LogFilter!): [Log]!
+
+  """
+  GasPrice returns the node's estimate of a gas price sufficient to
+  ensure a transaction is mined in a timely fashion.
+  """
+  gasPrice: BigInt!
+
+  """Return the current wire protocol version number."""
+  protocolVersion: Int!
 
   "Returns the health of the server."
   health: String!
@@ -27,7 +49,7 @@ An Ethereum Block.
 """
 type Block {
   "The block number."
-  number: BlockNumber!
+  number: Long!
 
   "The block hash."
   hash: Bytes32!
@@ -36,13 +58,13 @@ type Block {
   parent: Block
 
   "The block nonce."
-  nonce: String!
+  nonce: Bytes!
 
   "The block's transactions trie root."
   transactionsRoot: Bytes32!
 
   "The number of transactions in the block."
-  transactionCount: Int!
+  transactionCount: Int
 
   "The block's state trie root."
   stateRoot: Bytes32!
@@ -51,40 +73,56 @@ type Block {
   receiptsRoot: Bytes32!
 
   "The miner's account."
-  miner: Account!
+  miner(block: Long): Account!
 
   "Any extra data attached to the block."
-  extraData: String
+  extraData: Bytes!
 
   "The cumulative gas limit of all transactions in this block."
-  gasLimit: Long
+  gasLimit: Long!
 
   "The cumulative gas used of all transactions in this block."
-  gasUsed: Long
+  gasUsed: Long!
 
   "The timestamp when block was mined, in seconds after epoch."
-  timestamp: String
+  timestamp: BigInt!
 
-  "The bloom filter for the logs contained in this block."
-  logsBloom: String
+  """LogsBloom is a bloom filter that can be used to check if a block may
+  contain log entries matching a filter."""
+  logsBloom: Bytes!
 
   "The mix hash for this block."
-  mixHash: Bytes32
+  mixHash: Bytes32!
 
   "The difficulty of this block."
-  difficulty: Long
+  difficulty: Long!
 
   "The total difficulty of the canonical chain this block is part of."
-  totalDifficulty: Long
+  totalDifficulty: Long!
 
-  "The ommer blocks (also known as 'uncles')."
+  """OmmerCount is the number of ommers (AKA uncles) associated with this
+  block. If ommers are unavailable, this field will be null."""
+  ommerCount: Int
+
+  """Ommers is a list of ommer (AKA uncle) blocks associated with this block.
+  If ommers are unavailable, this field will be null. Depending on your
+  node, the transactions, transactionAt, transactionCount, ommers,
+  ommerCount and ommerAt fields may not be available on any ommer blocks."""
   ommers: [Block]
+
+  """OmmerAt returns the ommer (AKA uncle) at the specified index. If ommers
+  are unavailable, or the index is out of bounds, this field will be null."""
+  ommerAt(index: Int!): Block
+
+  """OmmerHash is the keccak256 hash of all the ommers (AKA uncles)
+  associated with this block."""
+  ommerHash: Bytes32
 
   "Gets a single transaction from this block, addressed by its position in the block."
   transactionAt(index: Int!): Transaction
 
   "Gets all transactions from this block. If a filter is passed, only the transactions matching the filter will be returned."
-  transactions(filter: TransactionFilter): [Transaction]
+  transactions(filter: TransactionFilter): [Transaction!]
 
   """
   Gets all transactions from this block as long as they involve any of the addresses specified.
@@ -97,6 +135,47 @@ type Block {
   If a filter is passed, only the transactions matching the filter will be returned.
   """
   transactionsRoles(from: Address, to: Address, filter: TransactionFilter): [Transaction]
+
+  """
+  Logs returns a filtered set of logs from this block
+  """
+  logs(filter: LogFilter): [Log!]!
+
+  """
+  Call executes a local call operation. Calls referenced to the local block
+  """
+  call(data: CallData!): CallResult
+}
+
+"""
+CallData represents the data associated with a local contract call.
+All fields are optional.
+"""
+input CallData {
+    # From is the address making the call.
+    from: Address
+    # To is the address the call is sent to.
+    to: Address
+    # Gas is the amount of gas sent with the call.
+    gas: Long
+    # GasPrice is the price, in wei, offered for each unit of gas.
+    gasPrice: BigInt
+    # Value is the value, in wei, sent along with the call.
+    value: BigInt
+    # Data is the data sent to the callee.
+    data: Bytes
+}
+
+"""
+CallResult is the result of a local call operation.
+"""
+type CallResult {
+    # Data is the return data of the called contract.
+    data: Bytes!
+    # GasUsed is the amount of gas used by the call, after any refunds.
+    gasUsed: Long!
+    # Status is the result of the call - 1 for success or 0 for failure.
+    status: Long!
 }
 
 """
@@ -210,16 +289,16 @@ type Account {
   address: Address
 
   "The balance of this account"
-  balance(unit: Unit): Long
+  balance(unit: Unit): BigInt!
 
   "The code behind this account"
-  code: String
+  code: Bytes
 
   "The type of this account"
   type: AccountType
 
   "The number of transactions this account has sent"
-  transactionCount: Int
+  transactionCount: Long!
 
   "The storage of this account"
   storage: Storage
@@ -251,31 +330,49 @@ type Transaction {
   nonce: Long!
 
   "The index of the transaction within the block"
-  index: Int!
+  index: Int
 
   "Sender of this transaction"
-  from: Account
+  from(block: Long): Account!
 
   "Recipient of this transaction"
-  to: Account
+  to(block: Long): Account
 
-  "Value of the transaction"
-  value(unit: Unit): Float!
+  "Value in wei, sent along with this transaction"
+  value: BigInt!
+
+  "Value of the transaction converted into specified denomination"
+  convertValue(unit: Unit): Float!
+
+  "GasPrice is the price offered to miners for gas, in weigh per unit"
+  gasPrice: BigInt!
 
   "Price set for each gas unit"
-  gasPrice(unit: Unit): Float!
+  convertGasPrice(unit: Unit): Float!
 
-  "The amount of gas expended in the transaction"
+  "The maximum amount of gas this tranaction can consome"
   gas: Long!
 
+  "GasUsed is the amount of gas that was used in processing this transaction"
+  gasUsed: Long
+
+  """cumulativeGasUsed is the total gas used in the block up to and including
+  this transaction. If the transaction has not yet been mined, this field will be null"""
+  cumulativeGasUsed: Long
+
+  """CreatedContract is the account that was created by a contract creation
+  transaction. If the transaction was not a contract creation transaction,
+  or it has not yet been mined, this field will be null."""
+  createdContract(block: Long): Account
+
   "The input data to the transaction"
-  inputData: String
+  inputData: Bytes
 
   "The status of the transaction"
   status: TransactionStatus
 
   "The block the transaction is contained in"
-  block: Block!
+  block: Block
 
   "The logs emitted by this transaction."
   logs(filter: LogFilter): [Log]
@@ -287,9 +384,6 @@ type Transaction {
   For example, because some standards share function signatures, a single transaction may appear to match several different standards.
   """
   decoded: DecodedTransaction
-
-  "Contract created by this transaction"
-  createdContract: Account
 }
 
 """
@@ -444,11 +538,33 @@ enum Unit {
   tether
 }
 
+"""
+BigInt is a large integer. Input is accepted as either a JSON number or as a string.
+"""
+scalar BigInt
+
+"""
+Bytes is an arbitrary length binary string, represented as a 0x-prefixed hexadecimal.
+An empty byte string is represented as '0x'. Byte strings must have an even number of
+hexadecimal nybbles
+"""
+scalar Bytes
+
+"""
+Long is a 64 bit unsigned integer
+"""
 scalar Long
 
+"""
+Bytes32 is a 32 byte binary string, represented as 0x-prefixed hexadecimal
+"""
 scalar Bytes32
 
-scalar BlockNumber
 
+"""
+Address is a 20 byte Ethereum address, represented as 0x-prefixed hexadecimal
+"""
 scalar Address
+
+scalar BlockNumber
 `;
