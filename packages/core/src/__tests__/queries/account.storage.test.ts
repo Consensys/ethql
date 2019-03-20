@@ -3,7 +3,7 @@ import { CORE_PLUGIN } from '../../plugin';
 
 const { execQuery } = testGraphql({
   opts: {
-    config: { jsonrpc: 'https://ropsten.infura.io' },
+    config: { jsonrpc: 'https://ropsten.infura.io/v3/70c53878c5a94e7f8d4043df3f8ef755' },
     plugins: [CORE_PLUGIN]
 }});
 const contractAddress = '"0x9c72Eda6de2F67F3B3DbcA3788Aa307AEF1e0Cef"';

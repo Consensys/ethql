@@ -41,8 +41,7 @@ JSON-RPC (web3): Using HTTP(S) provider with endpoint: https://mainnet.infura.io
 Running a GraphQL API server at http://0.0.0.0:4000/graphql (browse here: http://localhost:4000/graphql)
 ```
 
-This EthQL server uses [Infura](https://infura.io/) as a backend in anonymous mode. If you have an Infura ID (and if you
-don't, you should sign up for one!) you can set it like this:
+This EthQL server uses [Infura](https://infura.io/) as a backend in anonymous mode. If you have an Infura project ID (and if you don't, you should sign up for one!) you can set it like this:
 
 ```
 $ INFURA_ID=myid yarn run dev

@@ -5,8 +5,8 @@ function skipIfUndefined(prop: any) {
 }
 
 const endpoints = {
-  https: 'https://mainnet.infura.io',
-  wss: 'wss://mainnet.infura.io/ws',
+  https: 'https://mainnet.infura.io/v3/70c53878c5a94e7f8d4043df3f8ef755',
+  wss: 'wss://mainnet.infura.io/ws/v3/70c53878c5a94e7f8d4043df3f8ef755',
   http: process.env.TEST_HTTP_ENDPOINT,
   // ws: process.env.TEST_WS_ENDPOINT,
   ipc1: process.env.TEST_IPC_PATH,
