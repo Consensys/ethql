@@ -24,7 +24,7 @@ export const DEFAULT_TEST_RUNNER_OPTS: TestRunnerOpts = {
   mode: currentTestMode in TestMode ? TestMode[currentTestMode] : TestMode.replay,
   opts: {
     config: {
-      jsonrpc: 'https://mainnet.infura.io',
+      jsonrpc: 'https://mainnet.infura.io/v3/70c53878c5a94e7f8d4043df3f8ef755',
       queryMaxSize: 10,
       batching: true,
       caching: true,

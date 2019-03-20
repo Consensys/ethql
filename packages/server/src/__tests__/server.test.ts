@@ -12,7 +12,7 @@ const testServers: EthqlServer[] = [];
 
 const defaultOpts: EthqlOptions = {
   config: {
-    jsonrpc: 'https://mainnet.infura.io',
+    jsonrpc: 'https://mainnet.infura.io/v3/70c53878c5a94e7f8d4043df3f8ef755',
     queryMaxSize: 10,
     port: 0,
     validation: {
@@ -87,7 +87,7 @@ test('stop twice throws on second attempt', async () => {
 
 test('JSON RPC endpoint configuration works correctly', async () => {
   const servers = {
-    ropsten: await newServer({ config: { jsonrpc: 'https://ropsten.infura.io' } }),
+    ropsten: await newServer({ config: { jsonrpc: 'https://ropsten.infura.io/v3/70c53878c5a94e7f8d4043df3f8ef755' } }),
     mainnet: await newServer(),
   };
 
