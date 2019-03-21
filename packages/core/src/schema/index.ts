@@ -159,7 +159,7 @@ input CallData {
     # Gas is the amount of gas sent with the call.
     gas: Long
     # GasPrice is the price, in wei, offered for each unit of gas.
-    gasPrice: BigInt
+    gasPrice: String
     # Value is the value, in wei, sent along with the call.
     value: BigInt
     # Data is the data sent to the callee.

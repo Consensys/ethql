@@ -1,11 +1,13 @@
 import { EthqlServiceDefinition, Options } from '@ethql/base';
 import { Promise as BPromise } from 'bluebird';
 import DataLoader from 'dataloader';
+import * as Debug from 'debug';
 import net = require('net');
 import * as url from 'url';
 import Web3 = require('web3');
 import { Provider } from 'web3/providers';
 
+const debug = Debug.debug('ethql:services');
 declare module '@ethql/base' {
   interface EthqlServices {
     web3: Web3;
