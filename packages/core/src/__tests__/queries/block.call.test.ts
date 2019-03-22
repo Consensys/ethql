@@ -39,8 +39,10 @@ test('block: basic call', async () => {
      { data: '0x000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000034f4d470000000000000000000000000000000000000000000000000000000000' } } };
 
   let result = await execQuery(query);
+  let decodedResult = abiCoder.decodeParameter('string', result.data.block.call.data)
 
   expect(result.data).toBeDefined();
   expect(result.data).toEqual(expected);
+  expect(decodedResult).toBe('OMG');
 });
 
