@@ -1,7 +1,16 @@
 import { EthqlServiceDefinition } from '@ethql/base';
 import { ArgumentNode, FieldNode, GraphQLResolveInfo, ListValueNode, ObjectFieldNode, ObjectValueNode } from 'graphql';
 import _ from 'lodash';
-import { EthqlAccount, EthqlBlock, EthqlLog, EthqlTransaction, LogFilter, TransactionStatus } from '../../model';
+import {
+  CallData,
+  CallResult,
+  EthqlAccount,
+  EthqlBlock,
+  EthqlLog,
+  EthqlTransaction,
+  LogFilter,
+  TransactionStatus,
+} from '../../model';
 
 declare module '@ethql/base' {
   interface EthqlServices {
@@ -28,6 +37,7 @@ export interface EthService {
   fetchTransactionLogs(tx: EthqlTransaction, filter: LogFilter): Promise<EthqlLog[]>;
   fetchCreatedContract(tx: EthqlTransaction): Promise<EthqlAccount>;
   fetchTransactionStatus(tx: EthqlTransaction): Promise<TransactionStatus>;
+  callContract(data: CallData, blockNumber: number): Promise<CallResult>;
 }
 
 /**
@@ -63,5 +73,5 @@ export function fetchHints(info: GraphQLResolveInfo): FetchHints {
     transactions: !!txFields.length,
     logs: !!logsFields.length || !!withLogFilters.length,
     logFilters: logFilters[0]
-  }
+  };
 }

@@ -1,19 +1,13 @@
 import { EthqlContext } from '@ethql/base';
 import * as Debug from 'debug';
 import { GraphQLResolveInfo } from 'graphql';
-import { EthqlAccount, EthqlBlock, EthqlTransaction } from '../model';
+import { CallData, CallResult, EthqlAccount, EthqlBlock, EthqlTransaction } from '../model';
 
 const debug = Debug.debug('ethql:resolve');
 type TransactionFilter = { filter: { withInput?: boolean; withLogs?: boolean; contractCreation?: boolean } };
 type TransactionsInvolvingArgs = { participants: string[] } & TransactionFilter;
 type TransactionsRolesArgs = { from: string; to: string } & TransactionFilter;
-type CallData = {
-  to: string,
-  from?: string,
-  gas: number,
-  gasPrice: string,
-  data: string
-};
+
 /**
  * Creates a filtering function for transactions based on the user-provided filter parameters.
  *
@@ -111,9 +105,9 @@ function transactionsRoles(obj: EthqlBlock, args: TransactionsRolesArgs): EthqlT
     .filter(transactionFilter(args));
 }
 
-async function call(obj: EthqlBlock, args: CallData, { services }: EthqlContext, info: GraphQLResolveInfo): Promise<string> {
-  debug('Calling %O', args);
-  return services.web3.eth.call(args, obj.number).then((res) => { console.log(res); return res; });
+async function call(obj: EthqlBlock, { data }, { services }: EthqlContext, info: GraphQLResolveInfo): Promise<CallResult> {
+  debug('Calling %O', data);
+  return services.eth.callContract(data, obj.number);
 }
 
 export default {

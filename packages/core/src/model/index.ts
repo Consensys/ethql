@@ -149,3 +149,15 @@ export class StorageAccessor {
 export type TransactionStatus = 'PENDING' | 'SUCCESS' | 'FAILED';
 
 export type LogFilter = { topics: string[][] };
+
+export type CallData = {
+  to: string,
+  from?: string,
+  gas: number,
+  gasPrice: string,
+  data: string
+};
+
+export type CallResult = {
+  data: string
+};

@@ -172,10 +172,6 @@ CallResult is the result of a local call operation.
 type CallResult {
     # Data is the return data of the called contract.
     data: Bytes!
-    # GasUsed is the amount of gas used by the call, after any refunds.
-    gasUsed: Long!
-    # Status is the result of the call - 1 for success or 0 for failure.
-    status: Long!
 }
 
 """

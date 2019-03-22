@@ -53,6 +53,7 @@
   "gitHead": "9792ffc037e7dff5fbfa098dce52a9e3121c8157",
   "devDependencies": {
     "@types/debug": "^4.1.2",
-    "debug": "^4.1.1"
+    "debug": "^4.1.1",
+    "web3-eth-abi": "^1.0.0-beta.50"
   }
 }

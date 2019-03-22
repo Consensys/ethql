@@ -36,5 +36,8 @@
     "graphql": "^14.1.1",
     "graphql-tools": "^4.0.4",
     "lodash": "^4.17.11"
+  },
+  "devDependencies": {
+    "web3-eth-abi": "^1.0.0-beta.50"
   }
 }
