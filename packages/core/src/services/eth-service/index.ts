@@ -38,6 +38,7 @@ export interface EthService {
   fetchCreatedContract(tx: EthqlTransaction): Promise<EthqlAccount>;
   fetchTransactionStatus(tx: EthqlTransaction): Promise<TransactionStatus>;
   callContract(data: CallData, blockNumber: number): Promise<CallResult>;
+  estimateGas(data: CallData): Promise<number>;
 }
 
 /**

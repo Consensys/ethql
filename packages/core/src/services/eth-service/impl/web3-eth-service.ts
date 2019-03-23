@@ -13,6 +13,7 @@ import {
   EthqlTransaction,
   LogFilter,
   TransactionStatus } from '../../../model';
+import block from 'packages/core/src/resolvers/block';
 
 const debug = Debug.debug('ethql:web3');
 
@@ -117,5 +118,10 @@ export class Web3EthService implements EthService {
     return this.web3.eth.call(data, blockNumber).then((result) => ({ 
       data: result
     }));
+  }
+
+  public async estimateGas(data: CallData): Promise<number> {
+    debug('EstimateGas: %O', data);
+    return this.web3.eth.estimateGas(data);
   }
 }

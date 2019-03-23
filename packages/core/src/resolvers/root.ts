@@ -2,8 +2,8 @@ import { EthqlContext } from '@ethql/base';
 import * as Debug from 'debug';
 import { GraphQLResolveInfo } from 'graphql';
 import * as _ from 'lodash';
+import { isAddress, isHex } from 'web3-utils';
 import { EthqlAccount, EthqlBlock, EthqlTransaction } from '../model';
-
 const debug = Debug.debug('ethql:resolve');
 
 // Select a single block.
@@ -154,6 +154,20 @@ function transaction(obj, { hash }, { services }: EthqlContext): Promise<EthqlTr
   return services.eth.fetchStandaloneTx(hash);
 }
 
+async function estimateGas(obj, { data }, { services }: EthqlContext, info: GraphQLResolveInfo): Promise<number> {
+  debug('EstimateGas %O', data);
+
+  if (!isAddress(data.to)) {
+    throw new Error('A valid contract address is required.');
+  }
+
+  if (!isHex(data.data)) {
+    throw new Error('Parameter (data): missing or not hex encoded.');
+  }
+
+  return services.eth.estimateGas(data);
+}
+
 export default {
   Query: {
     block,
@@ -161,6 +175,7 @@ export default {
     blockList,
     blockOffset,
     blocksRange,
+    estimateGas,
     account,
     transaction,
   },
