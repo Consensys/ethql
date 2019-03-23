@@ -172,8 +172,13 @@ async function gasPrice(obj: never, args: never, { services }: EthqlContext, inf
   return services.web3.eth.getGasPrice();
 }
 
+async function protocolVersion(obj: never, args: never, { services }: EthqlContext, info: GraphQLResolveInfo): Promise<string> {
+  return services.web3.eth.getProtocolVersion();
+}
+
 export default {
   Query: {
+    account,
     block,
     blocks,
     blockList,
@@ -181,7 +186,7 @@ export default {
     blocksRange,
     estimateGas,
     gasPrice,
-    account,
+    protocolVersion,
     transaction,
   },
 };
