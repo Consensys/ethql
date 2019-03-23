@@ -168,6 +168,10 @@ async function estimateGas(obj, { data }, { services }: EthqlContext, info: Grap
   return services.eth.estimateGas(data);
 }
 
+async function gasPrice(obj: never, args: never, { services }: EthqlContext, info: GraphQLResolveInfo): Promise<number> {
+  return services.web3.eth.getGasPrice();
+}
+
 export default {
   Query: {
     block,
@@ -176,6 +180,7 @@ export default {
     blockOffset,
     blocksRange,
     estimateGas,
+    gasPrice,
     account,
     transaction,
   },
