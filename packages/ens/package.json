@@ -39,7 +39,7 @@
     "@types/graphql": "^14.0.7",
     "ez-ens": "^1.0.4",
     "graphql": "^14.0.2",
-    "lodash": "^4.17.10",
+    "lodash": "^4.17.15",
     "web3": "1.0.0-beta.37"
   },
   "devDependencies": {
