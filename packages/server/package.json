@@ -45,7 +45,7 @@
     "@ethql/plugin": "^0.1.2",
     "@types/graphql": "^14.0.7",
     "apollo-server": "^2.4.2",
-    "axios": "^0.18.0",
+    "axios": "^0.21.1",
     "get-port": "4.1.0",
     "graphql": "^14.1.1",
     "lodash": "^4.17.11"
