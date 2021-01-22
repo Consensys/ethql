@@ -24,12 +24,12 @@ const options: Options | commander.Command = commander
   .option(
     '-m, --query-max-size <limit>',
     'specify the maximum number of elements allowed in multiple selection queries',
-    10,
+    "10",
   )
   .option(
     '-p, --port <number>', //
     'specify the port number on which the GraphQL HTTP server will listen on',
-    4000,
+    "4000",
   )
   .option(
     '-b, --batching <enabled>', //

@@ -35,13 +35,14 @@
   },
   "dependencies": {
     "@types/graphql": "^14.0.7",
-    "@types/node": "^11.9.4",
+    "commander": "^7.0.0",
     "deepmerge": "^3.2.0",
     "graphql": "^14.1.1",
     "graphql-tools": "^4.0.4"
   },
   "devDependencies": {
     "@types/debug": "^4.1.2",
+    "@types/node": "12.12.21",
     "debug": "^4.1.1"
   }
 }
