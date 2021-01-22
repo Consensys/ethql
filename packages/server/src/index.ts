@@ -1,3 +1,4 @@
+require('dotenv').config();
 import { runtimeConfig } from '@ethql/base';
 import { CORE_PLUGIN } from '@ethql/core';
 import { ENS_PLUGIN } from '@ethql/ens';
