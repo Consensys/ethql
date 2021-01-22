@@ -702,7 +702,7 @@
         "affectsGlobalScope": false
       },
       "./src/config.ts": {
-        "version": "8692d48ca1c3b28625cb4fd7f58034aae06b9bf33bf26b03540b9daec1a86765",
+        "version": "04bfb729f8f97331daf31a12d9017811443f8caa1f86b7fc3d8f7ad0d5319144",
         "signature": "fc7deffbb7937f6cd800922f24a1c26d4a01808ee56ff9bc657d643c16f613b8",
         "affectsGlobalScope": false
       },

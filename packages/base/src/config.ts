@@ -12,19 +12,18 @@ export class Options {
   };
 }
 
-const DEFAULT_PROJECT_ID = '70c53878c5a94e7f8d4043df3f8ef755'
 /* tslint:disable */
 const options: Options | commander.Command = commander
   .version('0.0.1')
   .option(
     '-j, --jsonrpc <endpoint>',
-    'specify the JSON-RPC endpoint [https://mainnet.infura.io/v3/${INFURA_ID}]; supported transports: http, https, wss, ipc',
-    `https://mainnet.infura.io/v3/${process.env.INFURA_ID || DEFAULT_PROJECT_ID}`,
+    'specify the JSON-RPC endpoint [https://{USERNAME}:{PASSWORD}@{RPC_ENDPOINT}]; supported transports: http, https, wss, ipc',
+    `https://${process.env.USERNAME}:${process.env.PASSWORD}@${process.env.RPC_ENDPOINT}`,
   )
   .option(
     '-m, --query-max-size <limit>',
     'specify the maximum number of elements allowed in multiple selection queries',
-    "10",
+    "2000",
   )
   .option(
     '-p, --port <number>', //
