@@ -1,7 +1,9 @@
 import { EthqlContext } from '@ethql/base';
+import * as Debug from 'debug';
 import { GraphQLResolveInfo } from 'graphql';
-import { EthqlAccount, EthqlBlock, EthqlTransaction } from '../model';
+import { CallData, CallResult, EthqlAccount, EthqlBlock, EthqlTransaction } from '../model';
 
+const debug = Debug.debug('ethql:resolve');
 type TransactionFilter = { filter: { withInput?: boolean; withLogs?: boolean; contractCreation?: boolean } };
 type TransactionsInvolvingArgs = { participants: string[] } & TransactionFilter;
 type TransactionsRolesArgs = { from: string; to: string } & TransactionFilter;
@@ -103,8 +105,14 @@ function transactionsRoles(obj: EthqlBlock, args: TransactionsRolesArgs): EthqlT
     .filter(transactionFilter(args));
 }
 
+async function call(obj: EthqlBlock, { data }, { services }: EthqlContext, info: GraphQLResolveInfo): Promise<CallResult> {
+  debug('Calling %O', data);
+  return services.eth.callContract(data, obj.number);
+}
+
 export default {
   Block: {
+    call,
     miner,
     parent,
     transactions,

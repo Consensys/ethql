@@ -14,7 +14,7 @@ test('blocksRange: select multiple blocks by number range', async () => {
   `;
 
   const expected = {
-    data: { blocksRange: [{ timestamp: '1438270128' }, { timestamp: '1438270136' }, { timestamp: '1438270144' }] },
+    data: { blocksRange: [{ timestamp: 1438270128 }, { timestamp: 1438270136 }, { timestamp: 1438270144 }] },
   };
 
   const result = await execQuery(query);
@@ -144,7 +144,7 @@ test('blocksRange: error when negative number provided as start', async () => {
 
   const result = await execQuery(query);
   expect(result.errors).toHaveLength(1);
-  expect(result.errors[0].message).toBe('Expected type BlockNumber, found -1.');
+  expect(result.errors[0].message).toBe('Invalid block number provided.');
 });
 
 test('blocksRange: error when negative number provided as end', async () => {
@@ -158,7 +158,7 @@ test('blocksRange: error when negative number provided as end', async () => {
 
   const result = await execQuery(query);
   expect(result.errors).toHaveLength(1);
-  expect(result.errors[0].message).toBe('Expected type BlockNumber, found -1.');
+  expect(result.errors[0].message).toBe('Invalid block number provided.');
 });
 
 test('blocksRange: error when start number is larger than end number', async () => {
@@ -222,7 +222,7 @@ test('blocksRange: same block number provided twice returns one block', async ()
   `;
 
   const expected = {
-    data: { blocksRange: [{ timestamp: '1438270128' }] },
+    data: { blocksRange: [{ timestamp: 1438270128 }] },
   };
 
   const result = await execQuery(query);

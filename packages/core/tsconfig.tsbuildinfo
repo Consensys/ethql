@@ -467,8 +467,8 @@
         "affectsGlobalScope": false
       },
       "./src/model/index.ts": {
-        "version": "d5ea3dce2bd881199ef939f96b25aa6de63020201a2e9dcb8e8e698b3258beeb",
-        "signature": "80f45baae25a05d73fe7b3d786eaddc81bf9b708413ae95fc15524e484608460",
+        "version": "e073fdf6abd481894b52e7b50694f890c64e55c4e56e66cbf8ca72a19552d16b",
+        "signature": "6c4511960e31b22ab83febfb91f7ddc1beb8b43f78a2ee6bce921b3b00619e9b",
         "affectsGlobalScope": false
       },
       "../base/dist/schema/root.d.ts": {
@@ -1378,12 +1378,17 @@
       },
       "./src/resolvers/account.ts": {
         "version": "98272b2e6b5b894c1721f362c98a9d3e28a6dac0f235177d015e60b0c691b019",
-        "signature": "0fa72841ddf2de3f03694fc9e5d38b9ce4e501b4a70e9c0e6cc9fc93b8deba65",
+        "signature": "beb736cf16cb92215cb0eaa65be8a7e7a5bf3d4ea62ec172ef93a4e889257e13",
+        "affectsGlobalScope": false
+      },
+      "../../node_modules/@types/debug/index.d.ts": {
+        "version": "3cf5f191d75bbe7c92f921e5ae12004ac672266e2be2ece69f40b1d6b1b678f9",
+        "signature": "3cf5f191d75bbe7c92f921e5ae12004ac672266e2be2ece69f40b1d6b1b678f9",
         "affectsGlobalScope": false
       },
       "./src/resolvers/block.ts": {
-        "version": "a0a1c4d809592113e9211cc97c90e5eef595fca9020510d95142fd8cab2f8da0",
-        "signature": "f653691f8032ae03721e38ee8b76869bd25aeada39a09c13bd901fbdb35ec8ec",
+        "version": "d41276d1205f1056ee5fd3adc8270646dc9457bd326590d7270352f8fd3ea586",
+        "signature": "32c94fa23dec21725421ee4d16907b826f3012c83968a7c70fd9e43a59c682f9",
         "affectsGlobalScope": false
       },
       "./src/resolvers/health.ts": {
@@ -1396,24 +1401,19 @@
         "signature": "95accaadd87bd4cfd7aadf5139a60e19eda9fd0f3f00b46ed394ede14204236d",
         "affectsGlobalScope": false
       },
-      "../../node_modules/@types/debug/index.d.ts": {
-        "version": "3cf5f191d75bbe7c92f921e5ae12004ac672266e2be2ece69f40b1d6b1b678f9",
-        "signature": "3cf5f191d75bbe7c92f921e5ae12004ac672266e2be2ece69f40b1d6b1b678f9",
-        "affectsGlobalScope": false
-      },
-      "./src/resolvers/root.ts": {
-        "version": "65682c54f897f919e6f380f6b8cca48f86b19c5e27cffe345d61575e491a000e",
-        "signature": "af3c73d994d2a5bdad9d266ed5e4bc4f8ff4d1d664e49cc138bcc61bfd691049",
-        "affectsGlobalScope": false
-      },
       "./node_modules/web3-utils/types/index.d.ts": {
         "version": "6f89f91876898e1729782c4e119d8fe6987df4094d04c81a4a0156137a0cf8fa",
         "signature": "6f89f91876898e1729782c4e119d8fe6987df4094d04c81a4a0156137a0cf8fa",
         "affectsGlobalScope": false
       },
+      "./src/resolvers/root.ts": {
+        "version": "15015881579751563da1991b7e623ee7d9955fe5c35ae27117a5a4a523e7a524",
+        "signature": "5704c6074b66af0ab3e0108fbf070fce24ba102f9f9fe62c703ad61df069a8ee",
+        "affectsGlobalScope": false
+      },
       "./src/resolvers/scalars.ts": {
-        "version": "b6db6b5e9a03d1cc71a30f3c6da6e1983f5871a44c89ec546b7eccfa52c70ce6",
-        "signature": "a5f4a49919bf8ec6777e71f6878f4499593771561928f96e33e101c66652805a",
+        "version": "40acee04728a9171e1145a7ab326e114fc6098529fe4d5455d63b353865b272e",
+        "signature": "c2fc3a8b08f76c1902d605ed203a52f90a54cc05588c211487996103d72f986d",
         "affectsGlobalScope": false
       },
       "./src/resolvers/storage.ts": {
@@ -1437,8 +1437,8 @@
         "affectsGlobalScope": false
       },
       "./src/schema/index.ts": {
-        "version": "643f78df8459416350f6466d7fab59658e6768611d57ec63ae08cf775284acd4",
-        "signature": "4ed34ad3ddcff9850f8eacb585009248a59d0d1fb2274079c4db7f161444511f",
+        "version": "bea2f8c6dafe2a629cb7a701279095a41c7d5096f50c6f96e26b8091fb314bce",
+        "signature": "8a68855a8f7840cf99929642dbdaf392e4699007a43829bb35f2bc9720354250",
         "affectsGlobalScope": false
       },
       "./src/services/decoder/impl/simple.ts": {
@@ -1447,13 +1447,13 @@
         "affectsGlobalScope": false
       },
       "./src/services/eth-service/index.ts": {
-        "version": "6892022dec095a5c6baae9525d01b431601c139028fe80b4a1ae80f6049a45cf",
-        "signature": "9e1f20acac4fb0ac5c86bb20ec5670d1ccb5625b357ed47389d6901ec2faf9ba",
+        "version": "71805ad5ea928978788ef5dd367f7a369035cdbaa73f5e4c05e71538c34545a9",
+        "signature": "40d64c04a7357e0a1cad8f6c805f06bc1ad5c23c24503996930cc97342538e47",
         "affectsGlobalScope": false
       },
       "./src/services/eth-service/impl/web3-eth-service.ts": {
-        "version": "20dba38e99e936633f25d50e96eb96f9faff13e3c79bb6a4c1040e43ffc7e313",
-        "signature": "0925d32ff10b36272192e76dd124069b8f04e3b3cf1d0d48cab0bc5a5a2fadf5",
+        "version": "be6c66e157d5c8b05c817679f9442e0470748c8dad13d793fb1ff6c63553d5e5",
+        "signature": "e2b9e6f8b12b589c08aa491ff0b6b715d7c22bbcd1c1a7ed8843e0531c64869f",
         "affectsGlobalScope": false
       },
       "../../node_modules/dataloader/index.d.ts": {
@@ -1462,7 +1462,7 @@
         "affectsGlobalScope": false
       },
       "./src/services/web3/index.ts": {
-        "version": "71a8c29cae59d9961eeae4001e9a5a3e73620861c7427b2b0f80182c834f7005",
+        "version": "c0cb89637601a9f5a5b247fa4dc063af3253a755f96d0e7a329d0ddd7773a169",
         "signature": "cc817cabb25ec17ccf4f38dc66038a811b830cfbf31bfc71777d4c6cbcd0953f",
         "affectsGlobalScope": false
       },
@@ -3745,6 +3745,7 @@
         "./src/model/index.ts"
       ],
       "./src/resolvers/block.ts": [
+        "../../node_modules/@types/debug/index.d.ts",
         "../../node_modules/graphql/index.d.ts",
         "../base/dist/index.d.ts",
         "./src/model/index.ts"
@@ -3768,6 +3769,7 @@
         "../../node_modules/@types/debug/index.d.ts",
         "../../node_modules/graphql/index.d.ts",
         "../base/dist/index.d.ts",
+        "./node_modules/web3-utils/types/index.d.ts",
         "./src/model/index.ts"
       ],
       "./src/resolvers/scalars.ts": [
@@ -3803,6 +3805,7 @@
         "../web3-typings/src/index.d.ts",
         "./node_modules/web3-utils/types/index.d.ts",
         "./src/model/index.ts",
+        "./src/resolvers/block.ts",
         "./src/services/eth-service/index.ts"
       ],
       "./src/services/eth-service/index.ts": [
@@ -3813,6 +3816,7 @@
         "./src/services/web3/index.ts"
       ],
       "./src/services/web3/index.ts": [
+        "../../node_modules/@types/debug/index.d.ts",
         "../../node_modules/@types/node/net.d.ts",
         "../../node_modules/@types/node/url.d.ts",
         "../../node_modules/dataloader/index.d.ts",
@@ -5463,6 +5467,7 @@
       ],
       "./src/resolvers/account.ts": [
         "../base/dist/index.d.ts",
+        "./node_modules/web3-utils/types/index.d.ts",
         "./src/model/index.ts"
       ],
       "./src/resolvers/block.ts": [

@@ -23,7 +23,7 @@ const options: Options | commander.Command = commander
   .option(
     '-m, --query-max-size <limit>',
     'specify the maximum number of elements allowed in multiple selection queries',
-    "2000",
+    "200000",
   )
   .option(
     '-p, --port <number>', //

@@ -4,7 +4,16 @@ import * as _ from 'lodash';
 import Web3 = require('web3');
 import { Hex } from 'web3-utils/types';
 import { EthService, fetchHints, FetchHints } from '..';
-import { EthqlAccount, EthqlBlock, EthqlLog, EthqlTransaction, LogFilter, TransactionStatus } from '../../../model';
+import {
+  CallData,
+  CallResult,
+  EthqlAccount,
+  EthqlBlock,
+  EthqlLog,
+  EthqlTransaction,
+  LogFilter,
+  TransactionStatus } from '../../../model';
+import block from 'packages/core/src/resolvers/block';
 
 const debug = Debug.debug('ethql:web3');
 
@@ -104,4 +113,15 @@ export class Web3EthService implements EthService {
     return receipt.status === undefined ? null : receipt.status ? 'SUCCESS' : 'FAILED';
   }
 
+  public async callContract(data: CallData, blockNumber: number): Promise<CallResult> {
+    debug('contractCall: %O', data);
+    return this.web3.eth.call(data, blockNumber).then((result) => ({ 
+      data: result
+    }));
+  }
+
+  public async estimateGas(data: CallData): Promise<number> {
+    debug('EstimateGas: %O', data);
+    return this.web3.eth.estimateGas(data);
+  }
 }

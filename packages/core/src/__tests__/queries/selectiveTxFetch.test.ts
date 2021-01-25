@@ -54,7 +54,7 @@ test('selective TX fetch: blocksRange with transactions (triggered by transactio
 test('selective TX fetch: block without transactions', async () => {
   const query = `
     {
-      blocks(numbers: [5755715, 5755716, 5755717, 5755718]) {
+      blockList(numbers: [5755715, 5755716, 5755717, 5755718]) {
         hash
       }
     }
@@ -82,7 +82,7 @@ test('selective TX fetch: blocksRange without transactions', async () => {
 test('selective TX fetch: blocks with transactions (triggered by transactions)', async () => {
   const query = `
     {
-      blocks(numbers: [10, 20, 25, 900, 19]) {
+      blockList(numbers: [10, 20, 25, 900, 19]) {
         transactions {
           hash
         }

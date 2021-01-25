@@ -2,8 +2,8 @@ import { EthqlContext } from '@ethql/base';
 import * as Debug from 'debug';
 import { GraphQLResolveInfo } from 'graphql';
 import * as _ from 'lodash';
+import { isAddress, isHex } from 'web3-utils';
 import { EthqlAccount, EthqlBlock, EthqlTransaction } from '../model';
-
 const debug = Debug.debug('ethql:resolve');
 
 // Select a single block.
@@ -12,8 +12,11 @@ type BlockArgs = { number?: number; hash?: string; tag?: string };
 // Select a single block with an offset.
 type BlockOffsetArgs = { number?: number; hash?: string; offset?: number; tag?: string };
 
+// Select multiple contiguous blocks
+type BlocksArgs = { from: number, to?: number };
+
 // Select multiple blocks.
-type BlocksArgs = { numbers?: number[]; hashes?: string[] };
+type BlockListArgs = { numbers?: number[]; hashes?: string[] };
 
 // Select multiple blocks.
 type BlocksRangeArgs = { numberRange?: [number, number]; hashRange?: [string, string] };
@@ -27,14 +30,14 @@ async function block(obj, args: BlockArgs, { services }: EthqlContext, info: Gra
 
   const params = _.reject([blockNumber, hash, tag], _.isNil);
 
-  if (!params.length) {
-    throw new Error('Expected either number, hash or tag argument.');
-  }
   if (params.length > 1) {
     throw new Error('Only one of number, hash or tag argument should be provided.');
   }
+
   debug('params: %O', params);
-  return services.eth.fetchBlock(params[0], info);
+
+  const param = params.length > 0 ? params[0] : services.web3.eth.defaultBlock;
+  return services.eth.fetchBlock(param, info);
 }
 
 async function blockOffset(
@@ -59,9 +62,20 @@ async function blockOffset(
   return services.eth.fetchBlock(blockNumber + offset, info);
 }
 
-async function blocks(
+async function blocks (
   obj: never,
-  { numbers, hashes }: BlocksArgs,
+  { to, from }: BlocksArgs,
+  { services, config }: EthqlContext,
+  info: GraphQLResolveInfo,
+): Promise<EthqlBlock[]> {
+  to = to ? to : await services.web3.eth.getBlockNumber();
+  // Compensate to + 1 since _.range is exclusive
+  return blockList(obj, { numbers: _.range(from, to + 1) }, {services, config}, info);
+}
+
+async function blockList(
+  obj: never,
+  { numbers, hashes }: BlockListArgs,
   { services, config }: EthqlContext,
   info: GraphQLResolveInfo,
 ): Promise<EthqlBlock[]> {
@@ -140,13 +154,39 @@ function transaction(obj, { hash }, { services }: EthqlContext): Promise<EthqlTr
   return services.eth.fetchStandaloneTx(hash);
 }
 
+async function estimateGas(obj, { data }, { services }: EthqlContext, info: GraphQLResolveInfo): Promise<number> {
+  debug('EstimateGas %O', data);
+
+  if (!isAddress(data.to)) {
+    throw new Error('A valid contract address is required.');
+  }
+
+  if (!isHex(data.data)) {
+    throw new Error('Parameter (data): missing or not hex encoded.');
+  }
+
+  return services.eth.estimateGas(data);
+}
+
+async function gasPrice(obj: never, args: never, { services }: EthqlContext, info: GraphQLResolveInfo): Promise<number> {
+  return services.web3.eth.getGasPrice();
+}
+
+async function protocolVersion(obj: never, args: never, { services }: EthqlContext, info: GraphQLResolveInfo): Promise<string> {
+  return services.web3.eth.getProtocolVersion();
+}
+
 export default {
   Query: {
+    account,
     block,
     blocks,
+    blockList,
     blockOffset,
     blocksRange,
-    account,
+    estimateGas,
+    gasPrice,
+    protocolVersion,
     transaction,
   },
 };
