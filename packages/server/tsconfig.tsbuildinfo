@@ -1002,8 +1002,8 @@
         "affectsGlobalScope": false
       },
       "../core/dist/model/index.d.ts": {
-        "version": "80f45baae25a05d73fe7b3d786eaddc81bf9b708413ae95fc15524e484608460",
-        "signature": "80f45baae25a05d73fe7b3d786eaddc81bf9b708413ae95fc15524e484608460",
+        "version": "6c4511960e31b22ab83febfb91f7ddc1beb8b43f78a2ee6bce921b3b00619e9b",
+        "signature": "6c4511960e31b22ab83febfb91f7ddc1beb8b43f78a2ee6bce921b3b00619e9b",
         "affectsGlobalScope": false
       },
       "../plugin/dist/bootstrap.d.ts": {
@@ -1412,8 +1412,8 @@
         "affectsGlobalScope": false
       },
       "../core/dist/services/eth-service/index.d.ts": {
-        "version": "9e1f20acac4fb0ac5c86bb20ec5670d1ccb5625b357ed47389d6901ec2faf9ba",
-        "signature": "9e1f20acac4fb0ac5c86bb20ec5670d1ccb5625b357ed47389d6901ec2faf9ba",
+        "version": "40d64c04a7357e0a1cad8f6c805f06bc1ad5c23c24503996930cc97342538e47",
+        "signature": "40d64c04a7357e0a1cad8f6c805f06bc1ad5c23c24503996930cc97342538e47",
         "affectsGlobalScope": false
       },
       "../erc20/dist/index.d.ts": {

@@ -89,6 +89,9 @@ export interface EthqlBlock
     {
       transactions: EthqlTransaction[];
       miner: EthqlAccount;
+      ommerHash: string;
+      ommerCount: number;
+      ommers: string[];
     }
   > {}
 
@@ -100,6 +103,9 @@ export class EthqlBlock implements EthqlBlock {
     Object.assign(this, rest);
 
     this.miner = new EthqlAccount(block.miner);
+    this.ommerHash = this.sha3Uncles;
+    this.ommers = this.uncles;
+    this.ommerCount = this.uncles.length;
 
     if (logs) {
       const logsByTxIdx = _.groupBy(logs, l => l.transactionIndex);
@@ -143,3 +149,15 @@ export class StorageAccessor {
 export type TransactionStatus = 'PENDING' | 'SUCCESS' | 'FAILED';
 
 export type LogFilter = { topics: string[][] };
+
+export type CallData = {
+  to: string,
+  from?: string,
+  gas: number,
+  gasPrice: string,
+  data: string
+};
+
+export type CallResult = {
+  data: string
+};

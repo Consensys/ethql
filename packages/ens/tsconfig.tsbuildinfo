@@ -467,8 +467,8 @@
         "affectsGlobalScope": false
       },
       "../core/dist/model/index.d.ts": {
-        "version": "80f45baae25a05d73fe7b3d786eaddc81bf9b708413ae95fc15524e484608460",
-        "signature": "80f45baae25a05d73fe7b3d786eaddc81bf9b708413ae95fc15524e484608460",
+        "version": "6c4511960e31b22ab83febfb91f7ddc1beb8b43f78a2ee6bce921b3b00619e9b",
+        "signature": "6c4511960e31b22ab83febfb91f7ddc1beb8b43f78a2ee6bce921b3b00619e9b",
         "affectsGlobalScope": false
       },
       "../base/dist/schema/root.d.ts": {

@@ -7,14 +7,14 @@ const { execQuery } = testGraphql({opts: testServerOpts});
 test('blocks: error when selecting too many blocks by numbers', async () => {
   const query = `
     {
-      blocks(numbers: [1202, 20502, 292, 123, 423, 534, 533, 999, 111, 9, 12]) {
+      blockList(numbers: [1202, 20502, 292, 123, 423, 534, 533, 999, 111, 9, 12]) {
         hash
       }
     }
   `;
 
   const result = await execQuery(query);
-  expect(result.data.blocks).toBeNull();
+  expect(result.data.blockList).toBeNull();
   expect(result.errors).toHaveLength(1);
   expect(result.errors[0].message).toMatch(/^Too large a multiple selection/);
 });
@@ -22,7 +22,7 @@ test('blocks: error when selecting too many blocks by numbers', async () => {
 test('blocks: error when selecting too many blocks by hashes', async () => {
   const query = `
     {
-      blocks(hashes:
+      blockList(hashes:
         ["0x2f0e2a7b56ef50dcf8856af8d724566fbe51ecc0ff2ed67c235ca56fc67c0151"
          "0x2f0e2a7b56ef50dcf8856af8d724566fbe51ecc0ff2ed67c235ca56fc67c0152",
          "0x2f0e2a7b56ef50dcf8856af8d724566fbe51ecc0ff2ed67c235ca56fc67c0153",
@@ -40,7 +40,7 @@ test('blocks: error when selecting too many blocks by hashes', async () => {
   `;
 
   const result = await execQuery(query);
-  expect(result.data.blocks).toBeNull();
+  expect(result.data.blockList).toBeNull();
   expect(result.errors).toHaveLength(1);
   expect(result.errors[0].message).toMatch(/^Too large a multiple selection/);
 });

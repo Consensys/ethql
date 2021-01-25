@@ -48,7 +48,8 @@
     "axios": "^0.18.0",
     "get-port": "4.1.0",
     "graphql": "^14.1.1",
-    "lodash": "^4.17.11"
+    "lodash": "^4.17.11",
+    "web3-eth-abi": "^1.3.3"
   },
   "gitHead": "9792ffc037e7dff5fbfa098dce52a9e3121c8157",
   "devDependencies": {
