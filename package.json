@@ -74,6 +74,7 @@
     "prettier": "1.15.3",
     "rimraf": "^2.6.2",
     "ts-jest": "^23.1.4",
+    "tsc": "^1.20150623.0",
     "tsc-watch": "^1.0.30",
     "tslint": "^5.10.0",
     "tslint-config-prettier": "^1.15.0",

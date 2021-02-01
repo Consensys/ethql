@@ -2044,7 +2044,6 @@
       "composite": true,
       "rootDir": "./src",
       "outDir": "./dist",
-      "watch": true,
       "configFilePath": "./tsconfig.json"
     },
     "referencedMap": {

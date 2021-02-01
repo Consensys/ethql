@@ -1378,7 +1378,7 @@
       },
       "./src/resolvers/account.ts": {
         "version": "98272b2e6b5b894c1721f362c98a9d3e28a6dac0f235177d015e60b0c691b019",
-        "signature": "beb736cf16cb92215cb0eaa65be8a7e7a5bf3d4ea62ec172ef93a4e889257e13",
+        "signature": "0fa72841ddf2de3f03694fc9e5d38b9ce4e501b4a70e9c0e6cc9fc93b8deba65",
         "affectsGlobalScope": false
       },
       "../../node_modules/@types/debug/index.d.ts": {
@@ -2154,7 +2154,6 @@
       "composite": true,
       "rootDir": "./src",
       "outDir": "./dist",
-      "watch": true,
       "configFilePath": "./tsconfig.json"
     },
     "referencedMap": {
@@ -5467,7 +5466,6 @@
       ],
       "./src/resolvers/account.ts": [
         "../base/dist/index.d.ts",
-        "./node_modules/web3-utils/types/index.d.ts",
         "./src/model/index.ts"
       ],
       "./src/resolvers/block.ts": [

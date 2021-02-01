@@ -29,7 +29,7 @@
   },
   "scripts": {
     "clean": "rimraf dist",
-    "start": "dotenv -- node dist/index.js",
+    "start": "dotenv -- node dist/index.js --max-old-space-size=8192",
     "dev": "dotenv -- tsc-watch -b --onSuccess 'node dist/index.js'",
     "debug": "dotenv -- tsc-watch -b --onSuccess 'node --inspect dist/index.js'",
     "build:ts": "npm run clean && tsc -b",
