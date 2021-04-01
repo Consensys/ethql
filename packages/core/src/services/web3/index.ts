@@ -35,11 +35,18 @@ const matchers: Matchers = {
   },
   'HTTP(S)': {
     test: uri => !!uri.protocol.match(/^https?/),
-    provider: uri => new Web3.providers.HttpProvider(url.format(uri)),
+    provider: uri => new Web3.providers.HttpProvider(url.format(uri),{"headers":[{
+      name:"Authorization",
+      value:`Basic ${Buffer.from(`${process.env.USERNAME}:${process.env.PASSWORD}`).toString('base64')}`
+    }]}),
   },
   WebSocket: {
     test: uri => !!uri.protocol.match(/^ws/),
-    provider: uri => new Web3.providers.WebsocketProvider(url.format(uri)),
+    provider: uri => new Web3.providers.WebsocketProvider(url.format(uri),{
+      "headers":{
+        authorization:`Basic ${Buffer.from(`${process.env.USERNAME}:${process.env.PASSWORD}`).toString('base64')}`
+      }
+    }),
   },
 };
 
